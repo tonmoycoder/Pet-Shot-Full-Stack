@@ -1,0 +1,159 @@
+/* Payload Custom Theme - Modern Clean Dashboard */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-body: 'Inter', sans-serif;
+  
+  /* Modern Purple / Indigo (from the mockup) */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #5d5fef; /* Purple primary */
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+
+  /* Clean Light Theme */
+  --theme-bg: #ffffff; /* Main background */
+  --theme-elevation-0: #f9f9fb; /* Sidebar background */
+  --theme-elevation-50: #f0f0f4; /* Hover state */
+  --theme-elevation-100: #e5e7eb; /* Borders */
+  --theme-elevation-150: #d1d5db;
+  --theme-elevation-200: #9ca3af;
+  
+  /* Text */
+  --theme-text: #111827;
+  --theme-success-400: #10b981;
+  --theme-error-400: #ef4444;
+
+  /* Radii for that pill-shape look */
+  --style-radius-s: 8px;
+  --style-radius-m: 12px;
+  --style-radius-l: 16px;
+}
+
+[data-theme='dark'] {
+  --theme-bg: #0f1115;
+  --theme-elevation-0: #16181d;
+  --theme-elevation-50: #1f2228;
+  --theme-elevation-100: #2d3139;
+  --theme-elevation-150: #3f444e;
+  --theme-elevation-200: #5a616e;
+  
+  --theme-text: #f3f4f6;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #818cf8;
+}
+
+/* Base Font */
+.payload {
+  font-family: var(--font-body);
+  background: var(--theme-bg);
+}
+
+/* Sidebar (Nav) */
+.payload__nav {
+  border-right: 1px solid var(--theme-elevation-100);
+  background: var(--theme-elevation-0);
+  padding: 1rem 0;
+}
+
+/* Nav Groups (e.g. Collections, Globals) */
+.payload__nav .nav-group__toggle {
+  font-weight: 600;
+  color: var(--theme-text);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+
+/* Nav Links (Pill shape) */
+.payload__nav-link {
+  border-radius: 20px; /* Pill shape */
+  padding: 10px 16px;
+  margin: 4px 16px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: var(--theme-text);
+}
+
+.payload__nav-link:hover {
+  background: var(--theme-elevation-50);
+  text-decoration: none;
+}
+
+/* Active Nav Link */
+.payload__nav-link--active {
+  background: var(--theme-elevation-50) !important;
+  color: var(--theme-text) !important;
+  font-weight: 600;
+}
+
+/* Header */
+.payload__header {
+  border-bottom: 1px solid var(--theme-elevation-100);
+  background: var(--theme-bg);
+  box-shadow: none;
+}
+
+/* Primary Buttons */
+.btn--style-primary {
+  background: var(--color-primary-500);
+  border: none;
+  border-radius: var(--style-radius-m);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(93, 95, 239, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn--style-primary:hover {
+  background: var(--color-primary-600);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(93, 95, 239, 0.3);
+}
+
+/* Secondary Buttons */
+.btn--style-secondary {
+  background: var(--theme-bg);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-m);
+  color: var(--theme-text);
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn--style-secondary:hover {
+  background: var(--theme-elevation-50);
+  border-color: var(--theme-elevation-200);
+}
+
+/* Cards (Table wrappers, forms, etc) */
+.card {
+  border-radius: var(--style-radius-l);
+  border: 1px solid var(--theme-elevation-100);
+  background: var(--theme-bg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+/* Tables */
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th {
+  background: var(--theme-elevation-50);
+  font-weight: 600;
+  text-transform: capitalize;
+  border-bottom: 1px solid var(--theme-elevation-100);
+}
+
+.table td {
+  border-bottom: 1px solid var(--theme-elevation-100);
+}

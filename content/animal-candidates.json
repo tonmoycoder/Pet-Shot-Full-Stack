@@ -1,0 +1,46 @@
+[
+  {
+    "nameBn": "বাজরিগার",
+    "nameEn": "Budgerigar",
+    "scientificName": "Melopsittacus undulatus",
+    "category": "Bird",
+    "availability": null,
+    "price": null,
+    "legalVerification": false,
+    "recordStatus": "RESEARCH_BACKED",
+    "inventoryStatus": "SHOP_CONFIRMATION_REQUIRED"
+  },
+  {
+    "nameBn": "ইন্ডিয়ান রিংনেক",
+    "nameEn": "Indian Ringneck Parakeet",
+    "scientificName": "Psittacula krameri",
+    "category": "Bird",
+    "availability": null,
+    "price": null,
+    "legalVerification": false,
+    "recordStatus": "RESEARCH_BACKED",
+    "inventoryStatus": "SHOP_CONFIRMATION_REQUIRED"
+  },
+  {
+    "nameBn": "কবুতর",
+    "nameEn": "Fancy Pigeon",
+    "scientificName": "Columba livia domestica",
+    "category": "Bird",
+    "availability": null,
+    "price": null,
+    "legalVerification": false,
+    "recordStatus": "RESEARCH_BACKED",
+    "inventoryStatus": "SHOP_CONFIRMATION_REQUIRED"
+  },
+  {
+    "nameBn": "ঘুঘু",
+    "nameEn": "Dove",
+    "scientificName": "Spilopelia chinensis (example native)",
+    "category": "Bird",
+    "availability": null,
+    "price": null,
+    "legalVerification": true,
+    "recordStatus": "RESEARCH_BACKED",
+    "inventoryStatus": "DO_NOT_PUBLISH"
+  }
+]

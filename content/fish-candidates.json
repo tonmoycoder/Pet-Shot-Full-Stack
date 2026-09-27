@@ -1,0 +1,24 @@
+[
+  {
+    "nameBn": "গোল্ডফিশ",
+    "nameEn": "Goldfish",
+    "scientificName": "Carassius auratus",
+    "waterType": "Freshwater",
+    "diet": "Omnivore",
+    "availability": null,
+    "price": null,
+    "recordStatus": "RESEARCH_BACKED",
+    "inventoryStatus": "SHOP_CONFIRMATION_REQUIRED"
+  },
+  {
+    "nameBn": "গাপ্পি",
+    "nameEn": "Guppy",
+    "scientificName": "Poecilia reticulata",
+    "waterType": "Freshwater",
+    "diet": "Omnivore",
+    "availability": null,
+    "price": null,
+    "recordStatus": "RESEARCH_BACKED",
+    "inventoryStatus": "SHOP_CONFIRMATION_REQUIRED"
+  }
+]

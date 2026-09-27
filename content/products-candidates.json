@@ -1,0 +1,14 @@
+[
+  {
+    "nameEn": "Bird Cage",
+    "category": "Bird Accessories",
+    "recordStatus": "RESEARCH_BACKED",
+    "inventoryStatus": "SHOP_CONFIRMATION_REQUIRED"
+  },
+  {
+    "nameEn": "Sponge Filter",
+    "category": "Aquarium Accessories",
+    "recordStatus": "RESEARCH_BACKED",
+    "inventoryStatus": "SHOP_CONFIRMATION_REQUIRED"
+  }
+]

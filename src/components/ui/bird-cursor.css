@@ -1,0 +1,91 @@
+/* src/components/ui/bird-cursor.css */
+/* Reused for custom smooth ghost cursor V6 */
+
+.custom-cursor-root {
+  pointer-events: none;
+  /* Prevent any scrollbars from fixed elements */
+  overflow: hidden;
+}
+
+.cursor-svg-container {
+  transform-origin: 4px 4px; /* Origin near the arrow tip */
+}
+
+.cursor-clicking .cursor-svg-container {
+  transform: scale(0.9);
+}
+
+.cursor-view .cursor-svg-container {
+  transform: scale(1.1);
+}
+
+.cursor-cta .cursor-svg-container {
+  transform: scale(1.12);
+}
+
+.cursor-ghost {
+  opacity: 0;
+  will-change: transform, opacity;
+  color: var(--ghost-color, #14b8a6);
+}
+
+@keyframes ghost-fade {
+  0% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+.cursor-ghost.active {
+  animation: ghost-fade 320ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Click Ripple - 8px to 30px */
+.cursor-click-ripple {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  margin-left: -5px;
+  will-change: transform, opacity;
+}
+
+@keyframes click-ripple-v6 {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+.cursor-click-ripple.active {
+  animation: click-ripple-v6 350ms ease-out forwards;
+}
+
+/* SVG Accent Rays */
+.accent-flare {
+  opacity: 1 !important;
+  stroke: #fbbf24 !important; /* gold */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ghost {
+    display: none;
+  }
+  .cursor-clicking .cursor-svg-container {
+    transform: none;
+  }
+  .cursor-view .cursor-svg-container,
+  .cursor-cta .cursor-svg-container {
+    transform: none;
+  }
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "budgerigar",
+    "filename": "budgerigar.jpg",
+    "category": "birds",
+    "sourceSite": "AI Generated (Antigravity)",
+    "sourceUrl": "local",
+    "creator": "Antigravity",
+    "license": "Placeholder",
+    "licenseUrl": "",
+    "downloadedAt": "2026-09-20T00:57:31.000Z",
+    "attributionRequired": false,
+    "usedIn": "Discovery Bento (Birds)",
+    "notes": "Generated using generate_image as a high-quality photorealistic placeholder due to Wikimedia rate limits."
+  },
+  {
+    "id": "aquascape",
+    "filename": "aquascape.jpg",
+    "category": "aquarium",
+    "sourceSite": "AI Generated (Antigravity)",
+    "sourceUrl": "local",
+    "creator": "Antigravity",
+    "license": "Placeholder",
+    "licenseUrl": "",
+    "downloadedAt": "2026-09-20T00:57:43.000Z",
+    "attributionRequired": false,
+    "usedIn": "Discovery Bento (Aquarium)",
+    "notes": "Generated using generate_image."
+  },
+  {
+    "id": "cage",
+    "filename": "cage.jpg",
+    "category": "products",
+    "sourceSite": "AI Generated (Antigravity)",
+    "sourceUrl": "local",
+    "creator": "Antigravity",
+    "license": "Placeholder",
+    "licenseUrl": "",
+    "downloadedAt": "2026-09-20T00:57:54.000Z",
+    "attributionRequired": false,
+    "usedIn": "Discovery Bento (Accessories)",
+    "notes": "Generated using generate_image."
+  },
+  {
+    "id": "food",
+    "filename": "food.jpg",
+    "category": "products",
+    "sourceSite": "AI Generated (Antigravity)",
+    "sourceUrl": "local",
+    "creator": "Antigravity",
+    "license": "Placeholder",
+    "licenseUrl": "",
+    "downloadedAt": "2026-09-20T00:58:09.000Z",
+    "attributionRequired": false,
+    "usedIn": "Discovery Bento (Food)",
+    "notes": "Generated using generate_image."
+  },
+  {
+    "id": "caustics",
+    "filename": "caustics.jpg",
+    "category": "textures",
+    "sourceSite": "AI Generated (Antigravity)",
+    "sourceUrl": "local",
+    "creator": "Antigravity",
+    "license": "Placeholder",
+    "licenseUrl": "",
+    "downloadedAt": "2026-09-20T00:58:23.000Z",
+    "attributionRequired": false,
+    "usedIn": "Store Experience Background",
+    "notes": "Generated using generate_image."
+  }
+]

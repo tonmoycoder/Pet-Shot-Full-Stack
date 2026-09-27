@@ -1,0 +1,92 @@
+import type { Metadata } from "next";
+import { Plus_Jakarta_Sans, Hind_Siliguri } from "next/font/google";
+import "./globals.css";
+import { LanguageProvider } from "@/lib/language-context";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { CursorProvider } from "@/lib/cursor-context";
+import { ShortlistProvider } from "@/lib/shortlist-context";
+import { BirdCursor } from "@/components/ui/bird-cursor";
+import { Header } from "@/components/layout/header";
+import { FloatingContact } from "@/components/layout/floating-contact";
+import { ShortlistDrawer } from "@/components/layout/shortlist-drawer";
+import { Footer } from "@/components/layout/footer";
+import { BackgroundAudio } from "@/components/layout/background-audio";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-sans",
+  subsets: ["latin"],
+});
+
+const hindSiliguri = Hind_Siliguri({
+  variable: "--font-bangla",
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["bengali", "latin"],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://bismillahpakhi.com"), // Use the correct domain here
+  title: {
+    default: "Bismillah Pakhi & Aquarium | Premium Pet Shop in Chuadanga",
+    template: "%s | Bismillah Pakhi & Aquarium",
+  },
+  description: "Your trusted destination for premium birds, aquariums, and pet accessories in Chuadanga. Quality pets, expert advice.",
+  keywords: ["pet shop", "chuadanga", "birds", "aquarium", "pet accessories", "dog", "cat", "fish"],
+  openGraph: {
+    title: "Bismillah Pakhi & Aquarium",
+    description: "Premium birds, aquariums, and pet accessories in Chuadanga.",
+    url: "https://bismillahpakhi.com",
+    siteName: "Bismillah Pakhi & Aquarium",
+    images: [
+      {
+        url: "/images/hero.png", // Update with actual OG image
+        width: 1200,
+        height: 630,
+        alt: "Bismillah Pakhi & Aquarium - Storefront",
+      },
+    ],
+    locale: "bn_BD",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bismillah Pakhi & Aquarium",
+    description: "Premium birds, aquariums, and pet accessories in Chuadanga.",
+    images: ["/images/hero.png"], // Update with actual Twitter image
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="bn" suppressHydrationWarning data-scroll-behavior="smooth"
+      className={`${plusJakartaSans.variable} ${hindSiliguri.variable}`}
+    >
+      <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <LanguageProvider>
+          <CursorProvider>
+            <ShortlistProvider>
+              <BirdCursor />
+              <Header />
+              <main className="flex-1 pt-20 flex flex-col">
+                {children}
+              </main>
+              <Footer />
+              <FloatingContact />
+              <ShortlistDrawer />
+              <BackgroundAudio />
+            </ShortlistProvider>
+          </CursorProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
+  );
+}

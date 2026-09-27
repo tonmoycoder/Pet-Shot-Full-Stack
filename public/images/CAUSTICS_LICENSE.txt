@@ -1,0 +1,6 @@
+# Caustics Texture Asset
+- **Source URL**: https://opengameart.org/content/caustics
+- **Creator**: Filter Forge (via OpenGameArt)
+- **License**: CC0 (Public Domain)
+- **License URL**: https://creativecommons.org/publicdomain/zero/1.0/
+- **Downloaded Date**: 2026-09-24

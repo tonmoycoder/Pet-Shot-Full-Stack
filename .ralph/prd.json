@@ -1,0 +1,547 @@
+﻿{
+    "project":  "pet-shop-o2o-premium",
+    "branchName":  "feature/premium-o2o-build",
+    "userStories":  [
+                        {
+                            "id":  "P0-01",
+                            "title":  "Bootstrap repository brain",
+                            "priority":  1,
+                            "passes":  true,
+                            "dependsOn":  [
+
+                                          ]
+                        },
+                        {
+                            "id":  "P0-02",
+                            "title":  "Validate free-tier deployment assumptions",
+                            "priority":  2,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P0-01"
+                                          ]
+                        },
+                        {
+                            "id":  "P1-03",
+                            "title":  "Design tokens and fonts",
+                            "priority":  3,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P0-02"
+                                          ]
+                        },
+                        {
+                            "id":  "P1-04",
+                            "title":  "Global CSS reset and theme",
+                            "priority":  4,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P1-03"
+                                          ]
+                        },
+                        {
+                            "id":  "P1-05",
+                            "title":  "Shared buttons and CTA primitives",
+                            "priority":  5,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P1-04"
+                                          ]
+                        },
+                        {
+                            "id":  "P1-06",
+                            "title":  "Liquid Glass primitive",
+                            "priority":  6,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P1-05"
+                                          ]
+                        },
+                        {
+                            "id":  "P1-07",
+                            "title":  "Motion tokens and reduced-motion hooks",
+                            "priority":  7,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P1-06"
+                                          ]
+                        },
+                        {
+                            "id":  "P2-08",
+                            "title":  "Header and desktop navigation",
+                            "priority":  8,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P1-07"
+                                          ]
+                        },
+                        {
+                            "id":  "P2-09",
+                            "title":  "Mobile header",
+                            "priority":  9,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P2-08"
+                                          ]
+                        },
+                        {
+                            "id":  "P2-10",
+                            "title":  "Mobile bottom navigation",
+                            "priority":  10,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P2-09"
+                                          ]
+                        },
+                        {
+                            "id":  "P2-11",
+                            "title":  "Language toggle",
+                            "priority":  11,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P2-10"
+                                          ]
+                        },
+                        {
+                            "id":  "P2-12",
+                            "title":  "Floating contact actions",
+                            "priority":  12,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P2-11"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-13",
+                            "title":  "Hero static foundation",
+                            "priority":  13,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P2-12"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-14",
+                            "title":  "Hero premium motion layer",
+                            "priority":  14,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-13"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-15",
+                            "title":  "Custom cursor and pointer enhancement",
+                            "priority":  15,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-14"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-16",
+                            "title":  "Discovery bento",
+                            "priority":  16,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-15"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-17",
+                            "title":  "Animal card",
+                            "priority":  17,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-16"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-18",
+                            "title":  "Trust and live-signal strip",
+                            "priority":  18,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-17"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-19",
+                            "title":  "WhatsApp live-video section",
+                            "priority":  19,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-18"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-20",
+                            "title":  "Store experience",
+                            "priority":  20,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-19"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-21",
+                            "title":  "Final CTA and footer",
+                            "priority":  21,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-20"
+                                          ]
+                        },
+                        {
+                            "id":  "P3-22",
+                            "title":  "Homepage responsive QA",
+                            "priority":  22,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-21"
+                                          ]
+                        },
+                        {
+                            "id":  "P4-23",
+                            "title":  "Payload setup",
+                            "priority":  23,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P3-22"
+                                          ]
+                        },
+                        {
+                            "id":  "P4-24",
+                            "title":  "Store settings collection",
+                            "priority":  24,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P4-23"
+                                          ]
+                        },
+                        {
+                            "id":  "P4-25",
+                            "title":  "Animal collection",
+                            "priority":  25,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P4-24"
+                                          ]
+                        },
+                        {
+                            "id":  "P4-26",
+                            "title":  "Product collection",
+                            "priority":  26,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P4-25"
+                                          ]
+                        },
+                        {
+                            "id":  "P4-27",
+                            "title":  "Journal testimonial media models",
+                            "priority":  27,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P4-26"
+                                          ]
+                        },
+                        {
+                            "id":  "P4-28",
+                            "title":  "Revalidation hooks",
+                            "priority":  28,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P4-27"
+                                          ]
+                        },
+                        {
+                            "id":  "P4-29",
+                            "title":  "Replace mock homepage data with CMS",
+                            "priority":  29,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P4-28"
+                                          ]
+                        },
+                        {
+                            "id":  "P5-30",
+                            "title":  "Animal PDP",
+                            "priority":  30,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P4-29"
+                                          ]
+                        },
+                        {
+                            "id":  "P5-31",
+                            "title":  "Product PDP",
+                            "priority":  31,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P5-30"
+                                          ]
+                        },
+                        {
+                            "id":  "P5-32",
+                            "title":  "Sticky mobile CTA bar",
+                            "priority":  32,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P5-31"
+                                          ]
+                        },
+                        {
+                            "id":  "P5-33",
+                            "title":  "Prefilled WhatsApp generator",
+                            "priority":  33,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P5-32"
+                                          ]
+                        },
+                        {
+                            "id":  "P5-34",
+                            "title":  "Compatibility quiz",
+                            "priority":  34,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P5-33"
+                                          ]
+                        },
+                        {
+                            "id":  "P5-35",
+                            "title":  "Local shortlist",
+                            "priority":  35,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P5-34"
+                                          ]
+                        },
+                        {
+                            "id":  "P5-36",
+                            "title":  "Store directions and open-now logic",
+                            "priority":  36,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P5-35"
+                                          ]
+                        },
+                        {
+                            "id":  "P6-37",
+                            "title":  "Postgres search",
+                            "priority":  37,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P5-36"
+                                          ]
+                        },
+                        {
+                            "id":  "P6-38",
+                            "title":  "Search UI and autocomplete",
+                            "priority":  38,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P6-37"
+                                          ]
+                        },
+                        {
+                            "id":  "P6-39",
+                            "title":  "Search loading/error/empty states",
+                            "priority":  39,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P6-38"
+                                          ]
+                        },
+                        {
+                            "id":  "P7-40",
+                            "title":  "Hero caustics progressive layer",
+                            "priority":  40,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P6-39"
+                                          ]
+                        },
+                        {
+                            "id":  "P7-41",
+                            "title":  "Advanced scroll scene",
+                            "priority":  41,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P7-40"
+                                          ]
+                        },
+                        {
+                            "id":  "P7-42",
+                            "title":  "Phone live-video interaction polish",
+                            "priority":  42,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P7-41"
+                                          ]
+                        },
+                        {
+                            "id":  "P7-43",
+                            "title":  "Touch and micro-interaction polish",
+                            "priority":  43,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P7-42"
+                                          ]
+                        },
+                        {
+                            "id":  "P7-44",
+                            "title":  "Performance and effect budget",
+                            "priority":  44,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P7-43"
+                                          ]
+                        },
+                        {
+                            "id":  "P8-45",
+                            "title":  "Security headers and CSP",
+                            "priority":  45,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P7-44"
+                                          ]
+                        },
+                        {
+                            "id":  "P8-46",
+                            "title":  "Media upload hardening",
+                            "priority":  46,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P8-45"
+                                          ]
+                        },
+                        {
+                            "id":  "P8-47",
+                            "title":  "Accessibility pass",
+                            "priority":  47,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P8-46"
+                                          ]
+                        },
+                        {
+                            "id":  "P8-48",
+                            "title":  "SEO metadata and structured data",
+                            "priority":  48,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P8-47"
+                                          ]
+                        },
+                        {
+                            "id":  "P8-49",
+                            "title":  "E2E happy paths",
+                            "priority":  49,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P8-48"
+                                          ]
+                        },
+                        {
+                            "id":  "P8-50",
+                            "title":  "Visual regression pass",
+                            "priority":  50,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P8-49"
+                                          ]
+                        },
+                        {
+                            "id":  "P8-51",
+                            "title":  "Production build and deployment",
+                            "priority":  51,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P8-50"
+                                          ]
+                        },
+                        {
+                            "id":  "P8-52",
+                            "title":  "Final audit and documentation",
+                            "priority":  52,
+                            "passes":  true,
+                            "dependsOn":  [
+                                              "P8-51"
+                                          ]
+                        },
+                        {
+                            "priority":  53,
+                            "title":  "Next.js 15 async params fix (animals + products + categories)",
+                            "dependsOn":  [
+                                              "P5-30",
+                                              "P5-31"
+                                          ],
+                            "id":  "P5-53",
+                            "passes":  true
+                        },
+                        {
+                            "priority":  54,
+                            "title":  "Collection page premium redesign with filter tabs and search",
+                            "dependsOn":  [
+                                              "P5-53"
+                                          ],
+                            "id":  "P5-54",
+                            "passes":  true
+                        },
+                        {
+                            "priority":  55,
+                            "title":  "Category pages full rebuild - 0 404s on known slugs",
+                            "dependsOn":  [
+                                              "P5-54"
+                                          ],
+                            "id":  "P5-55",
+                            "passes":  true
+                        },
+                        {
+                            "priority":  56,
+                            "title":  "Background audio autoplay fix - mute-first + sessionStorage persist",
+                            "dependsOn":  [
+                                              "P5-55"
+                                          ],
+                            "id":  "P5-56",
+                            "passes":  true
+                        },
+                        {
+                            "priority":  57,
+                            "title":  "Footer real navigation links replacing hash anchors",
+                            "dependsOn":  [
+                                              "P5-56"
+                                          ],
+                            "id":  "P5-57",
+                            "passes":  true
+                        },
+                        {
+                            "priority":  58,
+                            "title":  "Smart image crop objectPosition per category",
+                            "dependsOn":  [
+                                              "P5-57"
+                                          ],
+                            "id":  "P5-58",
+                            "passes":  true
+                        },
+                        {
+                            "priority":  59,
+                            "title":  "next.config.ts wildcard image domains + overflow-x: hidden body",
+                            "dependsOn":  [
+                                              "P5-58"
+                                          ],
+                            "id":  "P5-59",
+                            "passes":  true
+                        },
+                        {
+                            "priority":  60,
+                            "title":  "Frontend Testimonial/Review UI and Submission Form",
+                            "dependsOn":  [
+                                              "P4-27"
+                                          ],
+                            "id":  "P5-60",
+                            "passes":  true
+                        }
+                    ]
+}
