@@ -69,7 +69,8 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
     offset: ["start end", "end start"],
   });
 
-  const whatsappLink = settings?.contact?.whatsappNumber ? `https://wa.me/${settings.contact.whatsappNumber}` : "https://wa.me/8801947315330";
+  const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
+  const whatsappLink = settings?.contact?.whatsappNumber ? `https://wa.me/${settings.contact.whatsappNumber}` : `https://wa.me/${defaultNumber}`;
   const displayPhone = settings?.contact?.phoneNumber || "01947315330";
   const displayAddress = settings?.location?.address || "সাত ভাই পুকুড় পাড়, চুয়াডাঙ্গা";
   const mapsLink = settings?.location?.googleMapsLink || "https://maps.app.goo.gl/j1NbDKU1zVpx533x8";

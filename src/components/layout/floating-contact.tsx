@@ -13,7 +13,7 @@ export function FloatingContact() {
   const [isHovered, setIsHovered] = React.useState(false);
 
   // WhatsApp link format: https://wa.me/<number>
-  const whatsappNumber = "8801947315330"; 
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330"; 
   const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
   const label = language === "bn" ? "জিজ্ঞাসা করুন" : "Ask Us";

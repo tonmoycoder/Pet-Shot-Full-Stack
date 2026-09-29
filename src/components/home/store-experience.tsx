@@ -78,7 +78,8 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
   const t = storeDict[language];
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
 
-  const whatsappLink = settings?.contact?.whatsappNumber ? `https://wa.me/${settings.contact.whatsappNumber}` : "https://wa.me/8801947315330";
+  const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
+  const whatsappLink = settings?.contact?.whatsappNumber ? `https://wa.me/${settings.contact.whatsappNumber}` : `https://wa.me/${defaultNumber}`;
   const displayPhone = settings?.contact?.phoneNumber || "01947315330";
   const displayAddress = settings?.location?.address || t.storeAddress;
   const mapsLink = settings?.location?.googleMapsLink || "https://maps.app.goo.gl/j1NbDKU1zVpx533x8";
@@ -198,6 +199,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
               src="/assets/sourced/textures/caustics.jpg"
               alt=""
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
             />
           </div>
@@ -254,6 +256,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
                 src="/images/dog-call.jpg"
                 alt="Video Feed"
                 fill
+                sizes="(max-width: 768px) 0vw, 250px"
                 className="object-cover opacity-90"
               />
               

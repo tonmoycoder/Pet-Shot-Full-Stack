@@ -99,8 +99,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       {/* Hero Banner */}
       <div className={`bg-gradient-to-br ${meta.color} py-16 px-4 text-white`}>
         <div className="max-w-7xl mx-auto">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-8 font-bangla text-sm group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -131,7 +131,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
               এই মুহূর্তে কোনো পণ্য নেই
             </h2>
             <p className="text-zinc-500 dark:text-zinc-400 font-bangla mb-8">
-              近近 শীঘ্রই নতুন পণ্য আসছে। আমাদের সাথে যোগাযোগ করুন।
+              খুব শীঘ্রই নতুন পণ্য আসছে। আমাদের সাথে যোগাযোগ করুন।
             </p>
             <a
               href="https://wa.me/8801947315330"
@@ -181,11 +181,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     {/* Status Badge */}
                     <div className="absolute top-3 left-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bangla font-semibold shadow-sm backdrop-blur-sm ${
-                        isAvailable 
-                          ? 'bg-emerald-500/90 text-white' 
+                      <span className={`px-3 py-1 rounded-full text-xs font-bangla font-semibold shadow-sm backdrop-blur-sm ${isAvailable
+                          ? 'bg-emerald-500/90 text-white'
                           : 'bg-red-500/90 text-white'
-                      }`}>
+                        }`}>
                         {tagBn}
                       </span>
                     </div>

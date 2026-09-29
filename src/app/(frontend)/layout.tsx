@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Hind_Siliguri } from "next/font/google";
+import { Plus_Jakarta_Sans, Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/language-context";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -19,10 +19,10 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
 });
 
-const hindSiliguri = Hind_Siliguri({
+const notoSerifBengali = Noto_Serif_Bengali({
   variable: "--font-bangla",
   weight: ["300", "400", "500", "600", "700"],
-  subsets: ["bengali", "latin"],
+  subsets: ["bengali"],
 });
 
 export const metadata: Metadata = {
@@ -64,7 +64,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bn" suppressHydrationWarning data-scroll-behavior="smooth"
-      className={`${plusJakartaSans.variable} ${hindSiliguri.variable}`}
+      className={`${plusJakartaSans.variable} ${notoSerifBengali.variable}`}
     >
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>

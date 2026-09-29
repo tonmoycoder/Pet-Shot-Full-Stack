@@ -45,7 +45,7 @@ export function ShortlistDrawer() {
   }, [isDrawerOpen]);
 
   // Generate WhatsApp link
-  const whatsappNumber = "8801947315330";
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
   const itemNames = items.map((i, idx) => `${idx + 1}. ${i.name[language]}`).join('%0A');
   const message = language === 'en' 
     ? `Hello, I'm interested in the following items from my shortlist:%0A%0A${itemNames}`
@@ -113,6 +113,7 @@ export function ShortlistDrawer() {
                           src={item.image}
                           alt={item.name.en}
                           fill
+                          sizes="80px"
                           className="object-cover"
                         />
                       </div>

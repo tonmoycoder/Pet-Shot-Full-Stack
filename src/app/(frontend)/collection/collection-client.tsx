@@ -122,7 +122,7 @@ function ItemCard({ item, index }: { item: Item; index: number }) {
 
       {/* Quick WhatsApp button (outside the link, absolutely positioned) */}
       <a
-        href={`https://wa.me/8801947315330?text=${whatsappMsg}`}
+        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330"}?text=${whatsappMsg}`}
         target="_blank"
         rel="noopener noreferrer"
         onClick={(e) => e.stopPropagation()}

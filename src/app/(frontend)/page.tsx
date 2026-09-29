@@ -6,6 +6,7 @@ import { StoreExperience } from "@/components/home/store-experience";
 import { FinalCTA } from "@/components/home/final-cta";
 import { TestimonialSection } from "@/components/home/testimonial-section";
 import { BlogPeek } from "@/components/home/blog-peek";
+import { RareExoticCollection } from "@/components/home/rare-exotic-collection";
 
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
@@ -16,6 +17,7 @@ export default async function Home() {
   let homepageRes: any = {};
   let testimonials: any[] = [];
   let blogs: any[] = [];
+  let rareProducts: any[] = [];
 
   try {
     const payload = await getPayload({ config: configPromise });
@@ -60,6 +62,28 @@ export default async function Home() {
         }));
       } catch {}
       console.warn("Could not query animals with isFeatured filter", e);
+    }
+
+    try {
+      const rareRes = await payload.find({
+        collection: 'animals',
+        limit: 3,
+        where: {
+          and: [
+            { status: { equals: 'available' } },
+            { isRareExotic: { equals: true } }
+          ]
+        }
+      });
+      rareProducts = rareRes.docs.map((doc: any) => ({
+        id: doc.id,
+        image: doc.image,
+        name: doc.name,
+        price: doc.price,
+        description: doc.description,
+      }));
+    } catch (e) {
+      console.warn("Could not query rare animals", e);
     }
 
     try {
@@ -133,6 +157,9 @@ export default async function Home() {
 
       {/* 3. Featured pets — filtered by isFeatured */}
       <FeaturedPets pets={pets} />
+
+      {/* RARE & EXOTIC COLLECTION */}
+      <RareExoticCollection products={rareProducts} storeNumber={settingsRes?.contactPhone || '1234567890'} />
 
       {/* 4. Trust strip — live signal + proof points */}
       <TrustStrip />

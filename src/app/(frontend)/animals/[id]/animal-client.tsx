@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, MessageCircle, Info, Tag } from "lucide-react";
+import { ArrowLeft, MessageCircle, Info, Tag, Star } from "lucide-react";
 import { cn } from "cn";
 import { useLanguage } from "@/lib/language-context";
 import { useCursor } from "@/lib/cursor-context";
@@ -25,7 +25,8 @@ const pdpDict = {
     description: "বিস্তারিত বিবরণ",
     inquire: "হোয়াটসঅ্যাপে যোগাযোগ করুন",
     available: "বিক্রির জন্য উপলব্ধ",
-    soldOut: "স্টক আউট"
+    soldOut: "স্টক আউট",
+    rareBadge: "এক্সক্লুসিভ কালেকশন"
   },
   en: {
     back: "Go Back",
@@ -34,7 +35,8 @@ const pdpDict = {
     description: "Description",
     inquire: "Inquire on WhatsApp",
     available: "Available for Sale",
-    soldOut: "Sold Out"
+    soldOut: "Sold Out",
+    rareBadge: "Rare & Exotic Collection"
   }
 };
 
@@ -59,7 +61,8 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
   const description = animal.description?.[language];
   
   // WhatsApp Link Generation
-  const whatsappNumber = settings?.contact?.whatsappNumber || "8801947315330";
+  const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
+  const whatsappNumber = settings?.contact?.whatsappNumber || defaultNumber;
   const whatsappMessage = encodeURIComponent(
     `Hi, I am interested in ${animal.internalName} (ID: ${animal.id}). Is it still available?`
   );
@@ -116,6 +119,7 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                     src={images[activeImageIndex].url}
                     alt={name || 'Animal'}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                     style={{ objectPosition: activeImageIndex === 0 ? animal.objectPosition : "center center" }}
                   />
@@ -137,7 +141,7 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                         : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
-                    <Image src={img.url} alt={`${name || 'Animal'} ${idx}`} fill className="object-cover" />
+                    <Image src={img.url} alt={`${name || 'Animal'} ${idx}`} fill sizes="80px" className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -152,11 +156,20 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
             className="flex flex-col pt-4 lg:pt-12"
           >
             <div className="mb-8">
-              {tag && (
-                <span className={cn("inline-block px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 text-sm font-medium mb-6", fontClass)}>
-                  {tag}
-                </span>
-              )}
+              <div className="flex flex-wrap gap-2 items-center mb-6">
+                {animal.isRareExotic && (
+                  <span className={cn("inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 text-sm font-bold uppercase tracking-widest", fontClass)}>
+                    <Star className="w-4 h-4 fill-amber-500" />
+                    {t.rareBadge}
+                  </span>
+                )}
+                {tag && (
+                  <span className={cn("inline-block px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 text-sm font-medium", fontClass)}>
+                    {tag}
+                  </span>
+                )}
+              </div>
+            
               <div className="flex items-start justify-between gap-4 mb-4">
                 <h1 className={cn("text-4xl md:text-6xl font-extrabold text-zinc-900 dark:text-white leading-tight", fontClass)}>
                   {name}
@@ -173,7 +186,7 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                 />
               </div>
               
-              <div className="flex items-end gap-4 mb-8">
+              <div className="flex items-end gap-4">
                 <div className="flex flex-col">
                   <span className={cn("text-sm text-zinc-500 uppercase tracking-wider mb-1", fontClass)}>
                     {t.price}

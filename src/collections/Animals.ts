@@ -137,6 +137,57 @@ export const Animals: CollectionConfig = {
                 description: 'চেক করা থাকলে হোমপেজের "আমাদের বিশেষ সংগ্রহ" সেকশনে দেখাবে।',
               },
             },
+            {
+              name: 'isRareExotic',
+              type: 'checkbox',
+              label: 'এক্সক্লুসিভ কালেকশন (Rare & Exotic)?',
+              admin: {
+                description: 'হোমপেজে এক্সক্লুসিভ সেকশনে দেখাতে এখানে টিক দিন। (Check to feature in Rare & Exotic collection)',
+              },
+              defaultValue: false,
+            },
+          ]
+        },
+        {
+          label: 'কুইজ ম্যাচিং (Quiz Matching)',
+          description: 'হোমপেজের কুইজের সাথে এই প্রাণীটিকে মেলানোর জন্য নিচের অপশনগুলো সিলেক্ট করুন।',
+          fields: [
+            {
+              name: 'spaceRequired',
+              type: 'select',
+              label: 'থাকার জায়গা (Space Required)',
+              options: [
+                { label: 'A: অ্যাপার্টমেন্ট বা ছোট জায়গা (Apartment/Small)', value: 'A' },
+                { label: 'B: বাড়ি, সাথে ছোট উঠান (House with small yard)', value: 'B' },
+                { label: 'C: বড় বাড়ি / অনেক জায়গা (Large space)', value: 'C' },
+              ],
+              defaultValue: 'A',
+              admin: { description: 'এই প্রাণীটির কেমন জায়গা প্রয়োজন?' }
+            },
+            {
+              name: 'experienceLevel',
+              type: 'select',
+              label: 'পালনের অভিজ্ঞতা (Experience Level)',
+              options: [
+                { label: 'A: প্রথমবার পালন (First-time owner)', value: 'A' },
+                { label: 'B: আগেও পালন করেছি (Prior experience)', value: 'B' },
+                { label: 'C: অনেক অভিজ্ঞতা (Very experienced)', value: 'C' },
+              ],
+              defaultValue: 'A',
+              admin: { description: 'মালিকের কেমন অভিজ্ঞতা থাকা উচিত?' }
+            },
+            {
+              name: 'lifespan',
+              type: 'select',
+              label: 'আয়ুষ্কাল (Lifespan)',
+              options: [
+                { label: 'A: স্বল্প সময়: ২-৩ বছর (Short 2-3 yrs)', value: 'A' },
+                { label: 'B: মাঝারি সময়: ৫-৬ বছর (Medium 5-6 yrs)', value: 'B' },
+                { label: 'C: দীর্ঘ সময়: ১০+ বছর (Long 10+ yrs)', value: 'C' },
+              ],
+              defaultValue: 'A',
+              admin: { description: 'সাধারণত কত বছর বাঁচে?' }
+            },
           ]
         },
         {

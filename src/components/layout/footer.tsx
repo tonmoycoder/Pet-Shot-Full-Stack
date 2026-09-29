@@ -23,6 +23,9 @@ const footerDict = {
     links: [
       { name: "হোম", href: "/", icon: "🏠" },
       { name: "যোগাযোগ", href: "/contact", icon: "📞" },
+      { name: "সাধারণ জিজ্ঞাসা", href: "#", icon: "❓" },
+      { name: "শর্তাবলী", href: "#", icon: "📜" },
+      { name: "গোপনীয়তা নীতি", href: "#", icon: "🔒" },
     ],
     contactTitle: "যোগাযোগ করুন",
     phone: "01947315330",
@@ -48,6 +51,9 @@ const footerDict = {
     links: [
       { name: "Home", href: "/", icon: "🏠" },
       { name: "Contact", href: "/contact", icon: "📞" },
+      { name: "FAQ", href: "#", icon: "❓" },
+      { name: "Terms of Service", href: "#", icon: "📜" },
+      { name: "Privacy Policy", href: "#", icon: "🔒" },
     ],
     contactTitle: "Contact Us",
     phone: "01947315330",
@@ -78,7 +84,7 @@ export function Footer() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
-              href="https://wa.me/8801947315330"
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330"}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#128C7E] text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-black/30 transition-all duration-300 active:scale-95"
@@ -176,7 +182,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://wa.me/8801947315330"
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330"}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-3 text-zinc-400 hover:text-[#25D366] transition-colors group"
@@ -195,8 +201,17 @@ export function Footer() {
 
         {/* Copyright Strip */}
         <div className="border-t border-white/5">
-          <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-zinc-600 text-sm">
-            <span>{t.copyright}</span>
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6 text-zinc-600 text-sm">
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <span>{t.copyright}</span>
+              <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full text-xs font-semibold text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                SSL SECURED
+              </div>
+            </div>
             <a
               href="https://www.facebook.com/tanverislamtonmoyofficial"
               target="_blank"
