@@ -15,6 +15,7 @@ export function SkeletonImage({
   wrapperClassName,
   onLoadingComplete,
   onLoad,
+  onError,
   sizes,
   ...props
 }: SkeletonImageProps) {
@@ -36,8 +37,8 @@ export function SkeletonImage({
       {/* Skeleton Background */}
       <div 
         className={cn(
-          "absolute inset-0 bg-zinc-200 dark:bg-zinc-800 transition-opacity duration-500",
-          isLoading ? "animate-pulse opacity-100" : "opacity-0 pointer-events-none"
+          "absolute inset-0 transition-opacity duration-500 z-0",
+          isLoading ? "skeleton-shimmer opacity-100" : "opacity-0 pointer-events-none"
         )} 
       />
       
@@ -47,13 +48,17 @@ export function SkeletonImage({
         alt={alt || "Image"}
         sizes={props.fill ? (sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw") : sizes}
         className={cn(
-          "transition-all duration-700 ease-in-out",
-          isLoading ? "scale-105 blur-md opacity-0" : "scale-100 blur-0 opacity-100",
-          className
+          "transition-all duration-700 ease-in-out z-10",
+          className,
+          isLoading && "scale-105 blur-md opacity-0"
         )}
         onLoad={(e) => {
           setIsLoading(false);
           if (onLoad) onLoad(e);
+        }}
+        onError={(e) => {
+          setIsLoading(false);
+          if (onError) onError(e);
         }}
         {...props}
       />

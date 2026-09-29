@@ -88,28 +88,14 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
       try {
         const queryStr = encodeURIComponent(debouncedQuery.trim());
-        // Using Payload REST API `like` operator (maps to ILIKE in Postgres)
-        // We search across internalName, name.en, name.bn, tag.en, tag.bn
-        const animalWhere = `?where[or][0][internalName][like]=${queryStr}&where[or][1][name.en][like]=${queryStr}&where[or][2][name.bn][like]=${queryStr}&where[or][3][tag.en][like]=${queryStr}&where[or][4][tag.bn][like]=${queryStr}`;
-        const productWhere = `?where[or][0][internalName][like]=${queryStr}&where[or][1][name.en][like]=${queryStr}&where[or][2][name.bn][like]=${queryStr}`;
+        
+        const res = await fetch(`/api/search?q=${queryStr}`);
+        if (!res.ok) throw new Error("Search failed");
 
-        const [animalsRes, productsRes] = await Promise.all([
-          fetch(`/api/animals${animalWhere}&limit=5`),
-          fetch(`/api/products${productWhere}&limit=5`),
-        ]);
-
-        if (!animalsRes.ok || !productsRes.ok) throw new Error("Search failed");
-
-        const animalsData = await animalsRes.json();
-        const productsData = await productsRes.json();
-
-        const combined: SearchResult[] = [
-          ...(animalsData.docs || []).map((doc: any) => ({ ...doc, type: "animal" })),
-          ...(productsData.docs || []).map((doc: any) => ({ ...doc, type: "product" })),
-        ];
-
-        // Shuffle or sort if necessary, here we just return them raw
-        setResults(combined.slice(0, 8));
+        const data = await res.json();
+        
+        // Results are already combined and sliced from the API
+        setResults(data.results || []);
       } catch (err) {
         console.error(err);
         setHasError(true);
@@ -206,6 +192,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                               src={result.image} 
                               alt={result.name[language] || 'Result'} 
                               fill
+                              sizes="(max-width: 768px) 64px, 80px"
                               className="object-cover group-hover:scale-110 transition-transform duration-500"
                               style={{ objectPosition: result.objectPosition || 'center center' }}
                             />

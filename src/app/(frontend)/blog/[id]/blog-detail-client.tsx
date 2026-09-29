@@ -2,18 +2,20 @@
 
 import React, { Fragment } from "react";
 import { motion } from "framer-motion";
-import { Clock, ArrowLeft } from "lucide-react";
+import { Clock, ArrowLeft, Share2, MessageCircle, Link as LinkIcon } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "cn";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 
 interface BlogPost {
   id: string;
   title: { en: string; bn: string };
   excerpt: { en: string; bn: string };
-  content: { en: any[]; bn: any[] };
+  content: { en: any; bn: any };
   coverImage?: any;
   publishedAt: string;
 }
@@ -39,34 +41,34 @@ function serializeRichText(nodes: any[], language: "en" | "bn") {
 
     switch (node.type) {
       case "h1":
-        return <h1 key={i} className="text-4xl font-bold mt-12 mb-6 text-[#09334F] dark:text-white leading-tight">{children}</h1>;
+        return <h1 key={i}>{children}</h1>;
       case "h2":
-        return <h2 key={i} className="text-3xl font-bold mt-10 mb-5 text-[#09334F] dark:text-white leading-tight">{children}</h2>;
+        return <h2 key={i}>{children}</h2>;
       case "h3":
-        return <h3 key={i} className="text-2xl font-bold mt-8 mb-4 text-[#09334F] dark:text-white leading-tight">{children}</h3>;
+        return <h3 key={i}>{children}</h3>;
       case "h4":
-        return <h4 key={i} className="text-xl font-bold mt-6 mb-3 text-[#09334F] dark:text-white leading-tight">{children}</h4>;
+        return <h4 key={i}>{children}</h4>;
       case "h5":
-        return <h5 key={i} className="text-lg font-bold mt-5 mb-2 text-[#09334F] dark:text-white leading-tight">{children}</h5>;
+        return <h5 key={i}>{children}</h5>;
       case "h6":
-        return <h6 key={i} className="text-base font-bold mt-4 mb-2 text-[#09334F] dark:text-white leading-tight">{children}</h6>;
+        return <h6 key={i}>{children}</h6>;
       case "quote":
         return (
-          <blockquote key={i} className="border-l-4 border-emerald-500 pl-6 my-8 italic text-xl text-zinc-600 dark:text-zinc-400 bg-emerald-50/50 dark:bg-emerald-900/10 py-4 pr-4 rounded-r-xl">
+          <blockquote key={i}>
             {children}
           </blockquote>
         );
       case "list":
         if (node.listType === "number") {
-          return <ol key={i} className="list-decimal list-outside ml-6 my-6 space-y-2 text-zinc-700 dark:text-zinc-300 text-lg">{children}</ol>;
+          return <ol key={i}>{children}</ol>;
         }
-        return <ul key={i} className="list-disc list-outside ml-6 my-6 space-y-2 text-zinc-700 dark:text-zinc-300 text-lg">{children}</ul>;
+        return <ul key={i}>{children}</ul>;
       case "listitem":
         return <li key={i}>{children}</li>;
-      case "ul": // Fallback for old slate data if any
-        return <ul key={i} className="list-disc list-outside ml-6 my-6 space-y-2 text-zinc-700 dark:text-zinc-300 text-lg">{children}</ul>;
+      case "ul": 
+        return <ul key={i}>{children}</ul>;
       case "ol":
-        return <ol key={i} className="list-decimal list-outside ml-6 my-6 space-y-2 text-zinc-700 dark:text-zinc-300 text-lg">{children}</ol>;
+        return <ol key={i}>{children}</ol>;
       case "li":
         return <li key={i}>{children}</li>;
       case "link":
@@ -76,18 +78,16 @@ function serializeRichText(nodes: any[], language: "en" | "bn") {
             href={node.url}
             target={node.newTab ? "_blank" : "_self"}
             rel={node.newTab ? "noopener noreferrer" : ""}
-            className="text-emerald-600 dark:text-emerald-400 hover:underline underline-offset-4 decoration-2"
           >
             {children}
           </a>
         );
       case "paragraph":
       default:
-        // Skip empty paragraphs
         if (node.children?.length === 1 && node.children[0].text === "") {
           return <br key={i} />;
         }
-        return <p key={i} className="mb-6 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">{children}</p>;
+        return <p key={i}>{children}</p>;
     }
   });
 }
@@ -98,84 +98,187 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
   const title = blog.title[language] || blog.title.bn;
   const rawContent = blog.content[language] || blog.content.bn;
   const content = rawContent?.root?.children || rawContent; // Support Lexical format
+  
+  const renderContent = () => {
+    if (typeof content === 'string') {
+       return <ReactMarkdown remarkPlugins={[remarkBreaks]}>{content.replace(/\\n/g, '\n')}</ReactMarkdown>;
+    }
+    
+    // Check if it's a bad AST dump (e.g. from CSV)
+    if (Array.isArray(content) && content.length > 0) {
+       const allText = content.reduce((acc, node) => {
+           if (node.type === 'paragraph' && node.children) {
+               return acc + '\n\n' + node.children.map((c: any) => c.text || '').join('');
+           }
+           if (node.type === 'heading' && node.children) {
+               const h = '#'.repeat(node.tag ? parseInt(node.tag.replace('h', '')) || 2 : 2) + ' ';
+               return acc + '\n\n' + h + node.children.map((c: any) => c.text || '').join('');
+           }
+           return acc;
+       }, '');
+       
+       if (allText.includes('\\n') || allText.includes('# ') || allText.includes('\n')) {
+          const sanitized = allText.replace(/\\n/g, '\n');
+          return <ReactMarkdown remarkPlugins={[remarkBreaks]}>{sanitized}</ReactMarkdown>;
+       }
+    }
+
+    return serializeRichText(content, language);
+  };
+
+  const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const whatsappShare = `https://api.whatsapp.com/send?text=${encodeURIComponent(title + " " + pageUrl)}`;
+  const facebookShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#051114] pt-28 pb-24">
-      {/* Top Banner (Hero Image) */}
-      <div className="w-full h-[40vh] md:h-[60vh] relative bg-zinc-100 dark:bg-zinc-800">
-        {blog.coverImage?.url ? (
-          <Image
-            src={blog.coverImage.url}
-            alt={title}
-            fill
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className="w-full h-full bg-emerald-900/20" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-[#051114] dark:to-[#051114]" />
+    <div className="min-h-screen bg-zinc-50 dark:bg-[#051114] pt-28 pb-24">
+      {/* Decorative Background */}
+      <div className="absolute top-0 left-0 w-full h-[500px] bg-emerald-500/5 dark:bg-emerald-900/10 blur-3xl pointer-events-none rounded-b-full" />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
         
-        {/* Back Button */}
-        <div className="absolute top-8 left-4 md:left-8 z-20">
+        {/* Back Button & Breadcrumbs */}
+        <div className="mb-8">
           <Link href="/blog">
             <motion.div 
               whileHover={{ x: -5 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white rounded-full transition-colors font-medium border border-white/20"
+              className="inline-flex items-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-5 h-5" />
               <span className={language === "bn" ? "font-bangla" : "font-sans"}>
                 {language === "bn" ? "ফিরে যান" : "Back to Journal"}
               </span>
             </motion.div>
           </Link>
         </div>
-      </div>
 
-      {/* Main Content Area */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 -mt-32 md:-mt-48">
+        {/* Hero Section */}
         <motion.div 
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-[2rem] shadow-2xl shadow-black/10 border border-zinc-100 dark:border-zinc-800 p-8 md:p-16"
+          className="mb-12"
         >
           {/* Metadata */}
-          <div className="flex items-center gap-4 mb-8 text-emerald-600 dark:text-emerald-400 font-semibold tracking-wide">
-            <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5" />
-              <span>{formatDate(blog.publishedAt || new Date().toISOString())}</span>
+          <div className="flex flex-wrap items-center gap-4 mb-6 text-emerald-600 dark:text-emerald-400 font-semibold tracking-wide">
+            <div className="flex items-center gap-2 bg-emerald-100/50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-full">
+              <Clock className="w-4 h-4" />
+              <span className="text-sm">{formatDate(blog.publishedAt || new Date().toISOString())}</span>
             </div>
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-200 dark:bg-emerald-800" />
-            <div className="uppercase text-sm">
+            <div className="uppercase text-sm bg-zinc-200/50 dark:bg-zinc-800/50 px-3 py-1.5 rounded-full text-zinc-700 dark:text-zinc-300">
               {language === "bn" ? "আর্টিকেল" : "Article"}
             </div>
           </div>
 
           {/* Title */}
           <h1 className={cn(
-            "text-4xl md:text-5xl lg:text-6xl font-bold text-[#09334F] dark:text-white mb-12 leading-[1.15]",
+            "text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#09334F] dark:text-white mb-10 leading-tight",
             language === "bn" ? "font-bangla" : "font-sans"
           )}>
             {title}
           </h1>
 
-          {/* Divider */}
-          <div className="w-full h-px bg-gradient-to-r from-zinc-200 via-zinc-100 to-transparent dark:from-zinc-800 dark:via-zinc-800/50 mb-12" />
-
-          {/* Rich Text Content */}
-          <article className={cn(
-            "prose prose-lg dark:prose-invert max-w-none prose-emerald",
-            "prose-headings:text-[#09334F] dark:prose-headings:text-white",
-            "prose-a:text-emerald-600 dark:prose-a:text-emerald-400",
-            "prose-strong:text-zinc-900 dark:prose-strong:text-zinc-100",
-            language === "bn" ? "font-bangla" : "font-sans"
-          )}>
-            {serializeRichText(content, language)}
-          </article>
+          {/* Cover Image */}
+          <div className="w-full aspect-[21/9] md:aspect-[2.5/1] relative bg-zinc-100 dark:bg-zinc-800 rounded-3xl overflow-hidden shadow-2xl shadow-zinc-200/50 dark:shadow-black/50 flex justify-center items-center">
+            {blog.coverImage?.url ? (
+              <>
+                {/* Ambient Blur Background */}
+                <Image
+                  src={blog.coverImage.url}
+                  alt={title}
+                  fill
+                  sizes="100vw"
+                  className="object-cover blur-3xl scale-110 opacity-60 dark:opacity-40"
+                  wrapperClassName="z-0"
+                  priority
+                />
+                {/* Crisp Foreground Image */}
+                <Image
+                  src={blog.coverImage.url}
+                  alt={title}
+                  fill
+                  sizes="100vw"
+                  className="object-contain drop-shadow-2xl"
+                  wrapperClassName="z-10"
+                  priority
+                />
+              </>
+            ) : (
+              <div className="w-full h-full bg-emerald-900/20" />
+            )}
+          </div>
         </motion.div>
+
+        {/* Content Layout */}
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+          
+          {/* Main Content Area */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="flex-1 min-w-0 bg-white dark:bg-zinc-900 p-8 md:p-12 rounded-3xl shadow-xl shadow-zinc-200/20 dark:shadow-black/20 border border-zinc-100 dark:border-zinc-800/50"
+          >
+            <article className={cn(
+              "prose prose-lg md:prose-xl dark:prose-invert max-w-none prose-emerald prose-headings:font-bold prose-headings:text-[#09334F] dark:prose-headings:text-white prose-a:text-emerald-600 prose-img:rounded-2xl",
+              language === "bn" ? "font-bangla" : "font-sans"
+            )}>
+              {renderContent()}
+            </article>
+          </motion.div>
+
+          {/* Sidebar Area */}
+          <motion.aside 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="w-full lg:w-80 shrink-0 space-y-8"
+          >
+            {/* Share Widget */}
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-3xl shadow-xl shadow-zinc-200/20 dark:shadow-black/20 border border-zinc-100 dark:border-zinc-800/50 sticky top-32">
+              <h3 className={cn(
+                "text-lg font-bold text-[#09334F] dark:text-white mb-4",
+                language === "bn" ? "font-bangla" : "font-sans"
+              )}>
+                {language === "bn" ? "শেয়ার করুন" : "Share this article"}
+              </h3>
+              <div className="flex gap-4">
+                <a href={whatsappShare} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all duration-300">
+                  <MessageCircle className="w-5 h-5" />
+                </a>
+                <a href={facebookShare} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition-all duration-300">
+                  <LinkIcon className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
+
+            {/* CTA Widget */}
+            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-8 rounded-3xl text-white shadow-xl shadow-emerald-500/20 sticky top-[280px]">
+              <h3 className={cn(
+                "text-2xl font-bold mb-4",
+                language === "bn" ? "font-bangla" : "font-sans"
+              )}>
+                {language === "bn" ? "আপনার স্বপ্নের পোষা প্রাণী খুঁজছেন?" : "Looking for your dream pet?"}
+              </h3>
+              <p className={cn(
+                "text-emerald-50 mb-6",
+                language === "bn" ? "font-bangla" : "font-sans"
+              )}>
+                {language === "bn" ? "আজই আমাদের সাথে যোগাযোগ করুন এবং এক্সক্লুসিভ পেট প্রি-বুক করুন।" : "Contact us today to pre-book exclusive pets and accessories."}
+              </p>
+              <a 
+                href="https://api.whatsapp.com/send?phone=YOUR_PHONE_NUMBER" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block w-full bg-white text-emerald-600 text-center py-3 rounded-xl font-bold hover:bg-emerald-50 transition-colors"
+              >
+                {language === "bn" ? "হোয়াটসঅ্যাপে মেসেজ দিন" : "Message on WhatsApp"}
+              </a>
+            </div>
+          </motion.aside>
+          
+        </div>
       </div>
     </div>
   );
 }
+

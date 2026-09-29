@@ -1,27 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import React, { useEffect, useState, useRef } from "react";
 import { useCursor } from "@/lib/cursor-context";
 import { Search } from "lucide-react";
 import "./custom-cursor.css";
 
 export function CustomCursor() {
-  const [mounted, setMounted] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const { cursorType } = useCursor();
-
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
-
-  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
-  const smoothX = useSpring(mouseX, springConfig);
-  const smoothY = useSpring(mouseY, springConfig);
+  
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-    
     // Only enable on non-touch devices
     const checkDevice = () => {
       setIsDesktop(window.matchMedia("(pointer: fine)").matches);
@@ -29,89 +20,73 @@ export function CustomCursor() {
     
     checkDevice();
     window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
+  }, []);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let cursorX = -100;
+    let cursorY = -100;
+    let animationFrameId: number;
+
+    const onMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
     };
 
-    if (isDesktop) {
-      window.addEventListener("mousemove", handleMouseMove);
-      document.body.classList.add("cursor-none-global");
-    } else {
-      document.body.classList.remove("cursor-none-global");
-    }
+    const updateCursor = () => {
+      // Smooth lerp for spring effect (low damping)
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+      }
+
+      animationFrameId = requestAnimationFrame(updateCursor);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    document.body.classList.add("cursor-none-global");
+    
+    updateCursor();
 
     return () => {
-      window.removeEventListener("resize", checkDevice);
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", onMouseMove);
       document.body.classList.remove("cursor-none-global");
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [isDesktop, mouseX, mouseY]);
+  }, [isDesktop]);
 
-  if (!mounted || !isDesktop) return null;
+  if (!isDesktop) return null;
 
-  // Define variants for different cursor states
-  const variants = {
-    default: {
-      width: 16,
-      height: 16,
-      backgroundColor: "rgba(34, 197, 94, 0.5)", // primary color with opacity
-      border: "1px solid rgba(34, 197, 94, 0.8)",
-      x: "-50%",
-      y: "-50%",
-      opacity: 1,
-    },
-    pointer: {
-      width: 48,
-      height: 48,
-      backgroundColor: "rgba(34, 197, 94, 0.1)",
-      border: "1px solid rgba(34, 197, 94, 0.4)",
-      x: "-50%",
-      y: "-50%",
-      opacity: 1,
-    },
-    view: {
-      width: 64,
-      height: 64,
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
-      border: "none",
-      x: "-50%",
-      y: "-50%",
-      opacity: 1,
-    },
-    hidden: {
-      width: 0,
-      height: 0,
-      opacity: 0,
-      x: "-50%",
-      y: "-50%",
-    }
-  };
+  // Map cursorType to tailwind classes for high performance shape morphing
+  let sizeClass = "w-4 h-4 bg-emerald-500/50 border border-emerald-500/80";
+  if (cursorType === "pointer") {
+    sizeClass = "w-12 h-12 bg-emerald-500/10 border border-emerald-500/40";
+  } else if (cursorType === "view") {
+    sizeClass = "w-16 h-16 bg-white/90 border-none";
+  } else if (cursorType === "hidden") {
+    sizeClass = "w-0 h-0 opacity-0";
+  }
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 pointer-events-none z-[9999] flex items-center justify-center rounded-full mix-blend-difference shadow-[0_0_20px_rgba(34,197,94,0.3)]"
+    <div
+      ref={cursorRef}
+      className={`fixed top-0 left-0 pointer-events-none z-[9999] flex items-center justify-center rounded-full mix-blend-difference shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-300 ease-out will-change-transform ${sizeClass}`}
       style={{
-        x: smoothX,
-        y: smoothY,
-        translateX: "-50%",
-        translateY: "-50%",
+        transform: "translate3d(-100px, -100px, 0) translate(-50%, -50%)",
       }}
-      variants={variants}
-      animate={cursorType}
-      transition={{ type: "spring", damping: 25, stiffness: 300, mass: 0.5 }}
     >
-      {cursorType === "view" && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          className="text-black"
-        >
-          <Search className="w-6 h-6" />
-        </motion.div>
-      )}
-    </motion.div>
+      <div 
+        ref={iconRef}
+        className={`text-black transition-all duration-300 ease-out flex items-center justify-center ${cursorType === 'view' ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
+      >
+        <Search className="w-6 h-6" />
+      </div>
+    </div>
   );
 }

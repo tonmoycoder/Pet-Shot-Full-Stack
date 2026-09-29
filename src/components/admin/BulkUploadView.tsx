@@ -34,7 +34,26 @@ export const BulkUploadView: React.FC = () => {
   return (
     <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', fontFamily: 'sans-serif' }}>
       <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Bulk Blog Uploader</h1>
-      <p style={{ color: '#666', marginBottom: '2rem' }}>Upload your CSV file to auto-create multiple blog posts.</p>
+      <p style={{ color: '#666', marginBottom: '1.5rem' }}>Upload your CSV file to auto-create multiple blog posts.</p>
+
+      <div style={{ backgroundColor: '#e0f2fe', padding: '1.5rem', borderRadius: '8px', marginBottom: '2rem', border: '1px solid #bae6fd' }}>
+        <h3 style={{ margin: '0 0 0.5rem 0', color: '#0284c7', fontSize: '1.2rem' }}>Required CSV Format</h3>
+        <p style={{ fontSize: '0.95rem', color: '#0369a1', marginBottom: '0.75rem' }}>
+          Your CSV file <strong>must</strong> contain the following exact column headers in the first row. You can copy the line below:
+        </p>
+        <div style={{ position: 'relative' }}>
+          <code style={{ display: 'block', padding: '0.75rem', backgroundColor: '#fff', border: '1px solid #bae6fd', borderRadius: '6px', marginBottom: '1rem', color: '#0f172a', fontWeight: 'bold', fontSize: '0.9rem', wordBreak: 'break-all' }}>
+            Title_EN, Title_BN, Excerpt_EN, Excerpt_BN, Content_EN, Content_BN, Cover_Image_URL, Status
+          </code>
+        </div>
+        <ul style={{ fontSize: '0.9rem', color: '#0369a1', paddingLeft: '1.5rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <li><strong>Title_EN / Title_BN:</strong> The title of the blog in English and Bengali.</li>
+          <li><strong>Excerpt_EN / Excerpt_BN:</strong> A short summary of the blog.</li>
+          <li><strong>Content_EN / Content_BN:</strong> The main body of the blog (Markdown format is supported!).</li>
+          <li><strong>Cover_Image_URL:</strong> Direct URL to an image file (e.g., https://example.com/image.jpg).</li>
+          <li><strong>Status:</strong> Use <code>published</code> or <code>draft</code> (defaults to published if left empty).</li>
+        </ul>
+      </div>
 
       <div style={{
         border: '2px dashed #ccc',

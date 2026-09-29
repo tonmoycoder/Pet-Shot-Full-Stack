@@ -37,11 +37,11 @@ const quizContent = {
       },
       {
         id: "time",
-        question: "How much daily time can you dedicate?",
+        question: "What is your preferred time commitment (lifespan)?",
         options: [
-          { value: "A", label: "Just a little (feeding & basic care)" },
-          { value: "B", label: "1-2 hours of active time" },
-          { value: "C", label: "More than 2 hours" }
+          { value: "A", label: "Short Term: 2-3 years (e.g. Betta Fish, Hamsters)" },
+          { value: "B", label: "Medium Term: 5-6 years (e.g. Dogs, Cats)" },
+          { value: "C", label: "Long Term: 9+ years (e.g. Parrots, Macaws)" }
         ]
       }
     ],
@@ -78,11 +78,11 @@ const quizContent = {
       },
       {
         id: "time",
-        question: "প্রতিদিন কতটা সময় দিতে পারবেন?",
+        question: "আপনি কতদিনের জন্য পোষা প্রাণী রাখতে চান (আয়ুষ্কাল)?",
         options: [
-          { value: "A", label: "অল্প সময় (খাবার ও সাধারণ যত্ন)" },
-          { value: "B", label: "১-২ ঘণ্টা" },
-          { value: "C", label: "২ ঘণ্টার বেশি" }
+          { value: "A", label: "স্বল্প সময়: ২-৩ বছর (যেমন বেটা ফিশ, হ্যামস্টার)" },
+          { value: "B", label: "মাঝারি সময়: ৫-৬ বছর (যেমন কুকুর, বিড়াল)" },
+          { value: "C", label: "দীর্ঘ সময়: ৯+ বছর (যেমন প্যারট, ম্যাকাও)" }
         ]
       }
     ],
@@ -139,27 +139,99 @@ export function CompatibilityQuiz() {
     setHasError(false);
 
     try {
-      const res = await fetch('/api/animals?limit=50&where[status][equals]=available');
+      const res = await fetch('/api/animals?limit=50&where[status][equals]=available', { cache: 'no-store' });
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
-      
-      const allAnimals = data.docs || [];
-      
-      // Determine recommended categories based on answers
-      let targetCategories = ['bird', 'fish', 'other'];
-      
-      if (answers.time === 'A') {
-        targetCategories = ['fish']; // minimal time -> fish
-      } else if (answers.space === 'A') {
-        targetCategories = ['fish', 'bird']; // apt but has time -> fish or bird
-      }
 
-      // Filter
-      const matched = allAnimals.filter((animal: any) => targetCategories.includes(animal.category));
-      
-      // Shuffle and pick top 3
-      const shuffled = matched.sort(() => 0.5 - Math.random());
-      setRecommendations(shuffled.slice(0, 3));
+      const allAnimals = data.docs || [];
+
+      // Deterministic scoring engine based on backend fields
+      const scoredAnimals = allAnimals.map((animal: any) => {
+        let score = 0;
+        let reasonsEn: string[] = [];
+        let reasonsBn: string[] = [];
+
+        const animalSpace = animal.spaceRequired || 'A';
+        const animalExp = animal.experienceLevel || 'A';
+        const animalTime = animal.lifespan || 'A';
+
+        // 1. Space
+        if (answers.space === animalSpace) {
+          score += 5; // Increased weight for exact match
+          if (answers.space === 'A') {
+            reasonsEn.push("Perfect for apartment living.");
+            reasonsBn.push("অ্যাপার্টমেন্টের জন্য একদম উপযুক্ত।");
+          } else if (answers.space === 'B') {
+            reasonsEn.push("Great for homes with a small yard.");
+            reasonsBn.push("ছোট উঠান থাকা বাড়ির জন্য দারুণ।");
+          } else {
+            reasonsEn.push("Thrives in large spaces.");
+            reasonsBn.push("বড় জায়গায় থাকতে পছন্দ করে।");
+          }
+        } else if (answers.space === 'C' && animalSpace !== 'C') {
+          score += 3; // User has large space, can accommodate smaller needs
+        } else if (answers.space === 'B' && animalSpace === 'A') {
+          score += 3; // User has medium space, can accommodate small needs
+        } else {
+          score -= 5; // Penalty for not having enough space
+        }
+
+        // 2. Experience
+        if (answers.experience === animalExp) {
+          score += 5; // Increased weight for exact match
+          if (answers.experience === 'A') {
+            reasonsEn.push("Great for beginners.");
+            reasonsBn.push("নতুনদের জন্য খুব ভালো।");
+          } else if (answers.experience === 'B') {
+            reasonsEn.push("Fits your prior experience.");
+            reasonsBn.push("আপনার অভিজ্ঞতার সাথে মানানসই।");
+          } else {
+            reasonsEn.push("Perfect for experienced owners.");
+            reasonsBn.push("অভিজ্ঞদের জন্য উপযুক্ত।");
+          }
+        } else if (answers.experience === 'C') {
+          score += 3; // Expert can handle anything
+        } else if (answers.experience === 'B' && animalExp === 'A') {
+          score += 3; // Prior experience can handle beginner pets
+        } else {
+          score -= 5; // Penalty for lack of experience
+        }
+
+        // 3. Time Commitment (Lifespan)
+        if (answers.time === animalTime) {
+          score += 5; // Increased weight for exact match
+          if (answers.time === 'A') {
+            reasonsEn.push("Fits a shorter time commitment.");
+            reasonsBn.push("অল্প সময়ের জন্য ভালো সঙ্গী।");
+          } else if (answers.time === 'B') {
+            reasonsEn.push("Fits a 5-6 year commitment.");
+            reasonsBn.push("৫-৬ বছরের জন্য ভালো সঙ্গী।");
+          } else {
+            reasonsEn.push("A wonderful long-term companion.");
+            reasonsBn.push("দীর্ঘ সময়ের জন্য চমৎকার সঙ্গী।");
+          }
+        }
+
+        let reasonEn = reasonsEn.join(" ");
+        let reasonBn = reasonsBn.join(" ");
+
+        if (!reasonEn) {
+          reasonEn = "A great overall match for your lifestyle.";
+          reasonBn = "আপনার জীবনযাত্রার সাথে মানানসই।";
+        }
+
+        // Add some slight randomness for tie-breaking ONLY (very small)
+        score += Math.random() * 0.1;
+
+        return {
+          ...animal,
+          score,
+          matchReason: { en: reasonEn.trim(), bn: reasonBn.trim() }
+        };
+      });
+
+      scoredAnimals.sort((a: any, b: any) => b.score - a.score);
+      setRecommendations(scoredAnimals.slice(0, 3));
     } catch (err) {
       console.error(err);
       setHasError(true);
@@ -172,14 +244,14 @@ export function CompatibilityQuiz() {
   if (currentStep === -1) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] max-w-2xl mx-auto px-4 text-center">
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className={cn("text-4xl md:text-5xl font-bold mb-6 text-zinc-900 dark:text-zinc-50", isBn ? "font-bangla" : "font-sans")}
         >
           {t.title}
         </motion.h1>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -192,7 +264,7 @@ export function CompatibilityQuiz() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <MagneticButton 
+          <MagneticButton
             onClick={startQuiz}
             className={cn("bg-emerald-700 hover:bg-emerald-800 text-white rounded-full px-6 md:px-8 py-4 md:py-6 text-base md:text-lg", isBn ? "font-bangla" : "font-sans")}
           >
@@ -211,7 +283,7 @@ export function CompatibilityQuiz() {
         <h2 className={cn("text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-50 mb-4", isBn ? "font-bangla" : "font-sans")}>
           {t.resultsTitle}
         </h2>
-        
+
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4" />
@@ -228,9 +300,10 @@ export function CompatibilityQuiz() {
                   <LiquidGlass className="group cursor-pointer transition-transform hover:-translate-y-2 h-full flex flex-col">
                     <div className="aspect-[4/3] w-full overflow-hidden relative shrink-0">
                       <Image
-                        src={pet.image} 
-                        alt={pet.name?.[language] || 'Pet'} 
+                        src={pet.image}
+                        alt={pet.name?.[language] || 'Pet'}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 33vw"
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         style={{ objectPosition: pet.objectPosition || 'center center' }}
                       />
@@ -239,8 +312,12 @@ export function CompatibilityQuiz() {
                       <h3 className={cn("text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100", isBn ? "font-bangla" : "font-sans")}>
                         {pet.name?.[language]}
                       </h3>
-                      <p className={cn("text-emerald-700 dark:text-emerald-400 font-medium mt-auto", isBn ? "font-bangla" : "font-sans")}>
+                      <p className={cn("text-emerald-700 dark:text-emerald-400 font-medium", isBn ? "font-bangla" : "font-sans")}>
                         {pet.price?.[language]}
+                      </p>
+                      <p className={cn("text-sm text-zinc-500 dark:text-zinc-400 mt-3 pt-3 border-t border-zinc-100 dark:border-zinc-800 leading-relaxed flex-1", isBn ? "font-bangla" : "font-sans")}>
+                        <span className="font-semibold block mb-1">{isBn ? "কেন সুপারিশ করা হলো:" : "Why it's a match:"}</span>
+                        {pet.matchReason?.[language]}
                       </p>
                     </div>
                   </LiquidGlass>
@@ -258,8 +335,8 @@ export function CompatibilityQuiz() {
 
         {!isLoading && (
           <div className="mt-12 flex gap-4">
-            <MagneticButton 
-              variant="outline" 
+            <MagneticButton
+              variant="outline"
               onClick={resetQuiz}
               className={cn("rounded-full border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50", isBn ? "font-bangla" : "font-sans")}
             >
@@ -283,16 +360,16 @@ export function CompatibilityQuiz() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 md:py-20 min-h-[60vh] flex flex-col justify-center">
-      
+
       {/* Progress */}
       <div className="flex gap-2 mb-12 justify-center">
         {[0, 1, 2].map((step) => (
-          <div 
-            key={step} 
+          <div
+            key={step}
             className={cn(
               "h-1.5 rounded-full transition-all duration-500",
-              step === currentStep ? "w-8 bg-emerald-600" : 
-              step < currentStep ? "w-4 bg-emerald-600/40" : "w-4 bg-zinc-200 dark:bg-zinc-800"
+              step === currentStep ? "w-8 bg-emerald-600" :
+                step < currentStep ? "w-4 bg-emerald-600/40" : "w-4 bg-zinc-200 dark:bg-zinc-800"
             )}
           />
         ))}
@@ -318,8 +395,8 @@ export function CompatibilityQuiz() {
                 onClick={() => handleSelect(question.id, opt.value as Answer)}
                 className={cn(
                   "p-5 md:p-6 rounded-2xl text-left transition-all duration-200 border-2",
-                  selectedAnswer === opt.value 
-                    ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20" 
+                  selectedAnswer === opt.value
+                    ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20"
                     : "border-transparent bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 shadow-sm",
                   isBn ? "font-bangla text-lg" : "font-sans text-lg"
                 )}
@@ -340,18 +417,18 @@ export function CompatibilityQuiz() {
           </div>
 
           <div className="flex justify-between mt-12">
-            <button 
+            <button
               onClick={handleBack}
               className={cn("flex items-center text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors font-medium", isBn ? "font-bangla" : "font-sans")}
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
               {t.back}
             </button>
-            
-            <MagneticButton 
+
+            <MagneticButton
               onClick={handleNext}
               disabled={!selectedAnswer}
-              className={cn("bg-emerald-700 hover:bg-emerald-800 text-white rounded-full px-8", 
+              className={cn("bg-emerald-700 hover:bg-emerald-800 text-white rounded-full px-8",
                 !selectedAnswer && "opacity-50 cursor-not-allowed",
                 isBn ? "font-bangla" : "font-sans"
               )}

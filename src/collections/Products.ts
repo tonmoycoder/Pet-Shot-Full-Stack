@@ -61,6 +61,15 @@ export const Products: CollectionConfig = {
               defaultValue: 'in_stock',
               required: true,
             },
+            {
+              name: 'isRareExotic',
+              type: 'checkbox',
+              label: 'এক্সক্লুসিভ কালেকশন (Rare & Exotic)?',
+              admin: {
+                description: 'হোমপেজে এক্সক্লুসিভ সেকশনে দেখাতে এখানে টিক দিন। (Check to feature in Rare & Exotic collection)',
+              },
+              defaultValue: false,
+            },
           ]
         },
         {

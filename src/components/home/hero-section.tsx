@@ -160,9 +160,10 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY, lensX, lensY, isHoveringMedia]);
 
+  const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
   const whatsappLink = storeSettings?.contact?.whatsappNumber 
     ? `https://wa.me/${storeSettings.contact.whatsappNumber.replace(/[^0-9]/g, '')}`
-    : `https://wa.me/8801947315330`;
+    : `https://wa.me/${defaultNumber}`;
 
   return (
     <section className="relative w-full min-h-[100vh] flex items-center overflow-x-hidden bg-[#fbf9f4] dark:bg-zinc-950">
@@ -358,6 +359,7 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
                 src={imageUrl}
                 alt="Beautiful Aquarium and Birds"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 priority
                 className="w-full h-full object-cover origin-center"
               />

@@ -103,15 +103,16 @@ export function FeaturedPets({ pets }: { pets: PetProp[] }) {
                   src={pet.image}
                   alt={pet.name?.en || 'Pet'}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   style={{ objectPosition: pet.objectPosition }}
                 />
                 
                 {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-20 pointer-events-none" />
                 
                 {/* Content */}
-                <div className="absolute bottom-0 left-0 w-full p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                <div className="absolute bottom-0 left-0 w-full p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out z-30">
                   <span className={cn("inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-medium mb-3 border border-white/10", fontClass)}>
                     {pet.tag?.[language as keyof typeof pet.tag]}
                   </span>

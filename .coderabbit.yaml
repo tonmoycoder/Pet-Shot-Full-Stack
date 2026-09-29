@@ -1,0 +1,24 @@
+# CodeRabbit Configuration
+# This file is used to configure the CodeRabbit PR review bot.
+
+language: "en-US"
+reviews:
+  profile: "professional"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: true
+  review_status: true
+  collapse_walkthrough: false
+  path_instructions:
+    - path: "**/*.tsx"
+      instructions: "Ensure React components follow the Next.js 14 App Router conventions and are accessible."
+    - path: "**/*.ts"
+      instructions: "Ensure strict TypeScript typing is used."
+    - path: "src/payload/**/*.ts"
+      instructions: "Ensure Payload CMS collections and globals are properly typed and documented."
+  path_filters:
+    - "!*.md"
+    - "!*.txt"
+    - "!package-lock.json"
+chat:
+  auto_reply: true

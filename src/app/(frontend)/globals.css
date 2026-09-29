@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
@@ -152,4 +153,20 @@
   0% { transform: translate(-50%, -50%); }
   50% { transform: translate(0%, 0%); }
   100% { transform: translate(-50%, -50%); }
+}
+
+@layer components {
+  .skeleton-shimmer {
+    background-size: 200% 100% !important;
+    background: linear-gradient(90deg, #e4e4e7 0px, #f4f4f5 50px, #e4e4e7 100px);
+    animation: shimmer-load 1.5s linear infinite;
+  }
+  .dark .skeleton-shimmer {
+    background: linear-gradient(90deg, #27272a 0px, #3f3f46 50px, #27272a 100px);
+  }
+}
+
+@keyframes shimmer-load {
+  0% { background-position-x: -100px; }
+  100% { background-position-x: -100%; }
 }

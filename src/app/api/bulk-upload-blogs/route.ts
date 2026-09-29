@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     let errors: string[] = [];
 
     for (let i = 0; i < records.length; i++) {
-      const row = records[i];
+      const row = records[i] as any;
       try {
         let mediaId: number | string | undefined = undefined;
 

@@ -5,7 +5,7 @@ export function markdownToLexical(markdown: string) {
   
   const tokens = marked.lexer(markdown);
 
-  function parseTokens(tokens: marked.TokensList | marked.Token[]): any[] {
+  function parseTokens(tokens: any[]): any[] {
     const nodes: any[] = [];
     
     for (const token of tokens) {
@@ -77,7 +77,7 @@ export function markdownToLexical(markdown: string) {
     return nodes;
   }
 
-  function parseInlineTokens(tokens: marked.Token[]): any[] {
+  function parseInlineTokens(tokens: any[]): any[] {
     const inlineNodes: any[] = [];
     for (const token of tokens) {
       if (token.type === 'text' || token.type === 'escape' || token.type === 'html') {

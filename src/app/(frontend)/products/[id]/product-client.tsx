@@ -66,7 +66,8 @@ export function ProductClient({ product, settings }: ProductClientProps) {
   const categoryLabel = categoryDict[product.category]?.[language] || product.category;
   
   // WhatsApp Link Generation
-  const whatsappNumber = settings?.contact?.whatsappNumber || "8801947315330";
+  const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
+  const whatsappNumber = settings?.contact?.whatsappNumber || defaultNumber;
   const whatsappMessage = encodeURIComponent(
     `Hi, I am interested in ${product.internalName} (ID: ${product.id}). Is it available?`
   );
@@ -123,6 +124,7 @@ export function ProductClient({ product, settings }: ProductClientProps) {
                     src={images[activeImageIndex].url}
                     alt={name || 'Product Image'}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                     style={{ objectPosition: "center center" }}
                   />
@@ -144,7 +146,7 @@ export function ProductClient({ product, settings }: ProductClientProps) {
                         : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
-                    <Image src={img.url} alt={`${name || 'Product'} ${idx}`} fill className="object-cover" />
+                    <Image src={img.url} alt={`${name || 'Product'} ${idx}`} fill sizes="80px" className="object-cover" />
                   </button>
                 ))}
               </div>

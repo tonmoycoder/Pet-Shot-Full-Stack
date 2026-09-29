@@ -82,20 +82,34 @@ export function BlogClient({ blogs }: { blogs: BlogPost[] }) {
                   <article className="flex flex-col h-full bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-xl shadow-zinc-200/20 dark:shadow-black/40 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                     
                     {/* Image Container */}
-                    <div className="relative w-full aspect-[16/10] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                    <div className="relative w-full aspect-[16/10] overflow-hidden bg-zinc-100 dark:bg-zinc-800/80 flex items-center justify-center border-b border-zinc-100 dark:border-zinc-800">
                       {blog.coverImage?.url ? (
-                        <Image
-                          src={blog.coverImage.url}
-                          alt={blog.title[language] || blog.title.bn}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
+                        <>
+                          {/* Ambient Blur Background */}
+                          <Image
+                            src={blog.coverImage.url}
+                            alt={blog.title[language] || blog.title.bn}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            className="object-cover blur-2xl scale-125 opacity-50 dark:opacity-40 transition-transform duration-700 group-hover:scale-[1.35] group-hover:opacity-60"
+                            wrapperClassName="z-0"
+                          />
+                          {/* Crisp Foreground Image */}
+                          <Image
+                            src={blog.coverImage.url}
+                            alt={blog.title[language] || blog.title.bn}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            className="object-contain transition-transform duration-700 group-hover:scale-105 drop-shadow-xl"
+                            wrapperClassName="z-10"
+                          />
+                        </>
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-emerald-50 dark:bg-zinc-800">
+                        <div className="w-full h-full flex items-center justify-center bg-emerald-50 dark:bg-zinc-800 relative z-10">
                           <BookOpen className="w-12 h-12 text-emerald-200 dark:text-zinc-700" />
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+                      <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500 z-20 pointer-events-none" />
                       
                       {/* Overlay Date */}
                       <div className="absolute top-4 left-4 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/20 flex items-center gap-1.5 transform transition-transform duration-500 group-hover:scale-105">
