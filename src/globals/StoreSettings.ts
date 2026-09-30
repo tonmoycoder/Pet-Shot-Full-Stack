@@ -72,7 +72,18 @@ export const StoreSettings: GlobalConfig = {
                   admin: {
                     description: 'যোগাযোগের ইমেইল (যেমন: info@petshop.com)',
                   }
+                },
+                {
+                  name: 'adminEmail',
+                  type: 'email',
+                  label: '📧 Contact Form Inbox — Admin Email',
+                  required: false,
+                  admin: {
+                    description: 'কন্টাক্ট ফর্মের সকল মেসেজ এই ইমেইলে আসবে। খালি রাখলে emailAddress ব্যবহার হবে।',
+                    placeholder: 'admin@bismillahpakhi.com',
+                  }
                 }
+
               ]
             }
           ]

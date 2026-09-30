@@ -8,17 +8,47 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
+      // --- Payload CMS / own domain ---
+      { protocol: "https", hostname: "**.vercel.app" },
+      { protocol: "https", hostname: "bismillahpakhi.com" },
+      { protocol: "https", hostname: "www.bismillahpakhi.com" },
+      // --- Image CDNs & stock photography ---
       { protocol: "https", hostname: "i.postimg.cc" },
       { protocol: "https", hostname: "images.pexels.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "web.pdx.edu" },
-      { protocol: "https", hostname: "*.supabase.co" },
-      { protocol: "https", hostname: "*.supabase.in" },
-      { protocol: "https", hostname: "**.cdninstagram.com" },
+      { protocol: "https", hostname: "cdn.pixabay.com" },
+      { protocol: "https", hostname: "pixabay.com" },
+      // --- ImgBB (popular free image hosting used in blogs) ---
+      { protocol: "https", hostname: "i.ibb.co" },
+      { protocol: "https", hostname: "ibb.co" },
+      // --- Wikipedia / Wikimedia ---
       { protocol: "https", hostname: "upload.wikimedia.org" },
+      { protocol: "https", hostname: "commons.wikimedia.org" },
+      { protocol: "https", hostname: "en.wikipedia.org" },
+      // --- Wildlife / Aquarium / Pet content sites ---
+      { protocol: "https", hostname: "www.wildlifeexplained.com" },
+      { protocol: "https", hostname: "wildlifeexplained.com" },
+      { protocol: "https", hostname: "aquariumscience.org" },
+      { protocol: "https", hostname: "www.aquariumscience.org" },
+      // --- Shopify CDN (pet product suppliers) ---
+      { protocol: "https", hostname: "cdn.shopify.com" },
+      { protocol: "https", hostname: "**.shopifycdn.com" },
+      // --- Google / Social ---
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
-      // Allow any HTTPS hostname for CMS-stored image URLs
+      { protocol: "https", hostname: "**.cdninstagram.com" },
+      { protocol: "https", hostname: "**.fbcdn.net" },
+      // --- Supabase storage ---
+      { protocol: "https", hostname: "**.supabase.co" },
+      { protocol: "https", hostname: "**.supabase.in" },
+      // --- Cloud storage & CDNs ---
+      { protocol: "https", hostname: "web.pdx.edu" },
+      { protocol: "https", hostname: "**.amazonaws.com" },
+      { protocol: "https", hostname: "**.cloudfront.net" },
+      { protocol: "https", hostname: "res.cloudinary.com" },
+      { protocol: "https", hostname: "**.imgix.net" },
+      // --- Catch-all: allows ANY future HTTPS hostname added via CMS ---
       { protocol: "https", hostname: "**" },
+
     ],
   },
   async headers() {
@@ -44,9 +74,21 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            // Note: unsafe-inline is required for Payload CMS and some Next.js dev features
-            // unsafe-eval is sometimes required for Payload rich text editors in dev mode
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.postimg.cc https://images.pexels.com https://images.unsplash.com https://web.pdx.edu https://*.supabase.co https://*.gravatar.com https://secure.gravatar.com; font-src 'self'; connect-src 'self' https://vitals.vercel-insights.com; frame-src 'self' https://www.google.com https://www.youtube.com;",
+            // CRITICAL FIX: img-src now allows ALL HTTPS sources (https:)
+            // Previous value was a strict allowlist that blocked every external
+            // CMS image URL (wildlifeexplained.com, aquariumscience.org,
+            // cdn.shopify.com, Pixabay, Wikimedia, etc.) in production.
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://va.vercel-scripts.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: blob: https:",
+              "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://api.resend.com https://bismillahpakhiandaquarium.vercel.app",
+
+              "frame-src 'self' https://www.google.com https://www.youtube.com https://maps.google.com",
+              "media-src 'self' blob:",
+            ].join("; "),
           },
         ],
       },

@@ -11,6 +11,7 @@ import { useCursor } from "@/lib/cursor-context";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { useMotionConfig } from "@/lib/motion";
 import { ShortlistButton } from "@/components/ui/shortlist-button";
+import { ImageZoom } from "@/components/ui/image-zoom";
 
 type ProductClientProps = {
   product: any;
@@ -101,38 +102,42 @@ export function ProductClient({ product, settings }: ProductClientProps) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           
-          {/* Left: Image Gallery */}
-          <div className="flex flex-col gap-4 sticky top-24">
-            <motion.div 
+          {/* Left: Image Gallery — relative on mobile, sticky on desktop */}
+          <div className="flex flex-col gap-4 relative lg:sticky lg:top-24">
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={getTransition("fluid")}
-              className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
               onMouseEnter={() => setCursorType("view")}
               onMouseLeave={() => setCursorType("default")}
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeImageIndex}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="absolute inset-0"
-                >
-                  <Image
-                    src={images[activeImageIndex].url}
-                    alt={name || 'Product Image'}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
-                    style={{ objectPosition: "center center" }}
-                  />
-                </motion.div>
-              </AnimatePresence>
+              <ImageZoom src={images[activeImageIndex].url} alt={name || "Product Image"} className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeImageIndex}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="absolute inset-0"
+                    style={{ willChange: "opacity" }}
+                  >
+                    {/* LCP: priority on the main product image */}
+                    <Image
+                      src={images[activeImageIndex].url}
+                      alt={name || 'Product Image'}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
+                      style={{ objectPosition: "center center" }}
+                      priority={activeImageIndex === 0}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </ImageZoom>
             </motion.div>
 
-            {/* Thumbnails */}
+            {/* Thumbnails — lazy loaded */}
             {images.length > 1 && (
               <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
                 {images.map((img, idx) => (
@@ -146,7 +151,7 @@ export function ProductClient({ product, settings }: ProductClientProps) {
                         : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
-                    <Image src={img.url} alt={`${name || 'Product'} ${idx}`} fill sizes="80px" className="object-cover" />
+                    <Image src={img.url} alt={`${name || 'Product'} ${idx}`} fill sizes="80px" className="object-cover" loading="lazy" />
                   </button>
                 ))}
               </div>
@@ -232,8 +237,8 @@ export function ProductClient({ product, settings }: ProductClientProps) {
         </div>
       </div>
 
-      {/* Sticky Mobile CTA */}
-      <div className="fixed bottom-0 left-0 w-full bg-white/80 dark:bg-zinc-950/80 backdrop-blur-lg border-t border-zinc-200 dark:border-zinc-800 p-4 lg:hidden z-50 flex items-center justify-between gap-4 pb-safe">
+      {/* Sticky Mobile CTA — z-[55] ensures it sits above body content but below modals/drawers */}
+      <div className="fixed bottom-0 left-0 w-full bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200 dark:border-zinc-800 p-4 lg:hidden z-[55] flex items-center justify-between gap-4 pb-safe">
         <div className="flex flex-col">
           <span className={cn("text-xs text-zinc-500 uppercase font-medium", fontClass)}>
             {t.price}

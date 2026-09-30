@@ -10,6 +10,7 @@ import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
+import { ImageZoom } from "@/components/ui/image-zoom";
 
 interface BlogPost {
   id: string;
@@ -88,12 +89,14 @@ function serializeRichText(nodes: any[], language: "en" | "bn") {
           return (
             <div key={i} className="my-8 w-full rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex justify-center">
               {url ? (
-                <img 
-                  src={url} 
-                  alt={alt || "Blog image"} 
-                  className="max-w-full h-auto object-contain rounded-2xl shadow-lg"
-                  loading="lazy"
-                />
+                <ImageZoom src={url} alt={alt || "Blog image"} className="w-full flex justify-center">
+                  <img
+                    src={url}
+                    alt={alt || "Blog image"}
+                    className="max-w-full h-auto object-contain rounded-2xl shadow-lg transition-opacity hover:opacity-90"
+                    loading="lazy"
+                  />
+                </ImageZoom>
               ) : null}
             </div>
           );
@@ -197,13 +200,17 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
           {/* Cover Image */}
           <div className="w-full aspect-[21/9] md:aspect-[2.5/1] relative bg-zinc-100 dark:bg-zinc-800 rounded-3xl overflow-hidden shadow-2xl shadow-zinc-200/50 dark:shadow-black/50 flex justify-center items-center">
             {blog.coverImage?.url ? (
-              <>
+              <ImageZoom
+                src={blog.coverImage.url}
+                alt={title}
+                className="absolute inset-0 w-full h-full"
+              >
                 {/* Ambient Blur Background */}
                 <Image
                   src={blog.coverImage.url}
                   alt={title}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 768px) 100vw, 90vw"
                   className="object-cover blur-3xl scale-110 opacity-60 dark:opacity-40"
                   wrapperClassName="z-0"
                   priority
@@ -213,12 +220,12 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
                   src={blog.coverImage.url}
                   alt={title}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 768px) 100vw, 90vw"
                   className="object-contain drop-shadow-2xl"
                   wrapperClassName="z-10"
                   priority
                 />
-              </>
+              </ImageZoom>
             ) : (
               <div className="w-full h-full bg-emerald-900/20" />
             )}
@@ -251,7 +258,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
             className="w-full lg:w-80 shrink-0 space-y-8"
           >
             {/* Share Widget */}
-            <div className="bg-white dark:bg-zinc-900 p-6 rounded-3xl shadow-xl shadow-zinc-200/20 dark:shadow-black/20 border border-zinc-100 dark:border-zinc-800/50 sticky top-32">
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-3xl shadow-xl shadow-zinc-200/20 dark:shadow-black/20 border border-zinc-100 dark:border-zinc-800/50 relative lg:sticky lg:top-32">
               <h3 className={cn(
                 "text-lg font-bold text-[#09334F] dark:text-white mb-4",
                 language === "bn" ? "font-bangla" : "font-sans"
@@ -269,7 +276,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
             </div>
 
             {/* CTA Widget */}
-            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-8 rounded-3xl text-white shadow-xl shadow-emerald-500/20 sticky top-[280px]">
+            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-8 rounded-3xl text-white shadow-xl shadow-emerald-500/20 relative lg:sticky lg:top-[280px]">
               <h3 className={cn(
                 "text-2xl font-bold mb-4",
                 language === "bn" ? "font-bangla" : "font-sans"

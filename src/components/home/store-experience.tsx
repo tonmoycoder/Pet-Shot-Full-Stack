@@ -190,21 +190,21 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-[#25D366]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           
-          {/* Water Caustics Texture — decorative only */}
+          {/* Caustic Texture Background — premium CDN version */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full overflow-hidden transform-gpu transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none opacity-20 mix-blend-overlay"
-          >
-            <Image
-              src="/assets/sourced/textures/caustics.jpg"
-              alt=""
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
+            className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
+            style={{
+              backgroundImage: "url('https://i.postimg.cc/k4s8FFgR/caust-016.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              opacity: 0.18,
+              mixBlendMode: "overlay",
+              transition: "opacity 0.7s ease",
+            }}
+          />
           
-          <div className="relative z-10 w-full lg:w-1/2 xl:w-3/5">
+          <div className="relative z-10 w-full">
             <div className="flex items-center gap-3 mb-6 px-4 py-2 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md rounded-full w-fit border border-[#25D366]/30">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75"></span>
@@ -223,7 +223,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
             </p>
           </div>
 
-          <div className="relative z-10 mt-12 flex flex-col xl:flex-row items-start xl:items-center gap-6 w-full lg:w-1/2 xl:w-3/5">
+          <div className="relative z-10 mt-8 md:mt-12 flex flex-col xl:flex-row items-start xl:items-center gap-4 w-full">
             <MagneticButton
               href={whatsappLink}
               target="_blank"

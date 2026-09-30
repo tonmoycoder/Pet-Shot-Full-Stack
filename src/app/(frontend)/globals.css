@@ -127,6 +127,14 @@
     @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
     overflow-x: hidden;
+    /* 12.2: Ensure no child can bleed beyond viewport width */
+    max-width: 100vw;
+  }
+
+  /* 12.2: Global mobile safe-padding — prevents text touching edges on 320px */
+  section, article, main {
+    box-sizing: border-box;
+    max-width: 100%;
   }
 
   .cursor-none-global,
@@ -142,6 +150,7 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome/Safari/Opera */
   }
+
 }
 
 @keyframes glass-drift {
