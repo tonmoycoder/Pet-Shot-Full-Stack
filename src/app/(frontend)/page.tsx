@@ -67,7 +67,7 @@ export default async function Home() {
     try {
       const rareRes = await payload.find({
         collection: 'animals',
-        limit: 3,
+        limit: 12,
         where: {
           and: [
             { status: { equals: 'available' } },

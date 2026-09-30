@@ -112,7 +112,7 @@ export function BlogClient({ blogs }: { blogs: BlogPost[] }) {
                       <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500 z-20 pointer-events-none" />
                       
                       {/* Overlay Date */}
-                      <div className="absolute top-4 left-4 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/20 flex items-center gap-1.5 transform transition-transform duration-500 group-hover:scale-105">
+                      <div className="absolute top-4 left-4 z-20 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/20 flex items-center gap-1.5 transform transition-transform duration-500 group-hover:scale-105">
                         <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 tracking-wide uppercase">
                           {formatDate(blog.publishedAt || new Date().toISOString())}

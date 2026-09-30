@@ -31,7 +31,7 @@ export default async function CollectionPage() {
       id: doc.id,
       isAnimal: true,
       // Animals have category: 'bird' | 'fish' | 'other'
-      category: doc.category || 'bird',
+      category: doc.isRareExotic ? 'exotic' : (doc.category || 'bird'),
       internalName: doc.internalName,
       name: doc.name || { en: doc.internalName, bn: doc.internalName },
       description: doc.description || { en: '', bn: '' },
@@ -44,7 +44,7 @@ export default async function CollectionPage() {
     ...productsData.docs.map((doc: any) => ({
       id: doc.id,
       isAnimal: false,
-      category: doc.category || 'accessories',
+      category: doc.isRareExotic ? 'exotic' : (doc.category || 'accessories'),
       internalName: doc.internalName,
       name: doc.name || { en: doc.internalName, bn: doc.internalName },
       description: doc.description || { en: '', bn: '' },

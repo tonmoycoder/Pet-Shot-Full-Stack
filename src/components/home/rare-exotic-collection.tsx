@@ -68,24 +68,25 @@ export function RareExoticCollection({ products, storeNumber = "1234567890" }: {
         </motion.h2>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-        {products && products.length > 0 ? (
-          products.map((product, index) => {
-            const productName = product.name?.[language as keyof typeof product.name] || product.name?.bn;
-            const whatsappMsg = `আমি আপনাদের এক্সক্লুসিভ কালেকশন থেকে ${productName} এর জন্য প্রি-বুকিং করতে চাই।`;
-            const whatsappLink = `https://wa.me/${storeNumber}?text=${encodeURIComponent(whatsappMsg)}`;
+      <div className="max-w-[1400px] mx-auto relative z-10">
+        <div className="flex overflow-x-auto gap-6 px-4 md:px-8 pb-12 pt-4 snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          {products && products.length > 0 ? (
+            products.map((product, index) => {
+              const productName = product.name?.[language as keyof typeof product.name] || product.name?.bn;
+              const whatsappMsg = `আমি আপনাদের এক্সক্লুসিভ কালেকশন থেকে ${productName} এর জন্য প্রি-বুকিং করতে চাই।`;
+              const whatsappLink = `https://wa.me/${storeNumber}?text=${encodeURIComponent(whatsappMsg)}`;
 
-            return (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ ...getTransition("snappy"), delay: index * 0.1 }}
-                onMouseEnter={() => setCursorType("pointer")}
-                onMouseLeave={() => setCursorType("default")}
-                className="group flex flex-col bg-zinc-900/50 backdrop-blur-md rounded-3xl overflow-hidden border border-zinc-800 hover:border-amber-500/30 transition-colors duration-500 relative"
-              >
+              return (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ ...getTransition("snappy"), delay: index * 0.1 }}
+                  onMouseEnter={() => setCursorType("pointer")}
+                  onMouseLeave={() => setCursorType("default")}
+                  className="group flex flex-col shrink-0 snap-center w-[85vw] sm:w-[380px] bg-zinc-900/50 backdrop-blur-md rounded-3xl overflow-hidden border border-zinc-800 hover:border-amber-500/30 transition-colors duration-500 relative"
+                >
                 <Link href={`/animals/${product.id}`} className="flex-1 flex flex-col">
                   {/* Image Container with Ambient Blur */}
                   <div className="relative w-full aspect-[4/3] bg-black flex items-center justify-center overflow-hidden border-b border-zinc-800 group-hover:border-amber-500/30 transition-colors duration-500">
@@ -144,16 +145,17 @@ export function RareExoticCollection({ products, storeNumber = "1234567890" }: {
               </motion.div>
             );
           })
-        ) : (
-          <div className="col-span-full py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-16 h-16 mb-4 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-              <Star className="w-6 h-6 text-zinc-500" />
+          ) : (
+            <div className="w-full py-12 flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 mb-4 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                <Star className="w-6 h-6 text-zinc-500" />
+              </div>
+              <p className={cn("text-zinc-400 text-lg", fontClass)}>
+                {t.empty}
+              </p>
             </div>
-            <p className={cn("text-zinc-400 text-lg", fontClass)}>
-              {t.empty}
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </section>
   );

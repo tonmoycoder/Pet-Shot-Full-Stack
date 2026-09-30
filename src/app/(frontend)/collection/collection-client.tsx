@@ -25,6 +25,7 @@ const TABS = [
   { id: "all", label: "সব দেখুন", labelEn: "All", icon: "🏪" },
   { id: "bird", label: "পাখি", labelEn: "Birds", icon: "🦜" },
   { id: "fish", label: "মাছ", labelEn: "Fish", icon: "🐟" },
+  { id: "exotic", label: "এক্সোটিক", labelEn: "Exotic", icon: "🦎" },
   { id: "food", label: "খাবার", labelEn: "Food", icon: "🌿" },
   { id: "accessories", label: "অ্যাক্সেসরিজ", labelEn: "Accessories", icon: "🛒" },
 ];
@@ -73,7 +74,7 @@ function ItemCard({ item, index }: { item: Item; index: number }) {
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-7xl opacity-30">
-                {item.isAnimal ? (item.category === 'bird' ? '🦜' : '🐟') : '🛒'}
+                {item.isAnimal ? (item.category === 'bird' ? '🦜' : item.category === 'exotic' ? '🦎' : '🐟') : '🛒'}
               </span>
             </div>
           )}

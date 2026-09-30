@@ -361,6 +361,8 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 priority
+                fetchPriority="high"
+                loading="eager"
                 className="w-full h-full object-cover origin-center"
               />
             </motion.div>
