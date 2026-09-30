@@ -75,13 +75,30 @@ function serializeRichText(nodes: any[], language: "en" | "bn") {
         return (
           <a
             key={i}
-            href={node.url}
-            target={node.newTab ? "_blank" : "_self"}
-            rel={node.newTab ? "noopener noreferrer" : ""}
+            href={node.fields?.url || node.url}
+            target={node.fields?.newTab || node.newTab ? "_blank" : "_self"}
+            rel={node.fields?.newTab || node.newTab ? "noopener noreferrer" : ""}
           >
             {children}
           </a>
         );
+      case "upload":
+        if (node.relationTo === "media" && node.value) {
+          const { url, alt, width, height } = node.value;
+          return (
+            <div key={i} className="my-8 w-full rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex justify-center">
+              {url ? (
+                <img 
+                  src={url} 
+                  alt={alt || "Blog image"} 
+                  className="max-w-full h-auto object-contain rounded-2xl shadow-lg"
+                  loading="lazy"
+                />
+              ) : null}
+            </div>
+          );
+        }
+        return null;
       case "paragraph":
       default:
         if (node.children?.length === 1 && node.children[0].text === "") {
