@@ -11,7 +11,7 @@ import { FloatingContact } from "@/components/layout/floating-contact";
 import { ShortlistDrawer } from "@/components/layout/shortlist-drawer";
 import { Footer } from "@/components/layout/footer";
 import { BackgroundAudio } from "@/components/layout/background-audio";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
