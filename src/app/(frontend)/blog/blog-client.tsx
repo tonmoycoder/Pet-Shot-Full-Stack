@@ -48,7 +48,7 @@ export function BlogClient({ blogs }: { blogs: BlogPost[] }) {
               language === "bn" ? "font-bangla" : "font-sans"
             )}
           >
-            {language === "bn" ? "পুষ্যিদের নিয়ে আমাদের ভাবনা" : "Thoughts, Tips & News"}
+            {language === "bn" ? "পোষা প্রাণীদের নিয়ে আমাদের ভাবনা" : "Thoughts on our Animal Pets friends"}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -59,7 +59,7 @@ export function BlogClient({ blogs }: { blogs: BlogPost[] }) {
               language === "bn" ? "font-bangla" : "font-sans"
             )}
           >
-            {language === "bn" 
+            {language === "bn"
               ? "পোষা প্রাণীর যত্ন, মজার তথ্য এবং আমাদের স্টোরের নতুন আপডেটগুলো জানুন।"
               : "Discover pet care tips, fun facts, and the latest updates from our store."}
           </motion.p>
@@ -80,7 +80,7 @@ export function BlogClient({ blogs }: { blogs: BlogPost[] }) {
               >
                 <Link href={`/blog/${blog.id}`} className="group block h-full">
                   <article className="flex flex-col h-full bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-xl shadow-zinc-200/20 dark:shadow-black/40 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                    
+
                     {/* Image Container */}
                     <div className="relative w-full aspect-[16/10] overflow-hidden bg-zinc-100 dark:bg-zinc-800/80 flex items-center justify-center border-b border-zinc-100 dark:border-zinc-800">
                       {blog.coverImage?.url ? (
@@ -110,7 +110,7 @@ export function BlogClient({ blogs }: { blogs: BlogPost[] }) {
                         </div>
                       )}
                       <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500 z-20 pointer-events-none" />
-                      
+
                       {/* Overlay Date */}
                       <div className="absolute top-4 left-4 z-20 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/20 flex items-center gap-1.5 transform transition-transform duration-500 group-hover:scale-105">
                         <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -128,7 +128,7 @@ export function BlogClient({ blogs }: { blogs: BlogPost[] }) {
                       )}>
                         {blog.title[language] || blog.title.bn}
                       </h3>
-                      
+
                       <p className={cn(
                         "text-zinc-600 dark:text-zinc-400 text-base line-clamp-3 mb-8 flex-1 leading-relaxed",
                         language === "bn" ? "font-bangla" : "font-sans"

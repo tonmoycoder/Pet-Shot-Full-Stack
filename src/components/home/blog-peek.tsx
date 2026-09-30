@@ -31,7 +31,7 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
   return (
     <section className="py-24 relative bg-zinc-50 dark:bg-zinc-900/40 border-t border-zinc-100 dark:border-zinc-800/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div className="max-w-2xl">
@@ -45,10 +45,10 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
               "text-4xl md:text-5xl font-bold text-[#09334F] dark:text-white mb-4 leading-tight",
               language === "bn" ? "font-bangla" : "font-sans"
             )}>
-              {language === "bn" ? "পুষ্যিদের নিয়ে আমাদের ভাবনা" : "Thoughts on our furry friends"}
+              {language === "bn" ? "পোষা প্রাণীদের নিয়ে আমাদের ভাবনা" : "Thoughts on our Animal Pets friends"}
             </h2>
           </div>
-          
+
           <Link
             href="/blog"
             className={cn(
@@ -73,7 +73,7 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
             >
               <Link href={`/blog/${blog.id}`} className="group block h-full">
                 <article className="flex flex-col h-full bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-lg shadow-zinc-200/20 dark:shadow-black/20 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                  
+
                   {/* Image Container */}
                   <div className="relative w-full aspect-[16/10] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                     {blog.coverImage?.url ? (
@@ -106,7 +106,7 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
                     )}>
                       {blog.title[language] || blog.title.bn}
                     </h3>
-                    
+
                     <p className={cn(
                       "text-zinc-500 dark:text-zinc-400 text-sm line-clamp-3 mb-6 flex-1 leading-relaxed",
                       language === "bn" ? "font-bangla" : "font-sans"

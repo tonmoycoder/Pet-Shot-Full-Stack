@@ -50,7 +50,7 @@ export const Media: CollectionConfig = {
     create: () => true, // Allow public uploads for reviews
   },
   upload: {
-    staticDir: 'media',
+    staticDir: 'public/media',
     imageSizes: [
       {
         name: 'thumbnail',
