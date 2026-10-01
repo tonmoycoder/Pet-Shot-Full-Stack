@@ -37,6 +37,7 @@ export function ShortlistProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Failed to load shortlist from localStorage', error);
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsHydrated(true);
   }, []);
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { cn } from "cn";
 import { MapPin, MessageCircle, Map, Clock, Video } from "lucide-react";
 import { useMotionConfig } from "@/lib/motion";
@@ -60,8 +60,8 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
   const { setCursorType } = useCursor();
   const t = heroDict[language];
 
-  // Resolve hero image url
-  const imageUrl = typeof heroImage === 'object' && heroImage?.url ? heroImage.url : "https://i.postimg.cc/vB1xfSwz/hero.png";
+  // Resolve hero image url - use local WebP fallback for best LCP
+  const imageUrl = typeof heroImage === 'object' && heroImage?.url ? heroImage.url : "/images/hero.webp";
 
   // ── Store open/closed status (synced with backend) ──────────────────
   const [isStoreOpen, setIsStoreOpen] = React.useState<boolean | null>(null);
@@ -125,9 +125,8 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
   const badge1X = useTransform(smoothMouseX, [-1, 1], [-18, 18]);
   const badge2X = useTransform(smoothMouseX, [-1, 1], [15, -15]);
 
-  // Scroll Parallax for badges
-  const { scrollYProgress } = useScroll();
-  const badgeScrollY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
+  // Scroll Parallax for badges (lightweight motion value)
+  const badgeScrollY = useMotionValue(0);
 
   // Local Lens Setup (for the image surface)
   const mediaRef = React.useRef<HTMLDivElement>(null);
@@ -148,7 +147,6 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
       // Local tracking for lens
       if (isHoveringMedia && mediaRef.current) {
         const rect = mediaRef.current.getBoundingClientRect();
-        // Calculate position relative to the center of the media container
         const lx = e.clientX - rect.left - rect.width / 2;
         const ly = e.clientY - rect.top - rect.height / 2;
         lensX.set(lx);
@@ -156,7 +154,8 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
       }
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    // { passive: true } prevents blocking scroll/input thread → improves INP/TBT
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY, lensX, lensY, isHoveringMedia]);
 
@@ -166,7 +165,7 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
     : `https://wa.me/${defaultNumber}`;
 
   return (
-    <section className="relative w-full min-h-[100vh] flex items-center overflow-x-hidden bg-[#fbf9f4] dark:bg-zinc-950">
+    <section className="relative w-full min-h-[100svh] flex items-center overflow-x-hidden bg-[#fbf9f4] dark:bg-zinc-950">
       
       {/* Caustics Fallback Background */}
       <CausticsBackground />
@@ -180,40 +179,42 @@ export function HeroSection({ heroImage, storeSettings }: { heroImage?: any; sto
         {/* Left Column (Editorial Content) */}
         <div className="flex-1 flex flex-col items-start w-full max-w-xl z-20">
           
-          {/* Eyebrow Status — synced with backend hours */}
-          {isStoreOpen !== null && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...getTransition("fluid"), delay: 0.1 }}
-              className={cn(
-                "flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full border transition-colors duration-500",
-                isStoreOpen === false
-                  ? "bg-red-50/60 dark:bg-red-950/30 border-red-200/50 dark:border-red-800/50"
-                  : "bg-emerald-100/50 dark:bg-emerald-900/30 border-emerald-200/50 dark:border-emerald-800/50"
-              )}
-            >
-              <div className="relative flex h-2 w-2">
+          {/* Eyebrow Status — synced with backend hours (Wrapped to prevent CLS) */}
+          <div className="min-h-[36px] mb-6 flex items-center">
+            {isStoreOpen !== null && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ ...getTransition("fluid"), delay: 0.1 }}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors duration-500",
+                  isStoreOpen === false
+                    ? "bg-red-50/60 dark:bg-red-950/30 border-red-200/50 dark:border-red-800/50"
+                    : "bg-emerald-100/50 dark:bg-emerald-900/30 border-emerald-200/50 dark:border-emerald-800/50"
+                )}
+              >
+                <div className="relative flex h-2 w-2">
+                  <span className={cn(
+                    "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
+                    isStoreOpen === false ? "bg-red-400" : "bg-emerald-500"
+                  )} />
+                  <span className={cn(
+                    "relative inline-flex rounded-full h-2 w-2",
+                    isStoreOpen === false ? "bg-red-500" : "bg-emerald-500"
+                  )} />
+                </div>
                 <span className={cn(
-                  "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
-                  isStoreOpen === false ? "bg-red-400" : "bg-emerald-500"
-                )} />
-                <span className={cn(
-                  "relative inline-flex rounded-full h-2 w-2",
-                  isStoreOpen === false ? "bg-red-500" : "bg-emerald-500"
-                )} />
-              </div>
-              <span className={cn(
-                "text-xs font-bold tracking-wider",
-                isStoreOpen === false
-                  ? "text-red-600 dark:text-red-400"
-                  : "text-emerald-700 dark:text-emerald-400",
-                language === "bn" ? "font-bangla" : "font-sans"
-              )}>
-                {isStoreOpen === false ? t.liveStatusClosed : t.liveStatusOpen}
-              </span>
-            </motion.div>
-          )}
+                  "text-xs font-bold tracking-wider",
+                  isStoreOpen === false
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-emerald-700 dark:text-emerald-400",
+                  language === "bn" ? "font-bangla" : "font-sans"
+                )}>
+                  {isStoreOpen === false ? t.liveStatusClosed : t.liveStatusOpen}
+                </span>
+              </motion.div>
+            )}
+          </div>
 
           {/* Editorial Headline */}
           <motion.h1

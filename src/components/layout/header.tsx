@@ -90,7 +90,7 @@ export function Header() {
             {/* Circular Professional Logo */}
             <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-border shadow-sm group-hover:scale-105 transition-transform duration-300">
               <Image 
-                src="/images/logo.png" 
+                src="/images/logo.webp" 
                 alt="Bismillah Pakhi & Aquarium Logo" 
                 fill 
                 className="object-cover"

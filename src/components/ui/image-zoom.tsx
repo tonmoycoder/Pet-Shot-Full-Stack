@@ -57,13 +57,15 @@ export function ImageZoom({ src, alt, children, className }: ImageZoomProps) {
 
   // Refs for gesture tracking
   const imgRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(false);
   const lastMouse = useRef({ x: 0, y: 0 });
   const lastTouches = useRef<React.Touch[] | null>(null);
   const lastPinchDist = useRef<number | null>(null);
   const lastPinchMid = useRef<{ x: number; y: number } | null>(null);
 
   // Portal mounting
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMounted(true); }, []);
 
   const resetTransform = useCallback(() => {
@@ -117,27 +119,31 @@ export function ImageZoom({ src, alt, children, className }: ImageZoomProps) {
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     if (scale <= 1) return;
     e.preventDefault();
-    isDragging.current = true;
+    setIsDragging(true);
+    isDraggingRef.current = true;
     lastMouse.current = { x: e.clientX, y: e.clientY };
   }, [scale]);
 
   const onMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging.current) return;
+    if (!isDraggingRef.current) return;
     const dx = e.clientX - lastMouse.current.x;
     const dy = e.clientY - lastMouse.current.y;
     lastMouse.current = { x: e.clientX, y: e.clientY };
     setOffset(o => ({ x: o.x + dx, y: o.y + dy }));
   }, []);
 
-  const stopDrag = useCallback(() => { isDragging.current = false; }, []);
+  const stopDrag = useCallback(() => { 
+    setIsDragging(false);
+    isDraggingRef.current = false; 
+  }, []);
 
   // ── Touch: pinch + pan ───────────────────────────────────────────────────────
-  const getTouchDist = (t1: Touch, t2: Touch) => {
+  const getTouchDist = (t1: React.Touch, t2: React.Touch) => {
     const dx = t1.clientX - t2.clientX;
     const dy = t1.clientY - t2.clientY;
     return Math.sqrt(dx * dx + dy * dy);
   };
-  const getTouchMid = (t1: Touch, t2: Touch) => ({
+  const getTouchMid = (t1: React.Touch, t2: React.Touch) => ({
     x: (t1.clientX + t2.clientX) / 2,
     y: (t1.clientY + t2.clientY) / 2,
   });
@@ -207,7 +213,7 @@ export function ImageZoom({ src, alt, children, className }: ImageZoomProps) {
 
   // ── Cursor style ────────────────────────────────────────────────────────────
   const cursorStyle = scale > 1
-    ? isDragging.current ? "grabbing" : "grab"
+    ? isDragging ? "grabbing" : "grab"
     : "zoom-in";
 
   // ── Lightbox ────────────────────────────────────────────────────────────────
@@ -224,7 +230,7 @@ export function ImageZoom({ src, alt, children, className }: ImageZoomProps) {
           style={{ background: "rgba(0,0,0,0.92)", backdropFilter: "blur(4px)" }}
           // Click backdrop = close (only if not dragging)
           onClick={(e) => {
-            if (e.target === e.currentTarget && !isDragging.current) closeLightbox();
+            if (e.target === e.currentTarget && !isDragging) closeLightbox();
           }}
         >
           {/* ── Controls bar ──────────────────────────────────────────────── */}
@@ -296,26 +302,35 @@ export function ImageZoom({ src, alt, children, className }: ImageZoomProps) {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            <motion.img
-              src={src}
-              alt={alt}
-              draggable={false}
+            <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
-                transformOrigin: "center center",
-                transition: isDragging.current ? "none" : "transform 0.05s ease",
-                maxWidth: "90vw",
-                maxHeight: "90vh",
-                objectFit: "contain",
-                borderRadius: 12,
-                userSelect: "none",
-                WebkitUserSelect: "none",
-                pointerEvents: "none", // prevent native img drag
-              }}
-            />
+              className="flex items-center justify-center w-full h-full"
+            >
+              <motion.img
+                src={src}
+                alt={alt}
+                draggable={false}
+                animate={{
+                  x: offset.x,
+                  y: offset.y,
+                  scale: scale,
+                }}
+                transition={
+                  isDragging ? { duration: 0 } : { type: "tween", duration: 0.05, ease: "easeOut" }
+                }
+                style={{
+                  maxWidth: "90vw",
+                  maxHeight: "90vh",
+                  objectFit: "contain",
+                  borderRadius: 12,
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  pointerEvents: "none", // prevent native img drag
+                }}
+              />
+            </motion.div>
           </div>
         </motion.div>
       )}

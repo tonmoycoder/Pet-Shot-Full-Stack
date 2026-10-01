@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { Resend } from 'resend';
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,17 +42,19 @@ export async function POST(req: NextRequest) {
     );
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${waText}`;
 
-    // ── Send email via Resend (if configured) ─────────────────────────────────
+    // ── Send email via Resend SDK ─────────────────────────────────────────────
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
     let emailSent = false;
 
     if (RESEND_API_KEY) {
-      const emailBody = {
-        from: "Contact Form <noreply@bismillahpakhi.com>",
-        to: [toEmail],
-        reply_to: email || undefined,
-        subject: `[বিসমিল্লাহ পাখি] ${lang === "bn" ? "নতুন বার্তা" : "New Message"} — ${name}`,
-        html: `
+      try {
+        const resend = new Resend(RESEND_API_KEY);
+        const { data, error } = await resend.emails.send({
+          from: "Bismillah Pakhi <onboarding@resend.dev>", // ⚠️ Resend requires onboarding@resend.dev or verified domain
+          to: [toEmail], // ⚠️ Must be your verified Resend email unless domain is verified
+          replyTo: email || undefined,
+          subject: `[বিসমিল্লাহ পাখি] ${lang === "bn" ? "নতুন বার্তা" : "New Message"} — ${name}`,
+          html: `
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"></head>
@@ -74,27 +77,22 @@ export async function POST(req: NextRequest) {
       <a href="${whatsappUrl}" style="display:inline-block; padding:12px 24px; background:#25D366; color:white; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">💬 WhatsApp-এ রিপ্লাই দিন</a>
     </div>
   </div>
-  <div style="padding:16px 32px; text-align:center; font-size:11px; color:#9ca3af;">
-    বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম • bismillahpakhiandaquarium.vercel.app
-  </div>
 </body>
 </html>`,
-      };
-
-      try {
-        const res = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${RESEND_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(emailBody),
         });
-        emailSent = res.ok;
-      } catch {
-        // Email failure is non-fatal — WhatsApp fallback still works
+
+        if (error) {
+          console.error("[Resend Error]:", error);
+          emailSent = false;
+        } else {
+          emailSent = true;
+        }
+      } catch (err) {
+        console.error("[Resend Exception]:", err);
         emailSent = false;
       }
+    } else {
+      console.warn("RESEND_API_KEY is not set in environment variables");
     }
 
     return NextResponse.json({

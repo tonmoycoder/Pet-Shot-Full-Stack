@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "cn";
 import { MapPin, Phone, MessageCircle, Bird, Fish, ShoppingBag, Home, Mail } from "lucide-react";
@@ -110,8 +111,14 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-xl shadow-lg">
-                🦜
+              <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-zinc-800 shadow-sm">
+                <Image 
+                  src="/images/logo.webp" 
+                  alt="Bismillah Pakhi & Aquarium Logo" 
+                  fill 
+                  className="object-cover"
+                  sizes="48px"
+                />
               </div>
               <div>
                 <div className="font-extrabold text-lg leading-tight">বিসমিল্লাহ পাখি</div>
@@ -119,7 +126,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-zinc-400 text-sm leading-relaxed mb-6">{t.desc}</p>
-            <div className="flex items-center gap-2 text-sm text-zinc-500">
+            <div className="flex items-center gap-2 text-sm text-zinc-400">
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               {t.hours}
             </div>
@@ -127,9 +134,9 @@ export function Footer() {
 
           {/* Collections */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest text-zinc-500 mb-6">
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-zinc-400 mb-6">
               {t.collectionsTitle}
-            </h4>
+            </h3>
             <ul className="space-y-3">
               {t.collections.map((link, idx) => (
                 <li key={idx}>
@@ -147,9 +154,9 @@ export function Footer() {
 
           {/* Pages */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest text-zinc-500 mb-6">
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-zinc-400 mb-6">
               {t.linksTitle}
-            </h4>
+            </h3>
             <ul className="space-y-3">
               {t.links.map((link, idx) => (
                 <li key={idx}>
@@ -167,9 +174,9 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest text-zinc-500 mb-6">
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-zinc-400 mb-6">
               {t.contactTitle}
-            </h4>
+            </h3>
             <ul className="space-y-4">
               <li>
                 <a
@@ -201,7 +208,7 @@ export function Footer() {
 
         {/* Copyright Strip */}
         <div className="border-t border-white/5">
-          <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6 text-zinc-600 text-sm">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6 text-zinc-400 text-sm">
             <div className="flex flex-col md:flex-row items-center gap-4">
               <span>{t.copyright}</span>
               <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full text-xs font-semibold text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
@@ -218,7 +225,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="group flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10 hover:border-white/20 transition-all"
             >
-              <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors text-xs">
+              <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors text-xs">
                 {t.devBy}
               </span>
               <span className="text-xs font-bold text-[#67D8CE] group-hover:text-emerald-400 transition-colors flex items-center gap-1.5">

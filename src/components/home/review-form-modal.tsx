@@ -159,6 +159,7 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
               <button
                 onClick={onClose}
                 disabled={isSubmitting}
+                aria-label="Close"
                 className="p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50"
               >
                 <X className="w-5 h-5 text-muted-foreground" />
@@ -250,6 +251,7 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
                               <button
                                 type="button"
                                 onClick={clearPhoto}
+                                aria-label="Remove photo"
                                 className="absolute top-1 right-1 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 transition-colors"
                               >
                                 <X className="w-3 h-3" />
@@ -275,10 +277,11 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
                       </div>
 
                       <div>
-                        <label className={cn("block text-sm font-medium mb-1.5", language === "bn" ? "font-bangla" : "font-sans")}>
+                        <label htmlFor="name" className={cn("block text-sm font-medium mb-1.5", language === "bn" ? "font-bangla" : "font-sans")}>
                           {language === "bn" ? "আপনার নাম" : "Your Name"} <span className="text-red-500">*</span>
                         </label>
                         <input
+                          id="name"
                           type="text"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
@@ -289,10 +292,11 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
                       </div>
 
                       <div>
-                        <label className={cn("block text-sm font-medium mb-1.5", language === "bn" ? "font-bangla" : "font-sans")}>
+                        <label htmlFor="role" className={cn("block text-sm font-medium mb-1.5", language === "bn" ? "font-bangla" : "font-sans")}>
                           {language === "bn" ? "পদবি বা পরিচয় (ঐচ্ছিক)" : "Role / Title (Optional)"}
                         </label>
                         <input
+                          id="role"
                           type="text"
                           value={role}
                           onChange={(e) => setRole(e.target.value)}
@@ -302,10 +306,11 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
                       </div>
 
                       <div>
-                        <label className={cn("block text-sm font-medium mb-1.5", language === "bn" ? "font-bangla" : "font-sans")}>
+                        <label htmlFor="review" className={cn("block text-sm font-medium mb-1.5", language === "bn" ? "font-bangla" : "font-sans")}>
                           {language === "bn" ? "আপনার মতামত" : "Your Review"} <span className="text-red-500">*</span>
                         </label>
                         <textarea
+                          id="review"
                           value={review}
                           onChange={(e) => setReview(e.target.value)}
                           required

@@ -17,12 +17,16 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap", // Prevent invisible text (FOIT) → reduces CLS
+  preload: true,
 });
 
 const notoSerifBengali = Noto_Serif_Bengali({
   variable: "--font-bangla",
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["bengali"],
+  display: "swap", // Prevent invisible text (FOIT) → reduces CLS
+  preload: true, // Primary font for Bengali content — must preload to prevent massive CLS
 });
 
 export const metadata: Metadata = {
@@ -33,6 +37,9 @@ export const metadata: Metadata = {
   },
   description: "Your trusted destination for premium birds, aquariums, and pet accessories in Chuadanga. Quality pets, expert advice.",
   keywords: ["pet shop", "chuadanga", "birds", "aquarium", "pet accessories", "dog", "cat", "fish"],
+  icons: {
+    icon: "/images/logo.webp",
+  },
   openGraph: {
     title: "Bismillah Pakhi & Aquarium",
     description: "Premium birds, aquariums, and pet accessories in Chuadanga.",

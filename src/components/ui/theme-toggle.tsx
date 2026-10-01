@@ -27,6 +27,7 @@ export function ThemeToggle() {
         className="toggle--checkbox"
         checked={isDark}
         onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+        aria-label="Toggle Theme"
       />
       <label className="toggle--btn" htmlFor="toggle--daynight-btn">
         <span className="toggle--feature"></span>

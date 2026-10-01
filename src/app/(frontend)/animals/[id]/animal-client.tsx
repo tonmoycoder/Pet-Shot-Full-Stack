@@ -11,6 +11,7 @@ import { useCursor } from "@/lib/cursor-context";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { useMotionConfig } from "@/lib/motion";
 import { ShortlistButton } from "@/components/ui/shortlist-button";
+import { ImageZoom } from "@/components/ui/image-zoom";
 
 type AnimalClientProps = {
   animal: any;
@@ -97,34 +98,35 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           
           {/* Left: Image Gallery */}
-          <div className="flex flex-col gap-4 sticky top-24">
+          <div className="flex flex-col gap-4 relative lg:sticky lg:top-24">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={getTransition("fluid")}
-              className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
               onMouseEnter={() => setCursorType("view")}
               onMouseLeave={() => setCursorType("default")}
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeImageIndex}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="absolute inset-0"
-                >
-                  <Image
-                    src={images[activeImageIndex].url}
-                    alt={name || 'Animal'}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
-                    style={{ objectPosition: activeImageIndex === 0 ? animal.objectPosition : "center center" }}
-                  />
-                </motion.div>
-              </AnimatePresence>
+              <ImageZoom src={images[activeImageIndex].url} alt={name || "Animal Image"} className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeImageIndex}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={images[activeImageIndex].url}
+                      alt={name || 'Animal'}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
+                      style={{ objectPosition: activeImageIndex === 0 ? animal.objectPosition : "center center" }}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </ImageZoom>
             </motion.div>
 
             {/* Thumbnails */}

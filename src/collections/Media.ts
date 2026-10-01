@@ -2,10 +2,17 @@ import type { CollectionConfig, CollectionBeforeValidateHook } from 'payload';
 import { revalidateCollection } from '../lib/revalidate';
 
 const fetchImageFromUrl: CollectionBeforeValidateHook = async ({ data, req }) => {
-  if (data?.sourceUrl) {
+  if (data?.sourceUrl && !req.file && (!req.files || !req.files.file)) {
     try {
-      const response = await fetch(data.sourceUrl);
-      if (!response.ok) throw new Error('Failed to fetch image');
+      const response = await fetch(data.sourceUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status} ${response.statusText}`);
+      }
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       
@@ -25,6 +32,7 @@ const fetchImageFromUrl: CollectionBeforeValidateHook = async ({ data, req }) =>
       };
     } catch (error) {
       console.error('Error fetching image from URL:', error);
+      throw new Error(`Failed to download image from source URL: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   return data;

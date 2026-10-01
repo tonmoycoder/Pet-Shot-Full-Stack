@@ -120,8 +120,18 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
   const content = rawContent?.root?.children || rawContent; // Support Lexical format
   
   const renderContent = () => {
+    const markdownComponents = {
+      img: (props: any) => (
+        <div className="my-8 w-full flex justify-center">
+          <ImageZoom src={props.src || ""} alt={props.alt || "Blog image"} className="w-full flex justify-center">
+            <img {...props} className="max-w-full h-auto object-contain rounded-2xl shadow-lg transition-opacity hover:opacity-90" loading="lazy" />
+          </ImageZoom>
+        </div>
+      )
+    };
+
     if (typeof content === 'string') {
-       return <ReactMarkdown remarkPlugins={[remarkBreaks]}>{content.replace(/\\n/g, '\n')}</ReactMarkdown>;
+       return <ReactMarkdown remarkPlugins={[remarkBreaks]} components={markdownComponents}>{content.replace(/\\n/g, '\n')}</ReactMarkdown>;
     }
     
     // Check if it's a bad AST dump (e.g. from CSV)
@@ -139,7 +149,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
        
        if (allText.includes('\\n') || allText.includes('# ') || allText.includes('\n')) {
           const sanitized = allText.replace(/\\n/g, '\n');
-          return <ReactMarkdown remarkPlugins={[remarkBreaks]}>{sanitized}</ReactMarkdown>;
+          return <ReactMarkdown remarkPlugins={[remarkBreaks]} components={markdownComponents}>{sanitized}</ReactMarkdown>;
        }
     }
 

@@ -67,6 +67,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       window.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "";
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery("");
       setResults([]);
     }

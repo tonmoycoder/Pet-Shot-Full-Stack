@@ -129,11 +129,11 @@ export function DiscoveryBento({ discoveryCards }: { discoveryCards?: any }) {
   const containerRef = useRef(null);
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
 
-  // Resolve images from CMS or fallback
-  const birdsImage = typeof discoveryCards?.birdsImage === 'object' && discoveryCards?.birdsImage?.url ? discoveryCards.birdsImage.url : "https://i.postimg.cc/bNPvJnK0/Bird.jpg";
-  const aquariumImage = typeof discoveryCards?.aquariumImage === 'object' && discoveryCards?.aquariumImage?.url ? discoveryCards.aquariumImage.url : "https://i.postimg.cc/y6ZK0Nmq/aquarium.jpg";
-  const foodImage = typeof discoveryCards?.foodImage === 'object' && discoveryCards?.foodImage?.url ? discoveryCards.foodImage.url : "https://i.postimg.cc/65nrvCbQ/food.jpg";
-  const accessoriesImage = typeof discoveryCards?.accessoriesImage === 'object' && discoveryCards?.accessoriesImage?.url ? discoveryCards.accessoriesImage.url : "https://i.postimg.cc/W1QcHL6b/accecories.jpg";
+  // Resolve images from CMS or local WebP fallback
+  const birdsImage = typeof discoveryCards?.birdsImage === 'object' && discoveryCards?.birdsImage?.url ? discoveryCards.birdsImage.url : "/images/bento/birds.webp";
+  const aquariumImage = typeof discoveryCards?.aquariumImage === 'object' && discoveryCards?.aquariumImage?.url ? discoveryCards.aquariumImage.url : "/images/bento/aquarium.webp";
+  const foodImage = typeof discoveryCards?.foodImage === 'object' && discoveryCards?.foodImage?.url ? discoveryCards.foodImage.url : "/images/bento/food.webp";
+  const accessoriesImage = typeof discoveryCards?.accessoriesImage === 'object' && discoveryCards?.accessoriesImage?.url ? discoveryCards.accessoriesImage.url : "/images/bento/accessories.webp";
 
   return (
     <section ref={containerRef} className="py-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full relative z-20">

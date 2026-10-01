@@ -4,13 +4,17 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'paylo
 export const revalidateCollection = (collectionSlug: string): CollectionAfterChangeHook & CollectionAfterDeleteHook => {
   return ({ doc, req: { context } }: { doc: any; req: { context: any } }) => {
     if (!context.disableRevalidate) {
-      // Revalidate the global layout/index
-      revalidatePath('/');
-      // Revalidate specific tags if used in fetch
-      // @ts-ignore
-      revalidateTag(collectionSlug);
-      
-      console.log(`Revalidated cache for collection: ${collectionSlug}`);
+      try {
+        // Revalidate the global layout/index
+        revalidatePath('/');
+        // Revalidate specific tags if used in fetch
+        // @ts-ignore
+        revalidateTag(collectionSlug);
+        
+        console.log(`Revalidated cache for collection: ${collectionSlug}`);
+      } catch (err: any) {
+        console.error(`Failed to revalidate collection ${collectionSlug}:`, err);
+      }
     }
     return doc;
   };
@@ -19,11 +23,15 @@ export const revalidateCollection = (collectionSlug: string): CollectionAfterCha
 export const revalidateGlobal = (globalSlug: string): any => {
   return ({ doc, req: { context } }: { doc: any; req: { context: any } }) => {
     if (!context.disableRevalidate) {
-      revalidatePath('/');
-      // @ts-ignore
-      revalidateTag(globalSlug);
-      
-      console.log(`Revalidated cache for global: ${globalSlug}`);
+      try {
+        revalidatePath('/');
+        // @ts-ignore
+        revalidateTag(globalSlug);
+        
+        console.log(`Revalidated cache for global: ${globalSlug}`);
+      } catch (err: any) {
+        console.error(`Failed to revalidate global ${globalSlug}:`, err);
+      }
     }
     return doc;
   };

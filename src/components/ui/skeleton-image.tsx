@@ -19,14 +19,16 @@ export function SkeletonImage({
   sizes,
   ...props
 }: SkeletonImageProps) {
-  const [isLoading, setIsLoading] = useState(true);
+  // If priority is set, bypass skeleton to immediately paint LCP
+  const isPriority = props.priority;
+  const [isLoading, setIsLoading] = useState(!isPriority);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    if (imgRef.current?.complete) {
+    if (!isPriority && imgRef.current?.complete) {
       setIsLoading(false);
     }
-  }, []);
+  }, [isPriority]);
 
   return (
     <div className={cn(
@@ -35,12 +37,14 @@ export function SkeletonImage({
       wrapperClassName
     )}>
       {/* Skeleton Background */}
-      <div 
-        className={cn(
-          "absolute inset-0 transition-opacity duration-500 z-0",
-          isLoading ? "skeleton-shimmer opacity-100" : "opacity-0 pointer-events-none"
-        )} 
-      />
+      {!isPriority && (
+        <div 
+          className={cn(
+            "absolute inset-0 transition-opacity duration-500 z-0",
+            isLoading ? "skeleton-shimmer opacity-100" : "opacity-0 pointer-events-none"
+          )} 
+        />
+      )}
       
       <Image
         ref={imgRef}
@@ -50,14 +54,14 @@ export function SkeletonImage({
         className={cn(
           "transition-all duration-700 ease-in-out z-10",
           className,
-          isLoading && "scale-105 blur-md opacity-0"
+          isLoading && !isPriority && "scale-105 blur-md opacity-0"
         )}
         onLoad={(e) => {
-          setIsLoading(false);
+          if (!isPriority) setIsLoading(false);
           if (onLoad) onLoad(e);
         }}
         onError={(e) => {
-          setIsLoading(false);
+          if (!isPriority) setIsLoading(false);
           if (onError) onError(e);
         }}
         {...props}

@@ -108,8 +108,8 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
                     />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50 to-zinc-100 dark:from-zinc-800 dark:to-zinc-900 p-6 text-center">
-                      <ImageIcon className="w-16 h-16 text-zinc-300 dark:text-zinc-700 mb-4" strokeWidth={1} />
-                      <p className={cn("text-zinc-400 dark:text-zinc-500 text-sm", language === "bn" ? "font-bangla" : "font-sans")}>
+                      <ImageIcon className="w-16 h-16 text-zinc-400 dark:text-zinc-600 mb-4" strokeWidth={1} />
+                      <p className={cn("text-zinc-500 dark:text-zinc-400 text-sm", language === "bn" ? "font-bangla" : "font-sans")}>
                         {language === "bn" ? "ইউজার কোনো ছবি প্রদান করেনি" : "No photo provided"}
                       </p>
                     </div>
@@ -145,11 +145,11 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
 
                   {/* Author Info */}
                   <div className="mt-auto">
-                    <h4 className={cn("text-base font-bold text-[#09334F] dark:text-white", language === "bn" ? "font-bangla" : "font-sans")}>
+                    <h3 className={cn("text-base font-bold text-[#09334F] dark:text-white", language === "bn" ? "font-bangla" : "font-sans")}>
                       {testimonial.authorName}
-                    </h4>
+                    </h3>
                     {testimonial.authorRole && (
-                      <p className={cn("text-sm text-zinc-500 dark:text-emerald-100/60 mt-1", language === "bn" ? "font-bangla" : "font-sans")}>
+                      <p className={cn("text-sm text-zinc-600 dark:text-emerald-100/60 mt-1", language === "bn" ? "font-bangla" : "font-sans")}>
                         {testimonial.authorRole[language] || testimonial.authorRole.bn}
                       </p>
                     )}
