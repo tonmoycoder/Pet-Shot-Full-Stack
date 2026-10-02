@@ -1,10 +1,8 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { cn } from "cn";
 import { useLanguage } from "@/lib/language-context";
-import { useMotionConfig } from "@/lib/motion";
 
 const trustDict = {
   bn: {
@@ -33,7 +31,6 @@ const trustDict = {
 
 export function TrustStrip() {
   const { language } = useLanguage();
-  const { getTransition } = useMotionConfig();
   const t = trustDict[language];
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
 
@@ -52,12 +49,8 @@ export function TrustStrip() {
         <div className="flex flex-col md:flex-row items-center gap-6 md:gap-0">
 
           {/* Live open signal — left side */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ ...getTransition("snappy"), delay: 0 }}
-            className="flex items-center gap-3 md:mr-10 shrink-0"
+          <div
+            className="flex items-center gap-3 md:mr-10 shrink-0 animate-in fade-in slide-in-from-left-4 duration-700 ease-out"
           >
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#67D8CE] opacity-75" />
@@ -67,7 +60,7 @@ export function TrustStrip() {
               <span className="text-[#67D8CE] text-sm font-bold tracking-wide">{t.openNow}</span>
               <span className="text-white/40 text-xs">{t.liveTime}</span>
             </div>
-          </motion.div>
+          </div>
 
           {/* Divider */}
           <div className="hidden md:block h-8 w-px bg-white/10 mr-10 shrink-0" />
@@ -75,23 +68,20 @@ export function TrustStrip() {
           {/* Trust signals */}
           <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 w-full md:w-auto">
             {t.signals.map((signal, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ ...getTransition("snappy"), delay: i * 0.06 }}
                 className={cn(
-                  "flex items-center gap-3 md:px-6",
+                  "flex items-center gap-3 md:px-6 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both",
                   i < t.signals.length - 1 && "md:border-r md:border-white/10"
                 )}
+                style={{ animationDelay: `${i * 60}ms` }}
               >
                 <span className="text-xl shrink-0">{signal.icon}</span>
                 <div className={cn("flex flex-col min-w-0", fontClass)}>
                   <span className="text-white font-bold text-sm leading-tight">{signal.stat}</span>
                   <span className="text-white/50 text-xs leading-snug">{signal.label}</span>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 

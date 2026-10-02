@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "cn";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import Link from "next/link";
-import { useMotionConfig } from "@/lib/motion";
+
 import { formatDate } from "@/lib/utils";
 
 interface BlogPost {
@@ -24,7 +24,6 @@ interface BlogPeekProps {
 
 export function BlogPeek({ blogs }: BlogPeekProps) {
   const { language } = useLanguage();
-  const { getTransition } = useMotionConfig();
 
   if (!blogs || blogs.length === 0) return null;
 
@@ -64,12 +63,10 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
         {/* Blog Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.slice(0, 3).map((blog, idx) => (
-            <motion.div
+            <div
               key={blog.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ ...getTransition("snappy"), delay: idx * 0.1 }}
+              className="animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+              style={{ animationDelay: `${idx * 100}ms` }}
             >
               <Link href={`/blog/${blog.id}`} className="group block h-full">
                 <article className="flex flex-col h-full bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-lg shadow-zinc-200/20 dark:shadow-black/20 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
@@ -123,7 +120,7 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
                   </div>
                 </article>
               </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

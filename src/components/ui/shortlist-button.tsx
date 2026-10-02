@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Heart } from 'lucide-react';
-import { motion } from 'framer-motion';
+
 import { cn } from 'cn';
 import { useShortlist, ShortlistItem } from '@/lib/shortlist-context';
 
@@ -32,15 +32,14 @@ export function ShortlistButton({ item, className, size = 'md' }: ShortlistButto
   };
 
   return (
-    <motion.button
-      whileTap={{ scale: 0.9 }}
+    <button
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
         toggleShortlist(item);
       }}
       className={cn(
-        "relative flex items-center justify-center rounded-full transition-all duration-300",
+        "relative flex items-center justify-center rounded-full transition-all duration-300 active:scale-90",
         sizes[size],
         active 
           ? "bg-rose-500/10 text-rose-500 hover:bg-rose-500/20" 
@@ -56,6 +55,6 @@ export function ShortlistButton({ item, className, size = 'md' }: ShortlistButto
           active ? "fill-current" : ""
         )}
       />
-    </motion.button>
+    </button>
   );
 }

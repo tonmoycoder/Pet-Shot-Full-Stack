@@ -4,14 +4,14 @@ import * as React from "react";
 import Link from "next/link";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Heart, Search } from "lucide-react";
 import { cn } from "cn";
-import { MagneticButton } from "@/components/ui/magnetic-button";
-import { springs, useMotionConfig } from "@/lib/motion";
+import dynamic from "next/dynamic";
+
+const MagneticButton = dynamic(() => import("@/components/ui/magnetic-button").then(m => ({ default: m.MagneticButton })), { ssr: false });
 import { useLanguage } from "@/lib/language-context";
 import { useShortlist } from "@/lib/shortlist-context";
-import { SearchModal } from "@/components/search/search-modal";
+const SearchModal = dynamic(() => import("@/components/search/search-modal").then(m => ({ default: m.SearchModal })), { ssr: false });
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const navDict = {
@@ -54,14 +54,12 @@ export function Header() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
-  const { getTransition } = useMotionConfig();
   const { language, toggleLanguage } = useLanguage();
   const { items, setDrawerOpen, isHydrated } = useShortlist();
   const t = navDict[language];
 
   // Close mobile menu when route changes
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
   }, [pathname]);
 
@@ -79,7 +77,7 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 inset-x-0 z-50 h-20 bg-white/40 dark:bg-black/40 backdrop-blur-2xl border-b border-white/20 dark:border-white/10 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)] transition-colors duration-500">
+      <header className="fixed top-0 inset-x-0 z-50 h-20 bg-white/95 dark:bg-black/95 border-b border-white/20 dark:border-white/10 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)] transition-colors duration-500">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           
           {/* Logo Area */}
@@ -130,10 +128,8 @@ export function Header() {
                   )}
                 >
                   {isActive && (
-                    <motion.div
-                      layoutId="header-active-tab"
-                      className="absolute inset-0 bg-primary/10 rounded-full z-0"
-                      transition={getTransition("snappy")}
+                    <div
+                      className="absolute inset-0 bg-primary/10 rounded-full z-0 transition-all duration-300"
                     />
                   )}
                   <span className="relative z-10">{t[link.key as keyof typeof t]}</span>
@@ -204,125 +200,90 @@ export function Header() {
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 -mr-2 text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+              className="relative w-10 h-10 flex items-center justify-center text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg transition-colors hover:bg-black/5 dark:hover:bg-white/5"
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
             >
-            <AnimatePresence mode="wait">
-              {isOpen ? (
-                <motion.div
-                  key="close"
-                  initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                  exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ willChange: 'transform', backfaceVisibility: 'hidden' }}
-                >
-                  <X className="w-6 h-6" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="menu"
-                  initial={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                  exit={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ willChange: 'transform', backfaceVisibility: 'hidden' }}
-                >
-                  <Menu className="w-6 h-6" />
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <Menu className={cn("absolute w-6 h-6 transition-all duration-300", isOpen ? "opacity-0 scale-50 rotate-90" : "opacity-100 scale-100 rotate-0")} />
+              <X className={cn("absolute w-6 h-6 transition-all duration-300", isOpen ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-50 -rotate-90")} />
             </button>
           </div>
         </div>
       </header>
 
       {/* Mobile Navigation Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -16, scale: 0.99 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -16, scale: 0.99, transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            style={{ willChange: 'transform, opacity', WebkitFontSmoothing: 'antialiased' } as React.CSSProperties}
-            className="fixed inset-0 top-0 z-40 bg-background/95 backdrop-blur-3xl pt-24 px-4 pb-8 flex flex-col md:hidden overflow-y-auto"
-          >
-            <nav className="flex flex-col gap-4 mt-8">
-              {navLinks.map((link, i) => {
-                const isActive = pathname === link.href;
-                return (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: -24, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
-                    style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' } as React.CSSProperties}
-                  >
-                    <Link
-                      href={link.href}
-                      className={cn(
-                        "block px-4 py-3 text-2xl font-bold rounded-2xl transition-colors active:scale-95",
-                        language === "bn" ? "font-bangla" : "font-sans",
-                        isActive ? "bg-primary/10 text-primary" : "text-foreground hover:bg-black/5 dark:hover:bg-white/5"
-                      )}
-                    >
-                      {t[link.key as keyof typeof t]}
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </nav>
-
-            <div className="mt-auto pt-8 flex flex-col gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ ...getTransition("snappy"), delay: 0.15 }}
-                className="flex items-center justify-between px-4"
+      <div
+        className={cn(
+          "fixed inset-0 top-0 z-40 bg-background pt-24 px-4 pb-8 flex flex-col md:hidden overflow-y-auto transition-all duration-500 ease-in-out",
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+      >
+        <nav className="flex flex-col gap-4 mt-8">
+          {navLinks.map((link, i) => {
+            const isActive = pathname === link.href;
+            return (
+              <div
+                key={link.href}
+                className={cn(
+                  "transition-all duration-300",
+                  isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+                )}
+                style={{ transitionDelay: isOpen ? `${i * 50}ms` : '0ms' }}
               >
-                <span className={cn("text-lg font-medium", language === "bn" ? "font-bangla" : "font-sans")}>
-                  {language === "bn" ? "থিম পরিবর্তন" : "Change Theme"}
-                </span>
-                <ThemeToggle />
-              </motion.div>
-              
-              <motion.button 
-                onClick={() => {
-                  toggleLanguage();
-                  setIsOpen(false);
-                }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ ...getTransition("snappy"), delay: 0.2 }}
-                className="w-full text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground py-4 border-t border-border focus:outline-none"
-              >
-                {language === "bn" ? "Switch to English" : "বাংলায় দেখুন"}
-              </motion.button>
-              
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ ...getTransition("bouncy"), delay: 0.3 }}
-              >
-                {/* Standard button on mobile (no magnetic physics) */}
-                <a
-                  href="https://wa.me/8801947315330"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={link.href}
                   className={cn(
-                    "flex items-center justify-center w-full bg-primary text-primary-foreground py-4 rounded-2xl font-semibold text-lg shadow-xl shadow-primary/20 active:scale-95 transition-transform",
-                    language === "bn" ? "font-bangla" : "font-sans"
+                    "block px-4 py-3 text-2xl font-bold rounded-2xl transition-colors active:scale-95",
+                    language === "bn" ? "font-bangla" : "font-sans",
+                    isActive ? "bg-primary/10 text-primary" : "text-foreground hover:bg-black/5 dark:hover:bg-white/5"
                   )}
                 >
-                  {t.contactMobile}
-                </a>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  {t[link.key as keyof typeof t]}
+                </Link>
+              </div>
+            );
+          })}
+        </nav>
+
+        <div 
+          className={cn(
+            "mt-auto pt-8 flex flex-col gap-6 transition-all duration-500",
+            isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          )}
+          style={{ transitionDelay: isOpen ? '300ms' : '0ms' }}
+        >
+          <div className="flex items-center justify-between px-4">
+            <span className={cn("text-lg font-medium", language === "bn" ? "font-bangla" : "font-sans")}>
+              {language === "bn" ? "থিম পরিবর্তন" : "Change Theme"}
+            </span>
+            <ThemeToggle />
+          </div>
+          
+          <button 
+            onClick={() => {
+              toggleLanguage();
+              setIsOpen(false);
+            }}
+            className="w-full text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground py-4 border-t border-border focus:outline-none transition-colors hover:text-foreground"
+          >
+            {language === "bn" ? "Switch to English" : "বাংলায় দেখুন"}
+          </button>
+          
+          <div>
+            <a
+              href="https://wa.me/8801947315330"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "flex items-center justify-center w-full bg-primary text-primary-foreground py-4 rounded-2xl font-semibold text-lg shadow-xl shadow-primary/20 active:scale-95 transition-transform",
+                language === "bn" ? "font-bangla" : "font-sans"
+              )}
+            >
+              {t.contactMobile}
+            </a>
+          </div>
+        </div>
+      </div>
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );

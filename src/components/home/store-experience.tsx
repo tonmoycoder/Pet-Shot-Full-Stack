@@ -2,13 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { Video, MapPin, Store, Clock, Phone, MicOff, Camera } from "lucide-react";
 import { cn } from "cn";
 import { useLanguage } from "@/lib/language-context";
 import { formatStoreHours } from "@/lib/format-time";
 import { useCursor } from "@/lib/cursor-context";
-import { useMotionConfig } from "@/lib/motion";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
 const storeDict = {
@@ -62,18 +60,7 @@ type SettingsProp = {
 };
 
 export function StoreExperience({ settings }: { settings?: SettingsProp }) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  // Phone Parallax
-  const phoneY = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const phoneRotate = useTransform(scrollYProgress, [0, 1], [10, -5]);
-
   const { language } = useLanguage();
-  const { getTransition } = useMotionConfig();
   const { setCursorType } = useCursor();
   const t = storeDict[language];
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
@@ -165,7 +152,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
   }, [displayHours, isManualOverride, manualStatus]);
 
   return (
-    <section ref={containerRef} className="py-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full relative z-20">
+    <section className="py-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full relative z-20">
 
       {/* Header */}
       <div className="mb-12 flex items-center gap-4">
@@ -179,12 +166,9 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 min-h-[500px]">
 
         {/* Left Pane: Live Video */}
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.98 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.1 }}
-          className="group relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-[#075E54]/5 dark:bg-[#075E54]/10 border border-[#25D366]/20 p-8 md:p-12 flex flex-col justify-between"
+        <div
+          className="group relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-[#075E54]/5 dark:bg-[#075E54]/10 border border-[#25D366]/20 p-8 md:p-12 flex flex-col justify-between animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+          style={{ animationDelay: "100ms" }}
           onMouseEnter={() => setCursorType("view")}
           onMouseLeave={() => setCursorType("default")}
         >
@@ -245,10 +229,9 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
             </div>
           </div>
 
-          {/* CSS Phone Mockup - Scroll Parallaxed */}
-          <motion.div
-            style={{ y: phoneY, rotateZ: phoneRotate }}
-            className="hidden md:block absolute right-[-20px] lg:right-[-40px] xl:right-12 bottom-[-60px] w-48 xl:w-56 h-[400px] xl:h-[480px] bg-black rounded-[32px] border-[6px] border-zinc-800 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden pointer-events-none transform-gpu z-0"
+          {/* CSS Phone Mockup - Static with hover effect */}
+          <div
+            className="hidden md:block absolute right-[-20px] lg:right-[-40px] xl:right-12 bottom-[-60px] w-48 xl:w-56 h-[400px] xl:h-[480px] bg-black rounded-[32px] border-[6px] border-zinc-800 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden pointer-events-none transform-gpu z-0 transition-transform duration-700 ease-out group-hover:-translate-y-4 group-hover:rotate-[-2deg]"
           >
             {/* Dynamic Island */}
             <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-4 bg-black rounded-full z-20"></div>
@@ -259,7 +242,6 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
                 src="/images/dog-call.webp"
                 alt="Video Feed"
                 fill
-                priority={true}
                 sizes="(max-width: 768px) 0vw, 250px"
                 className="object-cover opacity-90"
               />
@@ -285,17 +267,14 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
                 </div>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
 
         {/* Right Pane: Physical Store */}
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.98 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.2 }}
-          className="group relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 md:p-12 flex flex-col justify-between"
+        <div
+          className="group relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 md:p-12 flex flex-col justify-between animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+          style={{ animationDelay: "200ms" }}
           onMouseEnter={() => setCursorType("view")}
           onMouseLeave={() => setCursorType("default")}
         >
@@ -405,7 +384,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
               )}
             </div>
           </div>
-        </motion.div>
+        </div>
 
       </div>
     </section>

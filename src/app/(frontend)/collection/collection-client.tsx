@@ -22,12 +22,14 @@ type Item = {
 };
 
 const TABS = [
-  { id: "all", label: "সব দেখুন", labelEn: "All", icon: "🏪" },
-  { id: "bird", label: "পাখি", labelEn: "Birds", icon: "🦜" },
-  { id: "fish", label: "মাছ", labelEn: "Fish", icon: "🐟" },
-  { id: "exotic", label: "এক্সোটিক", labelEn: "Exotic", icon: "🦎" },
-  { id: "food", label: "খাবার", labelEn: "Food", icon: "🌿" },
-  { id: "accessories", label: "অ্যাক্সেসরিজ", labelEn: "Accessories", icon: "🛒" },
+  { id: "all",         label: "সব দেখুন",       labelEn: "All",          icon: "🏪",  categories: null },
+  { id: "bird",        label: "পাখি",            labelEn: "Birds",        icon: "🦜",  categories: ["bird"] },
+  { id: "fish",        label: "মাছ",             labelEn: "Fish",         icon: "🐟",  categories: ["fish"] },
+  { id: "exotic",      label: "এক্সোটিক",        labelEn: "Exotic",       icon: "🦎",  categories: ["exotic"] },
+  { id: "food",        label: "খাবার",           labelEn: "Food",         icon: "🌿",  categories: ["food"] },
+  { id: "accessories", label: "অ্যাক্সেসরিজ",   labelEn: "Accessories",  icon: "🛒",  categories: ["accessories"] },
+  { id: "medicine",    label: "ওষুধ",            labelEn: "Medicine",     icon: "💊",  categories: ["medicine"] },
+  { id: "other",       label: "অন্যান্য",        labelEn: "Other",        icon: "📦",  categories: ["other"] },
 ];
 
 function ItemCard({ item, index }: { item: Item; index: number }) {
@@ -141,8 +143,13 @@ export function CollectionClient({ items }: { items: Item[] }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredItems = useMemo(() => {
+    const activeTab = TABS.find((t) => t.id === filter);
     return items.filter((item) => {
-      if (filter !== "all" && item.category !== filter) return false;
+      // Category filter: null means 'all'; otherwise match any of the tab's categories
+      if (activeTab?.categories !== null && activeTab?.categories !== undefined) {
+        if (!activeTab.categories.includes(item.category)) return false;
+      }
+      // Search filter
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         const nameEn = item.name?.en?.toLowerCase() || '';
@@ -153,6 +160,14 @@ export function CollectionClient({ items }: { items: Item[] }) {
       return true;
     });
   }, [items, filter, searchQuery]);
+
+  // Only show tabs that have at least 1 item (hide empty tabs)
+  const visibleTabs = useMemo(() => {
+    return TABS.filter((tab) => {
+      if (!tab.categories) return true; // always show 'all'
+      return items.some((item) => tab.categories!.includes(item.category));
+    });
+  }, [items]);
 
   return (
     <div className="min-h-screen bg-[#ddf1fa] dark:bg-zinc-950">
@@ -178,9 +193,9 @@ export function CollectionClient({ items }: { items: Item[] }) {
       {/* Filters - floating card */}
       <div className="max-w-7xl mx-auto px-4 -mt-8 mb-10 relative z-10">
         <div className="bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-zinc-100 dark:border-zinc-800 p-4 md:p-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-          {/* Tab filters */}
+          {/* Tab filters — only show tabs with actual items */}
           <div className="flex flex-wrap gap-2">
-            {TABS.map((tab) => (
+            {visibleTabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id)}
@@ -193,6 +208,18 @@ export function CollectionClient({ items }: { items: Item[] }) {
               >
                 <span>{tab.icon}</span>
                 {tab.label}
+                {/* Count badge */}
+                <span className={cn(
+                  "ml-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full",
+                  filter === tab.id
+                    ? "bg-white/20 text-white"
+                    : "bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400"
+                )}>
+                  {tab.categories === null
+                    ? items.length
+                    : items.filter(i => tab.categories!.includes(i.category)).length
+                  }
+                </span>
               </button>
             ))}
           </div>

@@ -1,15 +1,14 @@
 import dynamic from "next/dynamic";
-import { HeroSection } from "@/components/home/hero-section";
+import Image from "next/image";
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
 export const revalidate = 60; // Enable ISR (cache for 60 seconds) to fix slow TTFB
 
-// Above-the-fold: Eager load
-import { DiscoveryBento } from "@/components/home/discovery-bento";
-import { FeaturedPets } from "@/components/home/featured-pets";
-
-// Below-the-fold: Lazy-load JS chunks to reduce initial bundle and TBT
+// Below-the-fold & Heavy components: Lazy-load JS chunks to reduce initial bundle and TBT
+import { HeroSection } from "@/components/home/hero-section";
+const DiscoveryBento = dynamic(() => import("@/components/home/discovery-bento").then(m => ({ default: m.DiscoveryBento })));
+const FeaturedPets = dynamic(() => import("@/components/home/featured-pets").then(m => ({ default: m.FeaturedPets })));
 const TrustStrip = dynamic(() => import("@/components/home/trust-strip").then(m => ({ default: m.TrustStrip })));
 const StoreExperience = dynamic(() => import("@/components/home/store-experience").then(m => ({ default: m.StoreExperience })));
 const TestimonialSection = dynamic(() => import("@/components/home/testimonial-section").then(m => ({ default: m.TestimonialSection })));
@@ -31,7 +30,8 @@ export default async function Home() {
     // ✅ Run ALL queries in PARALLEL — reduces wait from ~2.3s to ~600ms
     const [
       animalsResult,
-      rareResult,
+      rareAnimalsResult,
+      rareProductsResult,
       settingsResult,
       homepageResult,
       testimonialsResult,
@@ -53,6 +53,16 @@ export default async function Home() {
         where: {
           and: [
             { status: { equals: 'available' } },
+            { isRareExotic: { equals: true } }
+          ]
+        }
+      }),
+      payload.find({
+        collection: 'products',
+        limit: 12,
+        where: {
+          and: [
+            { status: { equals: 'in_stock' } },
             { isRareExotic: { equals: true } }
           ]
         }
@@ -91,15 +101,32 @@ export default async function Home() {
       console.warn("Could not query animals:", animalsResult.reason);
     }
 
-    if (rareResult.status === 'fulfilled') {
-      rareProducts = rareResult.value.docs.map((doc: any) => ({
-        id: doc.id,
-        image: doc.image,
-        name: doc.name,
-        price: doc.price,
-        description: doc.description,
-      }));
-    }
+    // Combine rare animals + rare products into one list
+    const rareAnimalDocs = rareAnimalsResult.status === 'fulfilled'
+      ? rareAnimalsResult.value.docs.map((doc: any) => ({
+          id: doc.id,
+          isAnimal: true,
+          image: doc.image,
+          name: doc.name,
+          tag: doc.tag,
+          price: doc.price,
+          description: doc.description,
+        }))
+      : [];
+
+    const rareProductDocs = rareProductsResult.status === 'fulfilled'
+      ? rareProductsResult.value.docs.map((doc: any) => ({
+          id: doc.id,
+          isAnimal: false,
+          image: doc.image,
+          name: doc.name,
+          tag: doc.tag,
+          price: doc.price,
+          description: doc.description,
+        }))
+      : [];
+
+    rareProducts = [...rareAnimalDocs, ...rareProductDocs];
 
     if (settingsResult.status === 'fulfilled') {
       settingsRes = settingsResult.value;
@@ -136,32 +163,62 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 1. Hero — pass settings so badge syncs with backend hours */}
-      <HeroSection heroImage={homepageRes?.heroImage} storeSettings={settingsRes as any} />
+      {/* 1. Hero — pass settings so badge syncs with backend hours, and LCP image statically */}
+      <HeroSection 
+        heroImage={homepageRes?.heroImage} 
+        storeSettings={settingsRes as any} 
+        lcpImage={
+          <Image
+            src={typeof homepageRes?.heroImage === 'object' && homepageRes?.heroImage?.url ? homepageRes.heroImage.url : "/images/hero.webp"}
+            alt="Beautiful Aquarium and Birds"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
+            unoptimized
+            className="w-full h-full object-cover origin-center z-10"
+          />
+        }
+      />
 
       {/* 2. Discovery surface — animals, food, accessories */}
-      <DiscoveryBento discoveryCards={homepageRes?.discoveryCards} />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
+        <DiscoveryBento discoveryCards={homepageRes?.discoveryCards} />
+      </div>
 
       {/* 3. Featured pets — filtered by isFeatured */}
-      <FeaturedPets pets={pets} />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
+        <FeaturedPets pets={pets} />
+      </div>
 
       {/* RARE & EXOTIC COLLECTION — lazy */}
-      <RareExoticCollection products={rareProducts} storeNumber={settingsRes?.contactPhone || '1234567890'} />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
+        <RareExoticCollection products={rareProducts} storeNumber={settingsRes?.contact?.whatsappNumber || settingsRes?.contact?.phoneNumber || '8801947315330'} />
+      </div>
 
       {/* 4. Trust strip — live signal + proof points */}
-      <TrustStrip />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 200px' }}>
+        <TrustStrip />
+      </div>
 
       {/* 5. Store experience — live video + physical store */}
-      <StoreExperience settings={settingsRes as any} />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
+        <StoreExperience settings={settingsRes as any} />
+      </div>
 
       {/* 6. Testimonials — customer reviews and form */}
-      <TestimonialSection testimonials={testimonials} />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
+        <TestimonialSection testimonials={testimonials} />
+      </div>
 
       {/* 7. Blog Peek — latest articles */}
-      <BlogPeek blogs={blogs} />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
+        <BlogPeek blogs={blogs} />
+      </div>
 
       {/* 8. Final invitation CTA — warm closing section */}
-      <FinalCTA settings={settingsRes as any} />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
+        <FinalCTA settings={settingsRes as any} />
+      </div>
     </div>
   );
 }

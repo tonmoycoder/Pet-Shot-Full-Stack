@@ -101,14 +101,14 @@ export const StoreSettings: GlobalConfig = {
                   type: 'text',
                   label: 'ঠিকানা (Address)',
                   required: true,
-                  defaultValue: 'Mirpur 1, Dhaka, Bangladesh',
+                  defaultValue: 'সাত ভাই পুকুড় পাড়, আব্দুল্লাহ সিটির পিছনে, বড় বাজার, চুয়াডাঙ্গা',
                 },
                 {
                   name: 'googleMapsLink',
                   type: 'text',
                   label: 'গুগল ম্যাপস লিংক (Google Maps Link)',
                   required: true,
-                  defaultValue: 'https://maps.google.com',
+                  defaultValue: 'https://maps.google.com/?q=Boro+Bazar+Chuadanga',
                 }
               ]
             }

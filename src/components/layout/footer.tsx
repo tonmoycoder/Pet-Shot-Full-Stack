@@ -80,7 +80,7 @@ export function Footer() {
           <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
             {language === 'bn' ? 'আপনার নতুন বন্ধুকে বাড়ি নিয়ে যান' : 'Take Your New Friend Home'}
           </h2>
-          <p className="text-white/70 text-lg mb-10 max-w-xl mx-auto">
+          <p className="text-white/70 text-lg mb-10 max-w-xl mx-auto min-h-[84px] sm:min-h-[56px]">
             {t.desc}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -125,7 +125,7 @@ export function Footer() {
                 <div className="text-xs text-zinc-400">& অ্যাকোয়ারিয়াম</div>
               </div>
             </div>
-            <p className="text-zinc-400 text-sm leading-relaxed mb-6">{t.desc}</p>
+            <p className="text-zinc-400 text-sm leading-relaxed mb-6 min-h-[60px]">{t.desc}</p>
             <div className="flex items-center gap-2 text-sm text-zinc-400">
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               {t.hours}

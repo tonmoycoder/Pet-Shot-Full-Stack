@@ -149,6 +149,7 @@ export function ImageZoom({ src, alt, children, className }: ImageZoomProps) {
   });
 
   const onTouchStart = useCallback((e: React.TouchEvent) => {
+    setIsDragging(true);
     if (e.touches.length === 2) {
       lastPinchDist.current = getTouchDist(e.touches[0], e.touches[1]);
       lastPinchMid.current = getTouchMid(e.touches[0], e.touches[1]);
@@ -189,6 +190,7 @@ export function ImageZoom({ src, alt, children, className }: ImageZoomProps) {
       lastPinchMid.current = null;
     }
     if (e.touches.length === 0) {
+      setIsDragging(false);
       lastTouches.current = null;
       // Snap back to 1× if zoomed out below it
       setScale(s => s < 1 ? 1 : s);
@@ -308,19 +310,13 @@ export function ImageZoom({ src, alt, children, className }: ImageZoomProps) {
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="flex items-center justify-center w-full h-full"
             >
-              <motion.img
-                src={src}
+              <img
+                src={typeof src === 'string' ? src : (src as any)?.src || src}
                 alt={alt}
                 draggable={false}
-                animate={{
-                  x: offset.x,
-                  y: offset.y,
-                  scale: scale,
-                }}
-                transition={
-                  isDragging ? { duration: 0 } : { type: "tween", duration: 0.05, ease: "easeOut" }
-                }
                 style={{
+                  transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
+                  transition: isDragging ? 'none' : 'transform 0.1s ease-out',
                   maxWidth: "90vw",
                   maxHeight: "90vh",
                   objectFit: "contain",

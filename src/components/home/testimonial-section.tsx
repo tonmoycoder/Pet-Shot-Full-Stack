@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { Star, MessageSquareQuote, CameraOff, Image as ImageIcon } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "cn";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import { ReviewFormModal } from "./review-form-modal";
-import { useMotionConfig } from "@/lib/motion";
 
 interface Testimonial {
   id: string;
@@ -25,7 +24,6 @@ interface TestimonialSectionProps {
 export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
   const { language } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { getTransition } = useMotionConfig();
 
   // If no testimonials, show a prompt to review
   if (!testimonials || testimonials.length === 0) {
@@ -85,16 +83,12 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
         </div>
 
         {/* Responsive Grid / Flex Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <AnimatePresence>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, idx) => (
-              <motion.div
+              <div
                 key={testimonial.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ ...getTransition("snappy"), delay: idx * 0.1 }}
-                className="bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-xl shadow-zinc-200/20 dark:shadow-black/40 flex flex-col group hover:shadow-2xl transition-shadow duration-500"
+                className="bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-xl shadow-zinc-200/20 dark:shadow-black/40 flex flex-col group hover:shadow-2xl transition-shadow duration-500 animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+                style={{ animationDelay: `${idx * 100}ms` }}
               >
                 {/* Large Image Area */}
                 <div className="w-full aspect-[4/3] bg-zinc-100 dark:bg-zinc-800 relative overflow-hidden flex items-center justify-center">
@@ -155,10 +149,9 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </AnimatePresence>
-        </div>
+          </div>
 
       </div>
 

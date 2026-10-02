@@ -2,12 +2,12 @@
 
 import React, { useRef } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+
 import { Phone, MapPin, MessageCircle } from "lucide-react";
 import { cn } from "cn";
 import { useLanguage } from "@/lib/language-context";
 import { useCursor } from "@/lib/cursor-context";
-import { useMotionConfig } from "@/lib/motion";
+
 import { formatStoreHours } from "@/lib/format-time";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CausticsBackground } from "@/components/ui/caustics-background";
@@ -59,15 +59,11 @@ type SettingsProp = {
 export function FinalCTA({ settings }: { settings?: SettingsProp }) {
   const { language } = useLanguage();
   const { setCursorType } = useCursor();
-  const { getTransition } = useMotionConfig();
   const t = ctaDict[language];
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
   const sectionRef = useRef<HTMLElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
+
 
   const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
   const whatsappLink = settings?.contact?.whatsappNumber ? `https://wa.me/${settings.contact.whatsappNumber}` : `https://wa.me/${defaultNumber}`;
@@ -110,55 +106,43 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
       <div className="relative z-10 max-w-[1400px] mx-auto px-4 md:px-8 flex flex-col items-center text-center">
 
         {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.05 }}
-          className="flex items-center gap-3 mb-8"
+        <div
+          className="flex items-center gap-3 mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+          style={{ animationDelay: "50ms" }}
         >
           <div className="h-px w-8 bg-[#67D8CE]/50" />
           <span className={cn("text-[#67D8CE] text-sm font-semibold uppercase tracking-[0.2em]", fontClass)}>
             {t.eyebrow}
           </span>
           <div className="h-px w-8 bg-[#67D8CE]/50" />
-        </motion.div>
+        </div>
 
         {/* Headline */}
-        <motion.h2
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.1 }}
+        <h2
           className={cn(
-            "text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold text-white leading-[1.1] tracking-tight mb-8 whitespace-pre-line",
+            "text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold text-white leading-[1.1] tracking-tight mb-8 whitespace-pre-line animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both",
             fontClass
           )}
+          style={{ animationDelay: "100ms" }}
         >
           {t.headline}
-        </motion.h2>
+        </h2>
 
         {/* Sub copy */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.18 }}
+        <p
           className={cn(
-            "text-lg md:text-xl text-white/50 max-w-xl leading-relaxed mb-14",
+            "text-lg md:text-xl text-white/50 max-w-xl leading-relaxed mb-14 animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both",
             fontClass
           )}
+          style={{ animationDelay: "180ms" }}
         >
           {t.sub}
-        </motion.p>
+        </p>
 
         {/* CTA buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.26 }}
-          className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 w-full sm:w-auto"
+        <div
+          className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 w-full sm:w-auto animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+          style={{ animationDelay: "260ms" }}
         >
           {/* Primary: WhatsApp */}
           <a
@@ -245,26 +229,23 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
               {t.quiz}
             </MagneticButton>
           </Link>
-        </motion.div>
+        </div>
 
         {/* Bottom store info strip */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.4 }}
+        <div
           className={cn(
             "mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3",
-            "text-white/30 text-sm",
+            "text-white/30 text-sm animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both",
             fontClass
           )}
+          style={{ animationDelay: "340ms" }}
         >
           <span>{displayAddress}</span>
           <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
           <span>{displayHours}</span>
           <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
           <span>{displayPhone}</span>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

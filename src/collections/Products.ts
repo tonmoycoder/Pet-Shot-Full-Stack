@@ -110,6 +110,18 @@ export const Products: CollectionConfig = {
                 { name: 'bn', type: 'text', label: 'দাম (বাংলায়)', required: true, defaultValue: 'যোগাযোগ করুন' },
                 { name: 'en', type: 'text', label: 'Price (English)', defaultValue: 'Contact us' },
               ]
+            },
+            {
+              name: 'tag',
+              type: 'group',
+              label: 'ট্যাগ / ব্যাজ (Badge)',
+              admin: {
+                description: 'ছবির ওপরে ছোট্ট ব্যাজ হিসেবে দেখানোর জন্য (যেমন: Exclusive, New Arrival)।',
+              },
+              fields: [
+                { name: 'bn', type: 'text', label: 'ট্যাগ (বাংলায়)', defaultValue: 'এক্সক্লুসিভ' },
+                { name: 'en', type: 'text', label: 'Tag (English)', defaultValue: 'Exclusive' },
+              ]
             }
           ]
         },

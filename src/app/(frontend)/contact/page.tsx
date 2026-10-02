@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -76,10 +76,10 @@ export default function ContactPage() {
   const [whatsappUrl, setWhatsappUrl] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
-  const defaultAddress = language === "bn" ? "মিরপুর ১, ঢাকা, বাংলাদেশ" : "Mirpur 1, Dhaka, Bangladesh";
+  const defaultAddress = language === "bn" ? "সাত ভাই পুকুড় পাড়, আব্দুল্লাহ সিটির পিছনে, বড় বাজার, চুয়াডাঙ্গা" : "Sat Bhai Pukur Par, Behind Abdullah City, Boro Bazar, Chuadanga";
   const defaultPhone = "+880 1947-315330";
   const defaultEmail = "info@bismillahpakhi.com";
-  const defaultMapLink = "https://maps.google.com/?q=Mirpur+1+Dhaka+Bangladesh";
+  const defaultMapLink = "https://maps.google.com/?q=Boro+Bazar+Chuadanga";
   const defaultWhatsApp = "8801947315330";
 
   async function handleSubmit(e: React.FormEvent) {

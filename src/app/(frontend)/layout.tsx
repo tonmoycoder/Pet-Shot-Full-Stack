@@ -5,14 +5,14 @@ import { LanguageProvider } from "@/lib/language-context";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { CursorProvider } from "@/lib/cursor-context";
 import { ShortlistProvider } from "@/lib/shortlist-context";
-import { BirdCursor } from "@/components/ui/bird-cursor";
-import { Header } from "@/components/layout/header";
-import { FloatingContact } from "@/components/layout/floating-contact";
-import { ShortlistDrawer } from "@/components/layout/shortlist-drawer";
-import { Footer } from "@/components/layout/footer";
-import { BackgroundAudio } from "@/components/layout/background-audio";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import dynamic from "next/dynamic";
+
+import { Header } from "@/components/layout/header";
+
+import { LayoutOverlays } from "@/components/layout/layout-overlays";
+import { Footer } from "@/components/layout/footer";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -78,15 +78,12 @@ export default function RootLayout({
           <LanguageProvider>
           <CursorProvider>
             <ShortlistProvider>
-              <BirdCursor />
               <Header />
               <main className="flex-1 pt-20 flex flex-col">
                 {children}
               </main>
               <Footer />
-              <FloatingContact />
-              <ShortlistDrawer />
-              <BackgroundAudio />
+              <LayoutOverlays />
             </ShortlistProvider>
           </CursorProvider>
           </LanguageProvider>

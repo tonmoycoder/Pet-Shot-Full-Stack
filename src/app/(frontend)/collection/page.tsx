@@ -25,13 +25,15 @@ export default async function CollectionPage() {
     limit: 200,
   });
 
-  // Combine: normalize category from products too
+  // Combine: normalize categories to match TABS in collection-client.tsx
+  // Animals: category = 'bird' | 'fish' | 'other' (no isRareExotic field)
+  // Products: category = 'food' | 'accessories' | 'medicine' | 'other', isRareExotic = boolean
   const combinedItems = [
     ...animalsData.docs.map((doc: any) => ({
       id: doc.id,
       isAnimal: true,
-      // Animals have category: 'bird' | 'fish' | 'other'
-      category: doc.isRareExotic ? 'exotic' : (doc.category || 'bird'),
+      // Animals have no isRareExotic — map 'other' animals to their own tab
+      category: doc.category || 'bird',
       internalName: doc.internalName,
       name: doc.name || { en: doc.internalName, bn: doc.internalName },
       description: doc.description || { en: '', bn: '' },
@@ -44,6 +46,7 @@ export default async function CollectionPage() {
     ...productsData.docs.map((doc: any) => ({
       id: doc.id,
       isAnimal: false,
+      // Products: isRareExotic flag maps to 'exotic' tab; otherwise use actual category
       category: doc.isRareExotic ? 'exotic' : (doc.category || 'accessories'),
       internalName: doc.internalName,
       name: doc.name || { en: doc.internalName, bn: doc.internalName },

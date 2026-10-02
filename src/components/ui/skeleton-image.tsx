@@ -46,26 +46,41 @@ export function SkeletonImage({
         />
       )}
       
-      <Image
-        ref={imgRef}
-        src={src}
-        alt={alt || "Image"}
-        sizes={props.fill ? (sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw") : sizes}
-        className={cn(
-          "transition-all duration-700 ease-in-out z-10",
-          className,
-          isLoading && !isPriority && "scale-105 blur-md opacity-0"
-        )}
-        onLoad={(e) => {
-          if (!isPriority) setIsLoading(false);
-          if (onLoad) onLoad(e);
-        }}
-        onError={(e) => {
-          if (!isPriority) setIsLoading(false);
-          if (onError) onError(e);
-        }}
-        {...props}
-      />
+      {isPriority ? (
+        <Image
+          ref={imgRef as any}
+          src={src}
+          alt={alt || "Image"}
+          priority
+          sizes={props.fill ? (sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw") : sizes}
+          className={cn("z-10", className)}
+          onLoad={(e) => {
+            if (onLoad) onLoad(e);
+          }}
+          {...props}
+        />
+      ) : (
+        <Image
+          ref={imgRef}
+          src={src}
+          alt={alt || "Image"}
+          sizes={props.fill ? (sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw") : sizes}
+          className={cn(
+            "transition-all duration-700 ease-in-out z-10",
+            className,
+            isLoading && "scale-105 blur-md opacity-0"
+          )}
+          onLoad={(e) => {
+            setIsLoading(false);
+            if (onLoad) onLoad(e);
+          }}
+          onError={(e) => {
+            setIsLoading(false);
+            if (onError) onError(e);
+          }}
+          {...props}
+        />
+      )}
     </div>
   );
 }

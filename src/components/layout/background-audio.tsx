@@ -31,9 +31,24 @@ export function BackgroundAudio() {
         window.removeEventListener("keydown", unlockAudio);
       };
     } else {
-      // Show popup after a small delay
-      const timer = setTimeout(() => setShowPopup(true), 2000);
-      return () => clearTimeout(timer);
+      // Show popup on scroll or after 10s to prevent blocking LCP
+      const handleScroll = () => {
+        if (window.scrollY > 200) {
+          setShowPopup(true);
+          window.removeEventListener("scroll", handleScroll);
+        }
+      };
+      
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      const timer = setTimeout(() => {
+        setShowPopup(true);
+        window.removeEventListener("scroll", handleScroll);
+      }, 10000);
+      
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener("scroll", handleScroll);
+      };
     }
   }, []);
 
@@ -228,7 +243,7 @@ export function BackgroundAudio() {
               background: "rgba(9, 51, 79, 0.85)",
               backdropFilter: "blur(12px)",
               border: "1px solid rgba(103,216,206,0.2)",
-              color: !isPlaying ? "#94a3b8" : "#67D8CE",
+              color: !isPlaying ? "#e2e8f0" : "#a3e4dd",
             }}
           >
             {!isPlaying ? "🔇 সাউন্ড অফ" : "🔊 সাউন্ড অন"}

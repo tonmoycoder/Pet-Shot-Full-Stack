@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { cn } from "cn";
 
 interface CausticsBackgroundProps {
@@ -8,49 +9,49 @@ interface CausticsBackgroundProps {
 }
 
 export function CausticsBackground({ className }: CausticsBackgroundProps) {
-  // Lazy-mount caustic layer after page is interactive to avoid blocking LCP
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    // Use requestIdleCallback to defer non-critical background loading
-    const mount = () => setMounted(true);
-    if ("requestIdleCallback" in window) {
-      const id = requestIdleCallback(mount, { timeout: 2000 });
-      return () => cancelIdleCallback(id);
-    } else {
-      const t = setTimeout(mount, 500);
-      return () => clearTimeout(t);
-    }
-  }, []);
-
   return (
     <div className={cn("absolute inset-0 overflow-hidden pointer-events-none z-0", className)}>
       {/* Static gradient fallback — always visible, zero CLS */}
-      <div className="absolute inset-0 bg-gradient-to-br from-teal-900/10 via-background to-teal-800/5 mix-blend-overlay" />
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-900/10 via-background to-teal-800/5" />
       
-      {/* Caustic texture — loaded only after page is interactive */}
-      {mounted && (
-        <div
-          className="absolute inset-0 opacity-[0.06] dark:opacity-[0.12] mix-blend-plus-lighter"
-          style={{
-            backgroundImage: "image-set(url('/images/caustics.webp') type('image/webp'), url('/images/caustics-compressed.png') type('image/png'))",
-            backgroundSize: "400px 400px",
-            backgroundRepeat: "repeat",
-            animation: "caustic-pan 30s linear infinite",
-            willChange: "background-position",
-          }}
+      {/* Caustic texture & Noise overlay — delayed fade to prevent LCP penalty */}
+      <div className="absolute -inset-[100%] opacity-0 animate-[delayed-fade-in_1s_ease-out_0.5s_forwards] caustic-animation">
+        <img 
+          src="/images/caustics.webp" 
+          alt="" 
+          loading="lazy"
+          decoding="async"
+          className="object-cover w-full h-full opacity-[0.06] dark:opacity-[0.12]" 
         />
-      )}
+      </div>
+      <div className="absolute inset-0 opacity-0 animate-[delayed-fade-in_1s_ease-out_0.5s_forwards] pointer-events-none">
+        <img 
+          src="/noise.png" 
+          alt="" 
+          loading="lazy"
+          decoding="async"
+          className="object-cover w-full h-full opacity-[0.03]" 
+        />
+      </div>
 
       <style>{`
+        @keyframes delayed-fade-in {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        .caustic-animation {
+          animation: caustic-pan 30s linear infinite;
+          will-change: transform;
+        }
         @keyframes caustic-pan {
-          from { background-position: 0% 0%; }
-          to { background-position: 100% 100%; }
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-10%, -10%, 0); }
         }
         @media (prefers-reduced-motion: reduce) {
-          [style*="caustic-pan"] { animation: none !important; }
+          .caustic-animation { animation: none !important; }
         }
       `}</style>
     </div>
   );
 }
+

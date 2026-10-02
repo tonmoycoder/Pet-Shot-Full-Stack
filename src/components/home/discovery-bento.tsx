@@ -3,12 +3,11 @@
 import React, { useRef } from "react";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "cn";
 import { useLanguage } from "@/lib/language-context";
 import { useCursor } from "@/lib/cursor-context";
-import { useMotionConfig } from "@/lib/motion";
+import { VanillaParallax } from "./vanilla-parallax";
 
 const bentoDict = {
   bn: {
@@ -46,24 +45,14 @@ interface BentoCardProps {
 
 function BentoCard({ title, desc, imageSrc, className, href, delay = 0, fontClass, objectPosition = "center" }: BentoCardProps) {
   const { setCursorType } = useCursor();
-  const { getTransition } = useMotionConfig();
+
   const cardRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start end", "end start"],
-  });
-  
-  // Parallax subtle offset
-  const imageY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
-      initial={{ opacity: 0, y: 40, scale: 0.98 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ ...getTransition("fluid"), delay }}
-      className={cn("group block relative w-full h-full", className)}
+      className={cn("group block relative w-full h-full animate-in fade-in zoom-in-95 slide-in-from-bottom-10 duration-1000 ease-out fill-mode-both", className)}
+      style={{ animationDelay: `${delay}s` }}
     >
       <Link 
         href={href} 
@@ -78,19 +67,20 @@ function BentoCard({ title, desc, imageSrc, className, href, delay = 0, fontClas
         onMouseLeave={() => setCursorType("default")}
       >
         {/* Background Image Container with Parallax */}
-        <motion.div 
-          style={{ y: imageY }}
+        <div 
           className="absolute inset-0 w-full h-[120%] -top-[10%] transform-gpu transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
         >
-          <Image
-            src={imageSrc}
-            alt={title}
-            fill
-            className="object-cover"
-            style={{ objectPosition }}
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
-        </motion.div>
+          <VanillaParallax offset={50} reverse className="w-full h-full">
+            <Image
+              src={imageSrc}
+              alt={title}
+              fill
+              className="object-cover"
+              style={{ objectPosition }}
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </VanillaParallax>
+        </div>
 
         {/* Dynamic Scrim for readability (Multi-stop smooth gradient) */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-700 ease-out" />
@@ -118,13 +108,13 @@ function BentoCard({ title, desc, imageSrc, className, href, delay = 0, fontClas
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }
 
 export function DiscoveryBento({ discoveryCards }: { discoveryCards?: any }) {
   const { language } = useLanguage();
-  const { getTransition } = useMotionConfig();
+
   const t = bentoDict[language];
   const containerRef = useRef(null);
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
@@ -140,24 +130,18 @@ export function DiscoveryBento({ discoveryCards }: { discoveryCards?: any }) {
       
       {/* Header */}
       <div className="mb-16 max-w-3xl flex flex-col items-start">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.1 }}
-          className={cn("text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-6", fontClass)}
+        <h2 
+          className={cn("text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-6 animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both", fontClass)}
+          style={{ animationDelay: "100ms" }}
         >
           {t.title}
-        </motion.h2>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ ...getTransition("fluid"), delay: 0.2 }}
-          className={cn("text-lg md:text-xl text-zinc-500 dark:text-zinc-400 max-w-xl leading-relaxed", fontClass)}
+        </h2>
+        <p 
+          className={cn("text-lg md:text-xl text-zinc-500 dark:text-zinc-400 max-w-xl leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both", fontClass)}
+          style={{ animationDelay: "200ms" }}
         >
           {t.subtitle}
-        </motion.p>
+        </p>
       </div>
 
       {/* Grid */}

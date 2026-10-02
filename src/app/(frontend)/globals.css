@@ -179,3 +179,35 @@
   0% { background-position-x: -100px; }
   100% { background-position-x: -100%; }
 }
+
+/* LCP Custom Animations */
+@keyframes lcp-fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes lcp-zoom-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-lcp-fade-in-up {
+  animation: lcp-fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-lcp-zoom-in {
+  animation: lcp-zoom-in 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

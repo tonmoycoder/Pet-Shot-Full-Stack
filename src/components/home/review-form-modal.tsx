@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { X, Star, Loader2, CheckCircle2, Upload, Image as ImageIcon } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "cn";
-import { useMotionConfig } from "@/lib/motion";
 import NextImage from "next/image";
 
 interface ReviewFormModalProps {
@@ -15,7 +14,6 @@ interface ReviewFormModalProps {
 
 export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
   const { language } = useLanguage();
-  const { getTransition } = useMotionConfig();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [rating, setRating] = useState(5);
@@ -133,23 +131,16 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
   };
 
   return (
-    <AnimatePresence>
+    <>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-sm overflow-y-auto"
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-300"
         >
           {/* Close Backdrop */}
           <div className="fixed inset-0 z-0" onClick={!isSubmitting ? onClose : undefined} />
 
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            transition={getTransition("snappy")}
-            className="relative z-10 w-full max-w-xl bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl border border-white/20 dark:border-emerald-900/40 flex flex-col my-auto max-h-[90vh]"
+          <div
+            className="relative z-10 w-full max-w-xl bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl border border-white/20 dark:border-emerald-900/40 flex flex-col my-auto max-h-[90vh] animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
           >
             {/* Header */}
             <div className="px-6 py-5 border-b border-border flex justify-between items-center bg-zinc-50 dark:bg-zinc-900 shrink-0 rounded-t-3xl">
@@ -167,22 +158,16 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
             </div>
 
             <div className="overflow-y-auto px-6 py-6 hide-scrollbar flex-1">
-              <AnimatePresence mode="wait">
+              <div className="relative">
                 {isSuccess ? (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center py-12 text-center"
+                  <div
+                    className="flex flex-col items-center justify-center py-12 text-center animate-in zoom-in-95 duration-500"
                   >
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", damping: 12, delay: 0.1 }}
-                      className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400"
+                    <div
+                      className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 animate-in zoom-in duration-500"
                     >
                       <CheckCircle2 className="w-10 h-10" />
-                    </motion.div>
+                    </div>
                     <h4 className={cn("text-2xl font-bold mb-2", language === "bn" ? "font-bangla" : "font-sans")}>
                       {language === "bn" ? "ধন্যবাদ!" : "Thank You!"}
                     </h4>
@@ -191,15 +176,11 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
                         ? "আপনার রিভিউ সফলভাবে জমা হয়েছে। রিভিউটি যাচাইয়ের পর প্রকাশ করা হবে।"
                         : "Your review has been submitted successfully and is pending approval."}
                     </p>
-                  </motion.div>
+                  </div>
                 ) : (
-                  <motion.form
-                    key="form"
+                  <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col gap-6"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                    className="flex flex-col gap-6 animate-in fade-in duration-500"
                   >
                     {/* Rating Selection */}
                     <div className="flex flex-col items-center gap-2">
@@ -345,13 +326,13 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
                         language === "bn" ? "রিভিউ জমা দিন" : "Submit Review"
                       )}
                     </button>
-                  </motion.form>
+                  </form>
                 )}
-              </AnimatePresence>
+              </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }
