@@ -218,7 +218,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
               >
                 {/* Ambient Blur Background */}
                 <Image
-                  src={blog.coverImage.url}
+                  src={blog.coverImage?.sizes?.tablet?.url || blog.coverImage?.sizes?.card?.url || blog.coverImage.url}
                   sourceUrl={blog.coverImage.sourceUrl}
                   alt={title}
                   fill
@@ -229,7 +229,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
                 />
                 {/* Crisp Foreground Image */}
                 <Image
-                  src={blog.coverImage.url}
+                  src={blog.coverImage?.sizes?.tablet?.url || blog.coverImage?.sizes?.card?.url || blog.coverImage.url}
                   sourceUrl={blog.coverImage.sourceUrl}
                   alt={title}
                   fill

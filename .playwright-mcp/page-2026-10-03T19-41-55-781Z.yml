@@ -1,0 +1,489 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Bismillah Pakhi & Aquarium Logo বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম" [ref=e4]:
+        - /url: /
+        - img "Bismillah Pakhi & Aquarium Logo" [ref=e7]
+        - generic [ref=e8]:
+          - generic [ref=e9]: বিসমিল্লাহ
+          - generic [ref=e10]: পাখি এন্ড অ্যাকোয়ারিয়াম
+      - navigation [ref=e11]:
+        - link "কালেকশন" [ref=e12]:
+          - /url: /collection
+        - link "পাখি" [ref=e13]:
+          - /url: /categories/birds
+        - link "অ্যাকোয়ারিয়াম" [ref=e14]:
+          - /url: /categories/aquarium
+        - link "খাবার" [ref=e15]:
+          - /url: /categories/food
+        - link "অ্যাক্সেসরিজ" [ref=e16]:
+          - /url: /categories/accessories
+        - link "ব্লগ" [ref=e17]:
+          - /url: /blog
+      - generic [ref=e18]:
+        - button "View shortlist" [ref=e19]
+        - button "Search" [ref=e22]
+        - button "Switch to English" [ref=e26]: EN
+  - main [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]: এখন দোকান বন্ধ
+          - heading "চোখের সামনে দেখুন। তারপর পছন্দের সঙ্গীকে কাছ থেকে চিনুন।" [level=1] [ref=e41]
+          - paragraph [ref=e42]: শখ আর ভালোবাসার এক বিশ্বস্ত নাম। দেশি-বিদেশি পাখি, একুরিয়ামের মাছ আর খাঁচাসহ যাবতীয় সরঞ্জাম। অনলাইনে কালেকশন দেখুন, আর দোকানে এসে দেখে-শুনে সিদ্ধান্ত নিন।
+          - generic [ref=e43]:
+            - link "WhatsApp-এ Live Video" [ref=e44]:
+              - /url: https://wa.me/8801947315330
+            - link "কীভাবে আসবেন?" [ref=e46]:
+              - /url: /contact
+            - link "সঠিক সঙ্গী খুঁজুন" [ref=e48]:
+              - /url: /match
+        - generic [ref=e50]:
+          - generic:
+            - paragraph: বাস্তব দোকান · চুয়াডাঙ্গা
+          - generic:
+            - paragraph: আজকের আপডেট
+          - img "Beautiful Aquarium and Birds" [ref=e53]
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "আমাদের কালেকশন আবিষ্কার করুন" [level=2] [ref=e57]
+          - paragraph [ref=e58]: দেশি-বিদেশি পাখি এবং প্রিমিয়াম ফিশ একুরিয়ামের এক বিশাল সংগ্রহ।
+        - generic [ref=e59]:
+          - link [ref=e61]:
+            - /url: /categories/birds
+            - img "পাখি" [ref=e65]
+            - generic [ref=e69]:
+              - heading "পাখি" [level=3] [ref=e70]
+              - paragraph [ref=e71]: টিয়া, ম্যাকাও এবং আরও অনেক
+          - link [ref=e77]:
+            - /url: /categories/aquarium
+            - img "অ্যাকোয়ারিয়াম ও মাছ" [ref=e81]
+            - generic [ref=e85]:
+              - heading "অ্যাকোয়ারিয়াম ও মাছ" [level=3] [ref=e86]
+              - paragraph [ref=e87]: অ্যাকোয়াস্কেপিং এবং রঙিন মাছ
+          - link [ref=e93]:
+            - /url: /categories/food
+            - img "খাবার" [ref=e97]
+            - generic [ref=e101]:
+              - heading "খাবার" [level=3] [ref=e102]
+              - paragraph [ref=e103]: পুষ্টিকর খাবার
+          - link [ref=e109]:
+            - /url: /categories/accessories
+            - img "অ্যাক্সেসরিজ" [ref=e113]
+            - generic [ref=e117]:
+              - heading "অ্যাক্সেসরিজ" [level=3] [ref=e118]
+              - paragraph [ref=e119]: খাঁচা এবং খেলনা
+      - generic [ref=e125]:
+        - generic [ref=e126]: আমাদের বিশেষ সংগ্রহ
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - heading "আপনার নতুন বন্ধু খুঁজুন" [level=2] [ref=e132]
+            - paragraph [ref=e133]: সুস্থ, চঞ্চল ও যত্নশীল পরিবেশে বেড়ে ওঠা সঙ্গী
+          - link "সব দেখুন" [ref=e134]:
+            - /url: /collection
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - link "কিউট কমেট গোল্ডফিশ জনপ্রিয় Add to shortlist কিউট কমেট গোল্ডফিশ আমাদের সংগ্রহ ১৫০ টাকা" [ref=e140]:
+              - /url: /animals/6
+              - img "কিউট কমেট গোল্ডফিশ" [ref=e143]
+              - generic [ref=e144]:
+                - generic [ref=e145]: জনপ্রিয়
+                - button "Add to shortlist" [ref=e147]
+              - generic:
+                - generic:
+                  - heading "কিউট কমেট গোল্ডফিশ" [level=3]
+                  - generic:
+                    - generic: আমাদের সংগ্রহ
+                    - generic: ১৫০ টাকা
+            - generic [ref=e150]:
+              - link "বুক করুন" [ref=e151]:
+                - /url: https://wa.me/8801947315330?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%95%E0%A6%BF%E0%A6%89%E0%A6%9F%20%E0%A6%95%E0%A6%AE%E0%A7%87%E0%A6%9F%20%E0%A6%97%E0%A7%8B%E0%A6%B2%E0%A7%8D%E0%A6%A1%E0%A6%AB%E0%A6%BF%E0%A6%B6%20%E0%A6%B8%E0%A6%AE%E0%A7%8D%E0%A6%AA%E0%A6%B0%E0%A7%8D%E0%A6%95%E0%A7%87%20%E0%A6%9C%E0%A6%BE%E0%A6%A8%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87
+              - link "বিস্তারিত জানুন" [ref=e158]:
+                - /url: /animals/6
+          - generic [ref=e161]:
+            - link "সুস্থ ও চটপটে বাজরিগার পাখির জোড়া জনপ্রিয় Add to shortlist সুস্থ ও চটপটে বাজরিগার পাখির জোড়া আমাদের সংগ্রহ ৬০০ টাকা (যোগাযোগ করুন)" [ref=e162]:
+              - /url: /animals/5
+              - img "সুস্থ ও চটপটে বাজরিগার পাখির জোড়া" [ref=e165]
+              - generic [ref=e166]:
+                - generic [ref=e167]: জনপ্রিয়
+                - button "Add to shortlist" [ref=e169]
+              - generic:
+                - generic:
+                  - heading "সুস্থ ও চটপটে বাজরিগার পাখির জোড়া" [level=3]
+                  - generic:
+                    - generic: আমাদের সংগ্রহ
+                    - generic: ৬০০ টাকা (যোগাযোগ করুন)
+            - generic [ref=e172]:
+              - link "বুক করুন" [ref=e173]:
+                - /url: https://wa.me/8801947315330?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%B8%E0%A7%81%E0%A6%B8%E0%A7%8D%E0%A6%A5%20%E0%A6%93%20%E0%A6%9A%E0%A6%9F%E0%A6%AA%E0%A6%9F%E0%A7%87%20%E0%A6%AC%E0%A6%BE%E0%A6%9C%E0%A6%B0%E0%A6%BF%E0%A6%97%E0%A6%BE%E0%A6%B0%20%E0%A6%AA%E0%A6%BE%E0%A6%96%E0%A6%BF%E0%A6%B0%20%E0%A6%9C%E0%A7%8B%E0%A7%9C%E0%A6%BE%20%E0%A6%B8%E0%A6%AE%E0%A7%8D%E0%A6%AA%E0%A6%B0%E0%A7%8D%E0%A6%95%E0%A7%87%20%E0%A6%9C%E0%A6%BE%E0%A6%A8%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87
+              - link "বিস্তারিত জানুন" [ref=e180]:
+                - /url: /animals/5
+          - generic [ref=e183]:
+            - link "হলুদ ককাটেল পাওয়া যাচ্ছে Add to shortlist হলুদ ককাটেল আমাদের সংগ্রহ দামের জন্য যোগাযোগ করুন" [ref=e184]:
+              - /url: /animals/3
+              - img "হলুদ ককাটেল" [ref=e187]
+              - generic [ref=e188]:
+                - generic [ref=e189]: পাওয়া যাচ্ছে
+                - button "Add to shortlist" [ref=e191]
+              - generic:
+                - generic:
+                  - heading "হলুদ ককাটেল" [level=3]
+                  - generic:
+                    - generic: আমাদের সংগ্রহ
+                    - generic: দামের জন্য যোগাযোগ করুন
+            - generic [ref=e194]:
+              - link "বুক করুন" [ref=e195]:
+                - /url: https://wa.me/8801947315330?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%B9%E0%A6%B2%E0%A7%81%E0%A6%A6%20%E0%A6%95%E0%A6%95%E0%A6%BE%E0%A6%9F%E0%A7%87%E0%A6%B2%20%E0%A6%B8%E0%A6%AE%E0%A7%8D%E0%A6%AA%E0%A6%B0%E0%A7%8D%E0%A6%95%E0%A7%87%20%E0%A6%9C%E0%A6%BE%E0%A6%A8%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87
+              - link "বিস্তারিত জানুন" [ref=e202]:
+                - /url: /animals/3
+        - generic [ref=e205]:
+          - generic [ref=e206]: সোয়াইপ করে পছন্দ করুন
+          - generic [ref=e214]:
+            - generic [ref=e215]: 01 / 03
+            - generic [ref=e216]:
+              - button "Previous" [ref=e217]
+              - button "Next" [ref=e220]
+      - generic [ref=e224]:
+        - generic [ref=e225]: এক্সক্লুসিভ কালেকশন
+        - generic [ref=e230]:
+          - generic [ref=e231]:
+            - heading "Rare & Exotic" [level=2] [ref=e232]
+            - paragraph [ref=e233]: আমাদের সবচেয়ে বিশেষ এবং দুষ্প্রাপ্য সংগ্রহ
+          - link "সব দেখুন" [ref=e234]:
+            - /url: /collection
+        - generic [ref=e238]:
+          - generic [ref=e239]:
+            - link [ref=e240]:
+              - /url: /animals/4
+              - img "গিনিপিগ" [ref=e243]
+              - img "গিনিপিগ" [ref=e246]
+              - generic [ref=e247]:
+                - generic [ref=e248]: জনপ্রিয়
+                - button "Add to shortlist" [ref=e252]
+              - generic:
+                - generic:
+                  - heading "গিনিপিগ" [level=3]
+                  - generic:
+                    - generic: রেয়ার আইটেম
+                    - generic: ৳ ৩,৫০০
+            - generic [ref=e255]:
+              - link "প্রি-বুক করুন" [ref=e256]:
+                - /url: https://wa.me/8801947315330?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%86%E0%A6%AA%E0%A6%A8%E0%A6%BE%E0%A6%A6%E0%A7%87%E0%A6%B0%20%E0%A6%8F%E0%A6%95%E0%A7%8D%E0%A6%B8%E0%A6%95%E0%A7%8D%E0%A6%B2%E0%A7%81%E0%A6%B8%E0%A6%BF%E0%A6%AD%20%E0%A6%95%E0%A6%BE%E0%A6%B2%E0%A7%87%E0%A6%95%E0%A6%B6%E0%A6%A8%20%E0%A6%A5%E0%A7%87%E0%A6%95%E0%A7%87%20%E0%A6%97%E0%A6%BF%E0%A6%A8%E0%A6%BF%E0%A6%AA%E0%A6%BF%E0%A6%97%20%E0%A6%8F%E0%A6%B0%20%E0%A6%9C%E0%A6%A8%E0%A7%8D%E0%A6%AF%20%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%BF-%E0%A6%AC%E0%A7%81%E0%A6%95%E0%A6%BF%E0%A6%82%20%E0%A6%95%E0%A6%B0%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A5%A4
+              - link "বিস্তারিত জানুন" [ref=e263]:
+                - /url: /animals/4
+          - generic [ref=e266]:
+            - link [ref=e267]:
+              - /url: /products/2
+              - img "প্রিমিয়াম ককাটিয়েল বীজ মিশ্রণ" [ref=e270]
+              - img "প্রিমিয়াম ককাটিয়েল বীজ মিশ্রণ" [ref=e273]
+              - generic [ref=e274]:
+                - generic [ref=e275]: এক্সক্লুসিভ
+                - button "Add to shortlist" [ref=e279]
+              - generic:
+                - generic:
+                  - heading "প্রিমিয়াম ককাটিয়েল বীজ মিশ্রণ" [level=3]
+                  - generic:
+                    - generic: রেয়ার আইটেম
+                    - generic: ৪৫০+
+            - generic [ref=e282]:
+              - link "প্রি-বুক করুন" [ref=e283]:
+                - /url: https://wa.me/8801947315330?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%86%E0%A6%AA%E0%A6%A8%E0%A6%BE%E0%A6%A6%E0%A7%87%E0%A6%B0%20%E0%A6%8F%E0%A6%95%E0%A7%8D%E0%A6%B8%E0%A6%95%E0%A7%8D%E0%A6%B2%E0%A7%81%E0%A6%B8%E0%A6%BF%E0%A6%AD%20%E0%A6%95%E0%A6%BE%E0%A6%B2%E0%A7%87%E0%A6%95%E0%A6%B6%E0%A6%A8%20%E0%A6%A5%E0%A7%87%E0%A6%95%E0%A7%87%20%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%BF%E0%A6%AE%E0%A6%BF%E0%A6%AF%E0%A6%BC%E0%A6%BE%E0%A6%AE%20%E0%A6%95%E0%A6%95%E0%A6%BE%E0%A6%9F%E0%A6%BF%E0%A6%AF%E0%A6%BC%E0%A7%87%E0%A6%B2%20%E0%A6%AC%E0%A7%80%E0%A6%9C%20%E0%A6%AE%E0%A6%BF%E0%A6%B6%E0%A7%8D%E0%A6%B0%E0%A6%A3%20%E0%A6%8F%E0%A6%B0%20%E0%A6%9C%E0%A6%A8%E0%A7%8D%E0%A6%AF%20%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%BF-%E0%A6%AC%E0%A7%81%E0%A6%95%E0%A6%BF%E0%A6%82%20%E0%A6%95%E0%A6%B0%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A5%A4
+              - link "বিস্তারিত জানুন" [ref=e290]:
+                - /url: /products/2
+          - generic [ref=e293]:
+            - link [ref=e294]:
+              - /url: /products/1
+              - img "হেভি ডিউটি ক্যানিস্টার ফিল্টার" [ref=e297]
+              - img "হেভি ডিউটি ক্যানিস্টার ফিল্টার" [ref=e300]
+              - generic [ref=e301]:
+                - generic [ref=e302]: এক্সক্লুসিভ
+                - button "Add to shortlist" [ref=e306]
+              - generic:
+                - generic:
+                  - heading "হেভি ডিউটি ক্যানিস্টার ফিল্টার" [level=3]
+                  - generic:
+                    - generic: রেয়ার আইটেম
+                    - generic: ৬,৫০০+ টাকা
+            - generic [ref=e309]:
+              - link "প্রি-বুক করুন" [ref=e310]:
+                - /url: https://wa.me/8801947315330?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%86%E0%A6%AA%E0%A6%A8%E0%A6%BE%E0%A6%A6%E0%A7%87%E0%A6%B0%20%E0%A6%8F%E0%A6%95%E0%A7%8D%E0%A6%B8%E0%A6%95%E0%A7%8D%E0%A6%B2%E0%A7%81%E0%A6%B8%E0%A6%BF%E0%A6%AD%20%E0%A6%95%E0%A6%BE%E0%A6%B2%E0%A7%87%E0%A6%95%E0%A6%B6%E0%A6%A8%20%E0%A6%A5%E0%A7%87%E0%A6%95%E0%A7%87%20%E0%A6%B9%E0%A7%87%E0%A6%AD%E0%A6%BF%20%E0%A6%A1%E0%A6%BF%E0%A6%89%E0%A6%9F%E0%A6%BF%20%E0%A6%95%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%A8%E0%A6%BF%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A6%BE%E0%A6%B0%20%E0%A6%AB%E0%A6%BF%E0%A6%B2%E0%A7%8D%E0%A6%9F%E0%A6%BE%E0%A6%B0%20%E0%A6%8F%E0%A6%B0%20%E0%A6%9C%E0%A6%A8%E0%A7%8D%E0%A6%AF%20%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%BF-%E0%A6%AC%E0%A7%81%E0%A6%95%E0%A6%BF%E0%A6%82%20%E0%A6%95%E0%A6%B0%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A5%A4
+              - link "বিস্তারিত জানুন" [ref=e317]:
+                - /url: /products/1
+        - generic [ref=e320]:
+          - generic [ref=e321]: সোয়াইপ করে এক্সপ্লোর করুন
+          - generic [ref=e329]:
+            - generic [ref=e330]: 01 / 03
+            - generic [ref=e331]:
+              - button "Previous" [ref=e332]
+              - button "Next" [ref=e335]
+      - generic [ref=e342]:
+        - generic [ref=e347]:
+          - generic [ref=e348]: ● এখন খোলা
+          - generic [ref=e349]: "সর্বশেষ আপডেট: ২ ঘণ্টা আগে"
+        - generic [ref=e351]:
+          - generic [ref=e352]:
+            - generic [ref=e353]: 🕐
+            - generic [ref=e354]:
+              - generic [ref=e355]: ২৭+
+              - generic [ref=e356]: বছরের অভিজ্ঞতা
+          - generic [ref=e357]:
+            - generic [ref=e358]: 📍
+            - generic [ref=e359]:
+              - generic [ref=e360]: বাস্তব
+              - generic [ref=e361]: ফিজিক্যাল স্টোর · চুয়াডাঙ্গা
+          - generic [ref=e362]:
+            - generic [ref=e363]: 📱
+            - generic [ref=e364]:
+              - generic [ref=e365]: সরাসরি
+              - generic [ref=e366]: যোগাযোগ · কোনো মিডলম্যান নেই
+          - generic [ref=e367]:
+            - generic [ref=e368]: ✅
+            - generic [ref=e369]:
+              - generic [ref=e370]: যাচাইযোগ্য
+              - generic [ref=e371]: ফেসবুকে রিভিউ দেখুন
+      - generic [ref=e373]:
+        - heading "অফলাইন এবং অনলাইন" [level=2] [ref=e376]
+        - generic [ref=e378]:
+          - generic [ref=e379]:
+            - generic [ref=e380]:
+              - generic [ref=e381]: WhatsApp Live
+              - heading "লাইভ ভিডিও কনসালটেশন" [level=3] [ref=e386]
+              - paragraph [ref=e387]: দোকানে আসতে পারছেন না? হোয়াটসঅ্যাপ ভিডিও কলের মাধ্যমে আমাদের সম্পূর্ণ কালেকশন দেখুন এবং আপনার পছন্দের সঙ্গীটি বেছে নিন।
+            - generic [ref=e388]:
+              - link "হোয়াটসঅ্যাপ এ যোগাযোগ করুন" [ref=e389]:
+                - /url: https://wa.me/8801947315330
+              - generic [ref=e391]: "যোগাযোগ: +880 1947-315330"
+            - generic:
+              - generic:
+                - generic:
+                  - img "Video Feed"
+                - generic: You
+          - generic [ref=e392]:
+            - generic [ref=e393]:
+              - generic [ref=e394]:
+                - generic [ref=e395]: সাত ভাই পুকুড় পাড়ের পাশে, আব্দুল্লাহ সিটির পিছনে, বড় বাজার, চুয়াডাঙ্গা
+                - heading "আমাদের ফিজিক্যাল স্টোর" [level=3] [ref=e401]
+                - paragraph [ref=e402]: "সরাসরি এসে আমাদের বিশাল কালেকশন দেখতে পারেন। আমাদের সময়সূচী: সকাল ৯টা - রাত ১১টা।"
+              - generic [ref=e403]:
+                - img "Store Location QR Code" [ref=e408]
+                - link "View store on Google Maps" [ref=e409]:
+                  - /url: https://maps.app.goo.gl/Y9rK8eZmYSSLE7Gc6
+                  - iframe [ref=e410]
+            - generic [ref=e411]:
+              - link "ম্যাপে দেখুন" [ref=e412]:
+                - /url: https://maps.app.goo.gl/Y9rK8eZmYSSLE7Gc6
+              - generic [ref=e414]:
+                - generic [ref=e415]: সকাল ৯টা - রাত ১১টা
+                - generic [ref=e420]: বন্ধ আছে
+      - generic [ref=e425]:
+        - generic [ref=e426]:
+          - generic [ref=e427]: বিশ্বস্ত ও প্রমাণিত সেবা
+          - heading "আমাদের গ্রাহকদের" [level=2] [ref=e430]
+          - paragraph [ref=e431]: মতামত
+        - generic [ref=e432]:
+          - generic [ref=e433]:
+            - article [ref=e434]:
+              - generic [ref=e435]:
+                - generic [ref=e436]: “
+                - generic [ref=e437]:
+                  - text: ★★★★★
+                  - generic [ref=e438]: "5.0"
+              - blockquote [ref=e439]: “গত সপ্তাহে সরাসরি দোকানে গিয়ে কিছু গাপ্পি মাছ কিনেছি। আরফিন ভাইয়ের কালেকশন আসলেই দারুণ! উনি নিজে থেকে সবচেয়ে চটপটে আর সুস্থ জোড়াগুলো বেছে দিয়েছেন। দোকানের অ্যাকুরিয়ামগুলোও খুব পরিষ্কার-পরিচ্ছন্ন। যারা সরাসরি গিয়ে কিনতে চান, তারা নিশ্চিন্তে যেতে পারেন।”
+              - generic [ref=e441]:
+                - img "Rifat Hossain" [ref=e445]
+                - generic [ref=e446]:
+                  - heading "Rifat Hossain" [level=3] [ref=e447]
+                  - paragraph [ref=e448]: Student
+                  - generic [ref=e449]: রেগুলার কাস্টমার
+            - article [aria-hidden] [ref=e452]:
+              - generic [ref=e453]:
+                - generic [ref=e454]: “
+                - generic [ref=e455]:
+                  - text: ★★★★★
+                  - generic [ref=e456]: "5.0"
+              - blockquote [ref=e457]: “আলহামদুলিল্লাহ, বিসমিল্লাহ পাখি ঘর থেকে এক জোড়া ককাটেল নিলাম। আমি পাখি পালনে একদম নতুন ছিলাম, কিন্তু আরফিন ভাই আমাকে খাঁচার সাইজ থেকে শুরু করে খাবার পর্যন্ত সব বিষয়ে খুব সুন্দরভাবে গাইড করেছেন। পাখিগুলো মাশাআল্লাহ খুব চটপটে এবং সুস্থ।”
+              - generic [ref=e464]:
+                - heading [level=3] [ref=e465]: Hasib Islam
+                - paragraph [ref=e466]: ব্যাংকার
+                - generic [ref=e467]: রেগুলার কাস্টমার
+            - article [aria-hidden] [ref=e470]:
+              - generic [ref=e471]:
+                - generic [ref=e472]: “
+                - generic [ref=e473]:
+                  - text: ★★★★★
+                  - generic [ref=e474]: "5.0"
+              - blockquote [ref=e475]: “খুবই ভালো সার্ভিস পেয়েছি এবং অনেক সুলভ মূল্যে পেয়েছি ”
+              - generic [ref=e482]:
+                - heading [level=3] [ref=e483]: Raihan Khan
+                - paragraph [ref=e484]: সন্তুষ্ট গ্রাহক
+                - generic [ref=e485]: রেগুলার কাস্টমার
+          - generic [ref=e488]:
+            - button "Previous" [ref=e489]
+            - generic [ref=e492]:
+              - generic [ref=e493]:
+                - generic [ref=e494]: "01"
+                - generic [ref=e495]: /
+                - generic [ref=e496]: "03"
+              - generic [ref=e499]:
+                - button "Slide 1" [ref=e500]
+                - button "Slide 2" [ref=e501]
+                - button "Slide 3" [ref=e502]
+            - button "Next" [ref=e503]
+          - button "আপনার মতামত দিন" [ref=e507]
+          - paragraph [ref=e513]: ১০০% অরিজিনাল কাস্টমার ফিডব্যাক • চুয়াডাঙ্গা জেলা ও পার্শ্ববর্তী অঞ্চলের শীর্ষ রিভিউড শপ
+      - generic [ref=e518]:
+        - generic [ref=e519]:
+          - generic [ref=e520]:
+            - generic [ref=e521]: জার্নাল ও আর্টিকেল
+            - heading "পোষা প্রাণীদের নিয়ে আমাদের ভাবনা" [level=2] [ref=e525]
+          - link "সব আর্টিকেল দেখুন" [ref=e526]:
+            - /url: /blog
+        - generic [ref=e529]:
+          - link [ref=e531]:
+            - /url: /blog/14
+            - article [ref=e532]:
+              - generic [ref=e533]:
+                - 'img "ফাইটার (Betta) মাছের অ্যাকুরিয়াম সেটআপ: সঠিক সাইজ এবং ফিল্টার" [ref=e536]'
+                - generic [ref=e537]: Sep 30, 2026
+              - generic [ref=e542]:
+                - 'heading "ফাইটার (Betta) মাছের অ্যাকুরিয়াম সেটআপ: সঠিক সাইজ এবং ফিল্টার" [level=3] [ref=e543]'
+                - paragraph [ref=e544]: ছোট বয়ামে ফাইটার মাছ পালন বন্ধ করুন! জেনে নিন ফাইটার মাছের সঠিক ট্যাংকের সাইজ এবং ফিল্টার সেটআপ।
+                - generic [ref=e545]: বিস্তারিত পড়ুন
+          - link [ref=e550]:
+            - /url: /blog/13
+            - article [ref=e551]:
+              - generic [ref=e552]:
+                - 'img "বাজরিগার পাখির প্রজনন রহস্য: খাঁচার মাপ, খাবার এবং ডিম ফুটানোর গাইড" [ref=e555]'
+                - generic [ref=e556]: Sep 30, 2026
+              - generic [ref=e561]:
+                - 'heading "বাজরিগার পাখির প্রজনন রহস্য: খাঁচার মাপ, খাবার এবং ডিম ফুটানোর গাইড" [level=3] [ref=e562]'
+                - paragraph [ref=e563]: কীভাবে খুব সহজে ঘরে বসে বাজরিগার পাখির সফল প্রজনন ও ডিম থেকে বাচ্চা ফোটাবেন, তার এক্সপার্ট গাইড।
+                - generic [ref=e564]: বিস্তারিত পড়ুন
+          - link [ref=e569]:
+            - /url: /blog/12
+            - article [ref=e570]:
+              - generic [ref=e571]:
+                - 'img "নতুনদের জন্য সেরা অ্যাকুরিয়াম ফিশ: গোল্ডফিশ, বেট্টা এবং কই কার্প" [ref=e574]'
+                - generic [ref=e575]: Sep 30, 2026
+              - generic [ref=e580]:
+                - 'heading "নতুনদের জন্য সেরা অ্যাকুরিয়াম ফিশ: গোল্ডফিশ, বেট্টা এবং কই কার্প" [level=3] [ref=e581]'
+                - paragraph [ref=e582]: গোল্ডফিশ, ফাইটার এবং কই কার্প—অ্যাকুরিয়াম শুরু করার জন্য সবচেয়ে দারুণ ও জনপ্রিয় কিছু মাছের গাইড।
+                - generic [ref=e583]: বিস্তারিত পড়ুন
+      - generic [ref=e590]:
+        - generic [ref=e591]: চলে আসুন
+        - heading "চা খেতে খেতে গল্প করি।" [level=2] [ref=e595]
+        - paragraph [ref=e596]: দোকানে এলে আমরা সরাসরি সাহায্য করতে পারব। প্রতিটি পাখি, মাছ ও পণ্য নিজে দেখে, জেনে, তারপর সিদ্ধান্ত নিন।
+        - generic [ref=e597]:
+          - link [ref=e598]:
+            - /url: https://wa.me/8801947315330
+            - button "WhatsApp-এ কথা বলুন" [ref=e599]
+          - link [ref=e601]:
+            - /url: tel:+8801947-315330
+            - button "কল করুন" [ref=e602]
+          - link [ref=e604]:
+            - /url: https://maps.app.goo.gl/Y9rK8eZmYSSLE7Gc6
+            - button "পথ দেখুন" [ref=e605]
+          - link [ref=e607]:
+            - /url: /match
+            - button "সঠিক সঙ্গী খুঁজুন" [ref=e608]
+        - generic [ref=e610]:
+          - generic [ref=e611]: সাত ভাই পুকুড় পাড়ের পাশে, আব্দুল্লাহ সিটির পিছনে, বড় বাজার, চুয়াডাঙ্গা
+          - generic [ref=e613]: সকাল ৯টা - রাত ১১টা
+          - generic [ref=e615]: +880 1947-315330
+  - contentinfo [ref=e616]:
+    - generic [ref=e618]:
+      - generic [ref=e619]: 🦜
+      - heading "আপনার নতুন বন্ধুকে বাড়ি নিয়ে যান" [level=2] [ref=e620]
+      - paragraph [ref=e621]: দেশি-বিদেশি পাখি, মাছ ও অ্যাকোয়ারিয়ামের বিশাল সংগ্রহ। গুণগত মান ও বিশ্বস্ততায় আমরা সেরা।
+      - generic [ref=e622]:
+        - link "হোয়াটসঅ্যাপে কথা বলুন" [ref=e623]:
+          - /url: https://wa.me/8801947315330
+        - link "সংগ্রহ দেখুন" [ref=e626]:
+          - /url: /collection
+    - generic [ref=e630]:
+      - generic [ref=e631]:
+        - generic [ref=e632]:
+          - generic [ref=e633]:
+            - img "Bismillah Pakhi & Aquarium Logo" [ref=e636]
+            - generic [ref=e637]:
+              - generic [ref=e638]: বিসমিল্লাহ পাখি
+              - generic [ref=e639]: "& অ্যাকোয়ারিয়াম"
+          - paragraph [ref=e640]: দেশি-বিদেশি পাখি, মাছ ও অ্যাকোয়ারিয়ামের বিশাল সংগ্রহ। গুণগত মান ও বিশ্বস্ততায় আমরা সেরা।
+          - generic [ref=e641]: প্রতিদিন সকাল ৯টা - রাত ৯টা
+        - generic [ref=e643]:
+          - heading "সংগ্রহ" [level=3] [ref=e644]
+          - list [ref=e645]:
+            - listitem [ref=e646]:
+              - link "🦜 পাখির কালেকশন" [ref=e647]:
+                - /url: /categories/birds
+                - generic [ref=e648]: 🦜
+                - text: পাখির কালেকশন
+            - listitem [ref=e649]:
+              - link "🐟 অ্যাকোয়ারিয়াম ও মাছ" [ref=e650]:
+                - /url: /categories/aquarium
+                - generic [ref=e651]: 🐟
+                - text: অ্যাকোয়ারিয়াম ও মাছ
+            - listitem [ref=e652]:
+              - link "🌿 খাবার" [ref=e653]:
+                - /url: /categories/food
+                - generic [ref=e654]: 🌿
+                - text: খাবার
+            - listitem [ref=e655]:
+              - link "🛒 অ্যাক্সেসরিজ" [ref=e656]:
+                - /url: /categories/accessories
+                - generic [ref=e657]: 🛒
+                - text: অ্যাক্সেসরিজ
+            - listitem [ref=e658]:
+              - link "🏪 সম্পূর্ণ কালেকশন" [ref=e659]:
+                - /url: /collection
+                - generic [ref=e660]: 🏪
+                - text: সম্পূর্ণ কালেকশন
+        - generic [ref=e661]:
+          - heading "পেজসমূহ" [level=3] [ref=e662]
+          - list [ref=e663]:
+            - listitem [ref=e664]:
+              - link "🏠 হোম" [ref=e665]:
+                - /url: /
+                - generic [ref=e666]: 🏠
+                - text: হোম
+            - listitem [ref=e667]:
+              - link "📞 যোগাযোগ" [ref=e668]:
+                - /url: /contact
+                - generic [ref=e669]: 📞
+                - text: যোগাযোগ
+            - listitem [ref=e670]:
+              - link "❓ সাধারণ জিজ্ঞাসা" [ref=e671]:
+                - /url: "#"
+                - generic [ref=e672]: ❓
+                - text: সাধারণ জিজ্ঞাসা
+            - listitem [ref=e673]:
+              - link "📜 শর্তাবলী" [ref=e674]:
+                - /url: "#"
+                - generic [ref=e675]: 📜
+                - text: শর্তাবলী
+            - listitem [ref=e676]:
+              - link "🔒 গোপনীয়তা নীতি" [ref=e677]:
+                - /url: "#"
+                - generic [ref=e678]: 🔒
+                - text: গোপনীয়তা নীতি
+        - generic [ref=e679]:
+          - heading "যোগাযোগ করুন" [level=3] [ref=e680]
+          - list [ref=e681]:
+            - listitem [ref=e682]:
+              - link "01947315330" [ref=e683]:
+                - /url: tel:+8801947315330
+            - listitem [ref=e687]:
+              - link "WhatsApp" [ref=e688]:
+                - /url: https://wa.me/8801947315330
+            - listitem [ref=e692]:
+              - generic [ref=e696]: সাত ভাই পুকুড় পাড়, আব্দুল্লাহ সিটির পিছনে, বড় বাজার, চুয়াডাঙ্গা
+      - generic [ref=e698]:
+        - generic [ref=e699]:
+          - generic [ref=e700]: © ২০২৪ বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম। সর্বস্বত্ব সংরক্ষিত।
+          - generic [ref=e701]: SSL SECURED
+        - 'link "ওয়েবসাইট তৈরি করেছেন: তানভীর ইসলাম তন্ময়" [ref=e705]':
+          - /url: https://www.facebook.com/tanverislamtonmoyofficial
+          - generic [ref=e706]: "ওয়েবসাইট তৈরি করেছেন:"
+          - generic [ref=e707]: তানভীর ইসলাম তন্ময়
+  - button "Open Next.js Dev Tools" [ref=e715] [cursor=pointer]
+  - alert [ref=e719]

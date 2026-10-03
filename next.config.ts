@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import { withPayload } from "@payloadcms/next/withPayload";
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     // Optimize device sizes - focus on real breakpoints

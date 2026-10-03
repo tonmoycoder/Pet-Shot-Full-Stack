@@ -229,7 +229,7 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
                     <div className="relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden ring-4 ring-emerald-500/20 shadow-md bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                       {testimonial.authorImage?.url ? (
                         <Image
-                          src={testimonial.authorImage.url}
+                          src={testimonial.authorImage?.sizes?.avatar?.url || testimonial.authorImage?.sizes?.thumbnail?.url || testimonial.authorImage.url}
                           sourceUrl={testimonial.authorImage.sourceUrl}
                           alt={testimonial.authorName}
                           fill
@@ -357,8 +357,8 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
 
         {/* Trust Badge Footer Note */}
         <div className="text-center mt-6">
-          <p className={cn("text-xs text-slate-400 dark:text-zinc-500 flex items-center justify-center gap-1.5 font-medium", language === "bn" ? "font-bangla" : "font-sans")}>
-            <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+          <p className={cn("text-xs text-slate-400 dark:text-zinc-500 flex items-start sm:items-center justify-center gap-1.5 font-medium max-w-[280px] sm:max-w-none mx-auto", language === "bn" ? "font-bangla" : "font-sans")}>
+            <svg className="w-4 h-4 text-emerald-500 shrink-0 mt-[2px] sm:mt-0" fill="currentColor" viewBox="0 0 20 20">
               <path clipRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fillRule="evenodd"></path>
             </svg>
             {language === "bn" ? "১০০% অরিজিনাল কাস্টমার ফিডব্যাক • চুয়াডাঙ্গা জেলা ও পার্শ্ববর্তী অঞ্চলের শীর্ষ রিভিউড শপ" : "100% Authentic Feedback • Top Rated Shop in Chuadanga & Surrounding Areas"}

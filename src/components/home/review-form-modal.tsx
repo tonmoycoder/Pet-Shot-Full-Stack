@@ -113,7 +113,7 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
       if (photo) {
         const formData = new FormData();
         formData.append("file", photo);
-        formData.append("alt", `Profile photo of ${name}`);
+        formData.append("_payload", JSON.stringify({ alt: `Profile photo of ${name}` }));
 
         const mediaRes = await fetch("/api/media", {
           method: "POST",

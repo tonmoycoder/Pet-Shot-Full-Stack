@@ -17,6 +17,11 @@ export default async function CollectionPage({
   const page = typeof resolvedParams.page === 'string' ? parseInt(resolvedParams.page, 10) || 1 : 1;
   const category = typeof resolvedParams.category === 'string' ? resolvedParams.category : 'all';
   const q = typeof resolvedParams.q === 'string' ? resolvedParams.q.toLowerCase() : '';
+  const sortParam = typeof resolvedParams.sort === 'string' ? resolvedParams.sort : 'default';
+  
+  let payloadSort: string | undefined = undefined;
+  if (sortParam === 'newest') payloadSort = '-createdAt';
+  if (sortParam === 'oldest') payloadSort = 'createdAt';
   
   const payload = await getPayload({ config: configPromise });
   const limit = 24;
@@ -106,27 +111,27 @@ export default async function CollectionPage({
     };
   }
 
-  let animalsDocs = [];
-  let productsDocs = [];
+  let animalsDocs: any[] = [];
+  let productsDocs: any[] = [];
   let totalDocs = 0;
   let totalPages = 1;
 
   if (fetchAnimals && fetchProducts) {
     const [a, p] = await Promise.all([
-      payload.find({ collection: 'animals', where: animalsFetchWhere, limit: limit / 2, page }),
-      payload.find({ collection: 'products', where: productsFetchWhere, limit: limit / 2, page })
+      payload.find({ collection: 'animals', where: animalsFetchWhere, limit: limit / 2, page, sort: payloadSort }),
+      payload.find({ collection: 'products', where: productsFetchWhere, limit: limit / 2, page, sort: payloadSort })
     ]);
     animalsDocs = a.docs;
     productsDocs = p.docs;
     totalDocs = tabCounts.all; // exact total across both
     totalPages = Math.max(a.totalPages, p.totalPages);
   } else if (fetchAnimals) {
-    const a = await payload.find({ collection: 'animals', where: animalsFetchWhere, limit, page });
+    const a = await payload.find({ collection: 'animals', where: animalsFetchWhere, limit, page, sort: payloadSort });
     animalsDocs = a.docs;
     totalDocs = a.totalDocs;
     totalPages = a.totalPages;
   } else if (fetchProducts) {
-    const p = await payload.find({ collection: 'products', where: productsFetchWhere, limit, page });
+    const p = await payload.find({ collection: 'products', where: productsFetchWhere, limit, page, sort: payloadSort });
     productsDocs = p.docs;
     totalDocs = p.totalDocs;
     totalPages = p.totalPages;
@@ -171,6 +176,7 @@ export default async function CollectionPage({
         totalDocs,
         category,
         q,
+        sort: sortParam,
         tabCounts
       }}
     />
