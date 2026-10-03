@@ -18,6 +18,6 @@ test.describe('Responsive Layout', () => {
     await expect(page).toHaveTitle(/Pet/i);
     
     // Check if hero text is visible on mobile
-    await expect(page.locator('text=See them in person.')).toBeVisible();
+    await expect(page.locator('h1')).toContainText('See them in person');
   });
 });

@@ -12,7 +12,7 @@ test.describe('Image Regression Tests', () => {
     const count = await images.count();
     for (let i = 0; i < count; i++) {
       const img = images.nth(i);
-      await img.scrollIntoViewIfNeeded();
+      await img.evaluate((el: HTMLElement) => el.scrollIntoView({ block: "center" }));
       await page.waitForFunction(
         (element) => (element as HTMLImageElement).complete,
         await img.elementHandle()
@@ -33,7 +33,7 @@ test.describe('Image Regression Tests', () => {
       const count = await images.count();
       for (let i = 0; i < count; i++) {
         const img = images.nth(i);
-        await img.scrollIntoViewIfNeeded();
+        await img.evaluate((el: HTMLElement) => el.scrollIntoView({ block: "center" }));
         await page.waitForFunction(
           (element) => (element as HTMLImageElement).complete,
           await img.elementHandle()
@@ -61,7 +61,7 @@ test.describe('Image Regression Tests', () => {
           const count = await images.count();
           for (let i = 0; i < count; i++) {
             const img = images.nth(i);
-            await img.scrollIntoViewIfNeeded();
+            await img.evaluate((el: HTMLElement) => el.scrollIntoView({ block: "center" }));
             await page.waitForFunction(
               (element) => (element as HTMLImageElement).complete,
               await img.elementHandle()
@@ -82,7 +82,7 @@ test.describe('Image Regression Tests', () => {
       const count = await images.count();
       for (let i = 0; i < count; i++) {
         const img = images.nth(i);
-        await img.scrollIntoViewIfNeeded();
+        await img.evaluate((el: HTMLElement) => el.scrollIntoView({ block: "center" }));
         await page.waitForFunction(
           (element) => (element as HTMLImageElement).complete,
           await img.elementHandle()

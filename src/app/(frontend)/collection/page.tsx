@@ -8,31 +8,135 @@ export const metadata = {
   description: "দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ এবং পোষা প্রাণীর সব সামগ্রীর বিশাল সংগ্রহ।",
 };
 
-export default async function CollectionPage() {
+export default async function CollectionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const resolvedParams = await searchParams;
+  const page = typeof resolvedParams.page === 'string' ? parseInt(resolvedParams.page, 10) || 1 : 1;
+  const category = typeof resolvedParams.category === 'string' ? resolvedParams.category : 'all';
+  const q = typeof resolvedParams.q === 'string' ? resolvedParams.q.toLowerCase() : '';
+  
   const payload = await getPayload({ config: configPromise });
+  const limit = 24;
 
-  // Fetch all animals (available)
-  const animalsData = await payload.find({
-    collection: 'animals',
-    where: { status: { equals: 'available' } },
-    limit: 200,
-  });
+  const animalsBaseWhere: any = { status: { equals: 'available' } };
+  const productsBaseWhere: any = { status: { equals: 'in_stock' } };
 
-  // Fetch all products (in_stock)
-  const productsData = await payload.find({
-    collection: 'products',
-    where: { status: { equals: 'in_stock' } },
-    limit: 200,
-  });
+  if (q) {
+    const qWhere = {
+      or: [
+        { internalName: { like: q } },
+        { 'name.bn': { like: q } },
+        { 'name.en': { like: q } },
+      ]
+    };
+    animalsBaseWhere.and = [ { status: { equals: 'available' } }, qWhere ];
+    productsBaseWhere.and = [ { status: { equals: 'in_stock' } }, qWhere ];
+  }
 
-  // Combine: normalize categories to match TABS in collection-client.tsx
-  // Animals: category = 'bird' | 'fish' | 'other' (no isRareExotic field)
-  // Products: category = 'food' | 'accessories' | 'medicine' | 'other', isRareExotic = boolean
+  // 1. Get total counts for ALL tabs to render the numbers accurately
+  // Using limit: 0 returns totalDocs without fetching the documents
+  const [
+    allAnimalsCount,
+    allProductsCount,
+    birdCount,
+    fishCount,
+    exoticCount,
+    foodCount,
+    accessoriesCount,
+    medicineCount,
+    otherCount
+  ] = await Promise.all([
+    payload.find({ collection: 'animals', limit: 0, where: animalsBaseWhere }),
+    payload.find({ collection: 'products', limit: 0, where: productsBaseWhere }),
+    payload.find({ collection: 'animals', limit: 0, where: { and: [animalsBaseWhere, { category: { equals: 'bird' } }] } }),
+    payload.find({ collection: 'animals', limit: 0, where: { and: [animalsBaseWhere, { category: { equals: 'fish' } }] } }),
+    payload.find({ collection: 'products', limit: 0, where: { and: [productsBaseWhere, { isRareExotic: { equals: true } }] } }),
+    payload.find({ collection: 'products', limit: 0, where: { and: [productsBaseWhere, { category: { equals: 'food' } }] } }),
+    payload.find({ collection: 'products', limit: 0, where: { and: [productsBaseWhere, { category: { equals: 'accessories' }, isRareExotic: { not_equals: true } }] } }),
+    payload.find({ collection: 'products', limit: 0, where: { and: [productsBaseWhere, { category: { equals: 'medicine' } }] } }),
+    payload.find({ collection: 'animals', limit: 0, where: { and: [animalsBaseWhere, { category: { equals: 'other' } }] } })
+  ]);
+
+  const tabCounts = {
+    all: allAnimalsCount.totalDocs + allProductsCount.totalDocs,
+    bird: birdCount.totalDocs,
+    fish: fishCount.totalDocs,
+    exotic: exoticCount.totalDocs,
+    food: foodCount.totalDocs,
+    accessories: accessoriesCount.totalDocs,
+    medicine: medicineCount.totalDocs,
+    other: otherCount.totalDocs
+  };
+
+  // 2. Determine what to fetch based on `category`
+  let animalsFetchWhere = { ...animalsBaseWhere };
+  let productsFetchWhere = { ...productsBaseWhere };
+  let fetchAnimals = false;
+  let fetchProducts = false;
+
+  if (category === 'all') {
+    fetchAnimals = true;
+    fetchProducts = true;
+  } else if (['bird', 'fish', 'other'].includes(category)) {
+    fetchAnimals = true;
+    animalsFetchWhere = {
+      and: [
+        animalsBaseWhere,
+        { category: { equals: category } }
+      ]
+    };
+  } else if (category === 'exotic') {
+    fetchProducts = true;
+    productsFetchWhere = {
+      and: [
+        productsBaseWhere,
+        { isRareExotic: { equals: true } }
+      ]
+    };
+  } else if (['food', 'accessories', 'medicine'].includes(category)) {
+    fetchProducts = true;
+    productsFetchWhere = {
+      and: [
+        productsBaseWhere,
+        { category: { equals: category } }
+      ]
+    };
+  }
+
+  let animalsDocs = [];
+  let productsDocs = [];
+  let totalDocs = 0;
+  let totalPages = 1;
+
+  if (fetchAnimals && fetchProducts) {
+    const [a, p] = await Promise.all([
+      payload.find({ collection: 'animals', where: animalsFetchWhere, limit: limit / 2, page }),
+      payload.find({ collection: 'products', where: productsFetchWhere, limit: limit / 2, page })
+    ]);
+    animalsDocs = a.docs;
+    productsDocs = p.docs;
+    totalDocs = tabCounts.all; // exact total across both
+    totalPages = Math.max(a.totalPages, p.totalPages);
+  } else if (fetchAnimals) {
+    const a = await payload.find({ collection: 'animals', where: animalsFetchWhere, limit, page });
+    animalsDocs = a.docs;
+    totalDocs = a.totalDocs;
+    totalPages = a.totalPages;
+  } else if (fetchProducts) {
+    const p = await payload.find({ collection: 'products', where: productsFetchWhere, limit, page });
+    productsDocs = p.docs;
+    totalDocs = p.totalDocs;
+    totalPages = p.totalPages;
+  }
+
+  // Normalize mapping
   const combinedItems = [
-    ...animalsData.docs.map((doc: any) => ({
+    ...animalsDocs.map((doc: any) => ({
       id: doc.id,
       isAnimal: true,
-      // Animals have no isRareExotic — map 'other' animals to their own tab
       category: doc.category || 'bird',
       internalName: doc.internalName,
       name: doc.name || { en: doc.internalName, bn: doc.internalName },
@@ -43,10 +147,9 @@ export default async function CollectionPage() {
       tag: doc.tag || { en: 'Available', bn: 'পাওয়া যাচ্ছে' },
       status: doc.status,
     })),
-    ...productsData.docs.map((doc: any) => ({
+    ...productsDocs.map((doc: any) => ({
       id: doc.id,
       isAnimal: false,
-      // Products: isRareExotic flag maps to 'exotic' tab; otherwise use actual category
       category: doc.isRareExotic ? 'exotic' : (doc.category || 'accessories'),
       internalName: doc.internalName,
       name: doc.name || { en: doc.internalName, bn: doc.internalName },
@@ -59,5 +162,17 @@ export default async function CollectionPage() {
     })),
   ];
 
-  return <CollectionClient items={combinedItems as any[]} />;
+  return (
+    <CollectionClient 
+      items={combinedItems as any[]} 
+      serverData={{
+        page,
+        totalPages,
+        totalDocs,
+        category,
+        q,
+        tabCounts
+      }}
+    />
+  );
 }

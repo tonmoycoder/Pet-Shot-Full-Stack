@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import { cn } from "@/lib/utils";
-import { Search, ShoppingBag, MessageCircle, ArrowUpRight, SlidersHorizontal } from "lucide-react";
+import { Search, ShoppingBag, MessageCircle, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Item = {
@@ -40,7 +41,6 @@ function ItemCard({ item, index }: { item: Item; index: number }) {
   const tagBn = item.tag?.bn || (item.isAnimal ? 'পাওয়া যাচ্ছে' : 'ইন স্টক');
   const isAvailable = item.status === 'available' || item.status === 'in_stock';
 
-  // Smart subject detection: birds → top 30%, fish → center, food/accessories → center
   const defaultPosition = item.isAnimal
     ? (item.category === 'bird' ? 'center 20%' : 'center center')
     : 'center center';
@@ -62,7 +62,6 @@ function ItemCard({ item, index }: { item: Item; index: number }) {
         href={href}
         className="block relative bg-white dark:bg-zinc-900 rounded-[28px] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 border border-zinc-100/80 dark:border-zinc-800 flex flex-col h-full"
       >
-        {/* Image Zone */}
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 shrink-0">
           {item.image ? (
             <Image
@@ -80,11 +79,7 @@ function ItemCard({ item, index }: { item: Item; index: number }) {
               </span>
             </div>
           )}
-
-          {/* Scrim */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-          {/* Status badge */}
           <div className="absolute top-3 left-3">
             <span className={cn(
               "px-3 py-1 rounded-full text-[11px] font-bangla font-bold shadow-md backdrop-blur-sm border",
@@ -95,14 +90,10 @@ function ItemCard({ item, index }: { item: Item; index: number }) {
               {tagBn}
             </span>
           </div>
-
-          {/* View arrow */}
           <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white/95 dark:bg-zinc-900/95 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
             <ArrowUpRight className="w-4 h-4 text-zinc-900 dark:text-white" />
           </div>
         </div>
-
-        {/* Info */}
         <div className="p-5 flex flex-col flex-1">
           <h3 className="text-[17px] font-bangla font-bold text-zinc-900 dark:text-white mb-1.5 line-clamp-1 group-hover:text-[#265D85] dark:group-hover:text-[#67B1E0] transition-colors duration-300">
             {nameBn}
@@ -122,8 +113,6 @@ function ItemCard({ item, index }: { item: Item; index: number }) {
           </div>
         </div>
       </Link>
-
-      {/* Quick WhatsApp button (outside the link, absolutely positioned) */}
       <a
         href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330"}?text=${whatsappMsg}`}
         target="_blank"
@@ -138,40 +127,43 @@ function ItemCard({ item, index }: { item: Item; index: number }) {
   );
 }
 
-export function CollectionClient({ items }: { items: Item[] }) {
-  const [filter, setFilter] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+export function CollectionClient({ items, serverData }: { items: Item[], serverData: any }) {
+  const router = useRouter();
+  const { page, totalPages, totalDocs, category: activeFilter, q: searchQuery, tabCounts } = serverData;
+  const [localSearch, setLocalSearch] = useState(searchQuery || "");
 
-  const filteredItems = useMemo(() => {
-    const activeTab = TABS.find((t) => t.id === filter);
-    return items.filter((item) => {
-      // Category filter: null means 'all'; otherwise match any of the tab's categories
-      if (activeTab?.categories !== null && activeTab?.categories !== undefined) {
-        if (!activeTab.categories.includes(item.category)) return false;
+  const updateUrl = (updates: Record<string, string | null>) => {
+    const url = new URL(window.location.href);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === "") {
+        url.searchParams.delete(key);
+      } else {
+        url.searchParams.set(key, value);
       }
-      // Search filter
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        const nameEn = item.name?.en?.toLowerCase() || '';
-        const nameBn = item.name?.bn?.toLowerCase() || '';
-        const internalName = item.internalName?.toLowerCase() || '';
-        if (!nameEn.includes(q) && !nameBn.includes(q) && !internalName.includes(q)) return false;
-      }
-      return true;
     });
-  }, [items, filter, searchQuery]);
+    router.push(url.pathname + url.search, { scroll: false });
+  };
 
-  // Only show tabs that have at least 1 item (hide empty tabs)
-  const visibleTabs = useMemo(() => {
-    return TABS.filter((tab) => {
-      if (!tab.categories) return true; // always show 'all'
-      return items.some((item) => tab.categories!.includes(item.category));
-    });
-  }, [items]);
+  const setFilter = (newFilter: string) => {
+    updateUrl({ category: newFilter, page: "1" });
+  };
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      updateUrl({ q: localSearch, page: "1" });
+    }
+  };
+
+  const setPage = (newPage: number) => {
+    updateUrl({ page: newPage.toString() });
+  };
+
+  const visibleTabs = TABS.filter((tab) => {
+    return tabCounts[tab.id] > 0 || tab.id === 'all';
+  });
 
   return (
     <div className="min-h-screen bg-[#ddf1fa] dark:bg-zinc-950">
-      {/* Hero Header */}
       <div className="bg-gradient-to-br from-[#09334F] via-[#0d4a6e] to-[#265D85] pt-8 pb-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/80 text-sm font-bangla mb-6 border border-white/20">
@@ -185,15 +177,13 @@ export function CollectionClient({ items }: { items: Item[] }) {
             আপনার পছন্দের পোষা প্রাণী এবং প্রয়োজনীয় সব সামগ্রী খুঁজে নিন।
           </p>
           <div className="mt-4 text-white/50 font-bangla text-sm">
-            {items.length} টি পণ্য উপলব্ধ
+            {totalDocs} টি পণ্য উপলব্ধ
           </div>
         </div>
       </div>
 
-      {/* Filters - floating card */}
       <div className="max-w-7xl mx-auto px-4 -mt-8 mb-10 relative z-10">
         <div className="bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-zinc-100 dark:border-zinc-800 p-4 md:p-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-          {/* Tab filters — only show tabs with actual items */}
           <div className="flex flex-wrap gap-2">
             {visibleTabs.map((tab) => (
               <button
@@ -201,47 +191,45 @@ export function CollectionClient({ items }: { items: Item[] }) {
                 onClick={() => setFilter(tab.id)}
                 className={cn(
                   "flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bangla font-semibold transition-all duration-300 border",
-                  filter === tab.id
+                  activeFilter === tab.id
                     ? "bg-[#09334F] text-white border-[#09334F] shadow-md"
                     : "bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border-transparent hover:border-zinc-200 dark:hover:border-zinc-700 hover:text-[#265D85] dark:hover:text-[#67B1E0]"
                 )}
               >
                 <span>{tab.icon}</span>
                 {tab.label}
-                {/* Count badge */}
                 <span className={cn(
                   "ml-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full",
-                  filter === tab.id
+                  activeFilter === tab.id
                     ? "bg-white/20 text-white"
                     : "bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400"
                 )}>
-                  {tab.categories === null
-                    ? items.length
-                    : items.filter(i => tab.categories!.includes(i.category)).length
-                  }
+                  {tabCounts[tab.id]}
                 </span>
               </button>
             ))}
           </div>
 
-          {/* Search */}
           <div className="relative w-full md:w-72 shrink-0">
             <input
               type="text"
               placeholder="খুঁজুন..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              onKeyDown={handleSearch}
               className="w-full pl-11 pr-4 py-2.5 rounded-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-[#265D85]/30 dark:text-zinc-100 font-bangla text-sm transition-all"
             />
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+            <Search 
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 cursor-pointer" 
+              onClick={() => updateUrl({ q: localSearch, page: "1" })}
+            />
           </div>
         </div>
       </div>
 
-      {/* Items Grid */}
       <div className="max-w-7xl mx-auto px-4 pb-20">
         <AnimatePresence mode="popLayout">
-          {filteredItems.length === 0 ? (
+          {items.length === 0 ? (
             <motion.div
               key="empty"
               initial={{ opacity: 0 }}
@@ -262,12 +250,34 @@ export function CollectionClient({ items }: { items: Item[] }) {
               key="grid"
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6"
             >
-              {filteredItems.map((item, index) => (
+              {items.map((item, index) => (
                 <ItemCard key={item.id + (item.isAnimal ? 'A' : 'P')} item={item} index={index} />
               ))}
             </motion.div>
           )}
         </AnimatePresence>
+
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-12">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage(page - 1)}
+              className="flex items-center gap-1 px-4 py-2 rounded-full bg-white dark:bg-zinc-900 shadow-sm border border-zinc-200 dark:border-zinc-800 disabled:opacity-50 transition-all font-bangla text-zinc-600 dark:text-zinc-300 hover:text-[#265D85] hover:border-[#265D85]"
+            >
+              <ChevronLeft className="w-4 h-4" /> আগে
+            </button>
+            <span className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 font-sans">
+              {page} / {totalPages}
+            </span>
+            <button
+              disabled={page >= totalPages}
+              onClick={() => setPage(page + 1)}
+              className="flex items-center gap-1 px-4 py-2 rounded-full bg-white dark:bg-zinc-900 shadow-sm border border-zinc-200 dark:border-zinc-800 disabled:opacity-50 transition-all font-bangla text-zinc-600 dark:text-zinc-300 hover:text-[#265D85] hover:border-[#265D85]"
+            >
+              পরবর্তী <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

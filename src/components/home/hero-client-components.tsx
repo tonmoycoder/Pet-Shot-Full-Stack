@@ -10,8 +10,9 @@ import { useCursor } from "@/lib/cursor-context";
 import { useLanguage } from "@/lib/language-context";
 
 // ── Store Status Badge ──────────────────────────────────────────────────────
-export function StoreStatusClient({ storeSettings, dict }: { storeSettings: any, dict: any }) {
+export function StoreStatusClient({ storeSettings, dicts }: { storeSettings: any, dicts: any }) {
   const { language } = useLanguage();
+  const dict = dicts[language as 'en' | 'bn'] || dicts['bn'];
 
   const [isStoreOpen, setIsStoreOpen] = React.useState<boolean | null>(null);
 
@@ -92,8 +93,9 @@ export function StoreStatusClient({ storeSettings, dict }: { storeSettings: any,
 }
 
 // ── Hero CTAs ───────────────────────────────────────────────────────────────
-export function HeroCTAsClient({ whatsappLink, dict }: { whatsappLink: string, dict: any }) {
+export function HeroCTAsClient({ whatsappLink, dicts }: { whatsappLink: string, dicts: any }) {
   const { language } = useLanguage();
+  const dict = dicts[language as 'en' | 'bn'] || dicts['bn'];
   const { setCursorType } = useCursor();
   
   return (
@@ -143,8 +145,9 @@ export function HeroCTAsClient({ whatsappLink, dict }: { whatsappLink: string, d
 }
 
 // ── Hero Badges (Parallax) ──────────────────────────────────────────────────
-export function HeroBadgesClient({ dict }: { dict: any }) {
+export function HeroBadgesClient({ dicts }: { dicts: any }) {
   const { language } = useLanguage();
+  const dict = dicts[language as 'en' | 'bn'] || dicts['bn'];
 
   return (
     <>
