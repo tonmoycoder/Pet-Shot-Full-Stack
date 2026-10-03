@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Clock, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "cn";
-import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import Link from "next/link";
 import { useMotionConfig } from "@/lib/motion";
 import { formatDate } from "@/lib/utils";
@@ -85,24 +85,25 @@ export function BlogClient({ blogs }: { blogs: BlogPost[] }) {
                     <div className="relative w-full aspect-[16/10] overflow-hidden bg-zinc-100 dark:bg-zinc-800/80 flex items-center justify-center border-b border-zinc-100 dark:border-zinc-800">
                       {blog.coverImage?.url ? (
                         <>
-                          {/* Ambient Blur Background */}
-                          <Image
-                            src={blog.coverImage.url}
-                            alt={blog.title[language] || blog.title.bn}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="object-cover blur-2xl scale-125 opacity-50 dark:opacity-40 transition-transform duration-700 group-hover:scale-[1.35] group-hover:opacity-60"
-                            wrapperClassName="z-0"
-                          />
-                          {/* Crisp Foreground Image */}
-                          <Image
-                            src={blog.coverImage.url}
-                            alt={blog.title[language] || blog.title.bn}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="object-contain transition-transform duration-700 group-hover:scale-105 drop-shadow-xl"
-                            wrapperClassName="z-10"
-                          />
+                    <Image
+                      src={blog.coverImage?.url}
+                      sourceUrl={blog.coverImage?.sourceUrl}
+                      alt={blog.title[language] || blog.title.bn}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover blur-2xl scale-125 opacity-50 dark:opacity-40 transition-transform duration-700 group-hover:scale-[1.35] group-hover:opacity-60"
+                      wrapperClassName="z-0"
+                    />
+                    {/* Crisp Foreground Image */}
+                    <Image
+                      src={blog.coverImage?.url}
+                      sourceUrl={blog.coverImage?.sourceUrl}
+                      alt={blog.title[language] || blog.title.bn}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-contain transition-transform duration-700 group-hover:scale-105 drop-shadow-xl"
+                      wrapperClassName="z-10"
+                    />
                         </>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-emerald-50 dark:bg-zinc-800 relative z-10">

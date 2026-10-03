@@ -20,3 +20,8 @@ If you need to revert the UI, please restore the previous versions of the files 
 2. In `src/app/(frontend)/page.tsx`, remove `tag: doc.tag,` from the `rareAnimalDocs` and `rareProductDocs` maps.
 
 *Note: The new UI uses `useRef` and `useState` for tracking scroll progress and calculating the active card index for the indicator text.*
+
+## Image Resolution (Phase 1.2)
+1. **SafeImage Component**: Updated to accept an optional sourceUrl prop. If the local file fails to load or is invalid, it falls back to using the external URL if it exists.
+2. **log-client.tsx, log-detail-client.tsx, 	estimonial-section.tsx**: Updated to pass both url and sourceUrl from Payload to SafeImage, ensuring that if Vercel serverless functions fail to resolve local images or if they are corrupted (e.g. placeholder images from hotlink protection), the frontend will securely fallback to the original image link.
+

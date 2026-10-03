@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { Clock, ArrowLeft, Share2, MessageCircle, Link as LinkIcon } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "cn";
-import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import Link from "next/link";
-import { formatDate } from "@/lib/utils";
+import { formatDate, resolveImageUrl } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
 import { ImageZoom } from "@/components/ui/image-zoom";
@@ -86,12 +86,13 @@ function serializeRichText(nodes: any[], language: "en" | "bn") {
       case "upload":
         if (node.relationTo === "media" && node.value) {
           const { url, alt, width, height } = node.value;
+          const resolvedSrc = resolveImageUrl(url);
           return (
             <div key={i} className="my-8 w-full rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex justify-center">
-              {url ? (
-                <ImageZoom src={url} alt={alt || "Blog image"} className="w-full flex justify-center">
+              {resolvedSrc ? (
+                <ImageZoom src={resolvedSrc} alt={alt || "Blog image"} className="w-full flex justify-center">
                   <img
-                    src={url}
+                    src={resolvedSrc}
                     alt={alt || "Blog image"}
                     className="max-w-full h-auto object-contain rounded-2xl shadow-lg transition-opacity hover:opacity-90"
                     loading="lazy"
@@ -211,13 +212,14 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
           <div className="w-full aspect-[21/9] md:aspect-[2.5/1] relative bg-zinc-100 dark:bg-zinc-800 rounded-3xl overflow-hidden shadow-2xl shadow-zinc-200/50 dark:shadow-black/50 flex justify-center items-center">
             {blog.coverImage?.url ? (
               <ImageZoom
-                src={blog.coverImage.url}
+                src={blog.coverImage?.sourceUrl || blog.coverImage?.url}
                 alt={title}
                 className="absolute inset-0 w-full h-full"
               >
                 {/* Ambient Blur Background */}
                 <Image
                   src={blog.coverImage.url}
+                  sourceUrl={blog.coverImage.sourceUrl}
                   alt={title}
                   fill
                   sizes="(max-width: 768px) 100vw, 90vw"
@@ -228,6 +230,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
                 {/* Crisp Foreground Image */}
                 <Image
                   src={blog.coverImage.url}
+                  sourceUrl={blog.coverImage.sourceUrl}
                   alt={title}
                   fill
                   sizes="(max-width: 768px) 100vw, 90vw"

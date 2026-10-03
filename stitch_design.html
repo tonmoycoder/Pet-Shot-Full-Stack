@@ -1,0 +1,481 @@
+<!DOCTYPE html><html lang="bn" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>গ্রাহকদের সন্তুষ্টির গল্প - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Hind Siliguri (Bengali) & Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            bengali: ['"Hind Siliguri"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', '"Hind Siliguri"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          },
+          boxShadow: {
+            '3d-center': '0 25px 60px -15px rgba(16, 185, 129, 0.12), 0 20px 40px -20px rgba(15, 23, 42, 0.18)',
+            '3d-side': '0 15px 35px -10px rgba(15, 23, 42, 0.08)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Layout Styles -->
+<style data-purpose="custom-3d-styles">
+    /* Perspective and Card Stacking Transition Effects */
+    .carousel-perspective {
+      perspective: 1200px;
+      perspective-origin: center center;
+    }
+    .testimonial-card {
+      transition: all 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform, opacity, filter, box-shadow;
+    }
+    /* Dynamic slide positions controlled via JS */
+    .card-center {
+      transform: translate3d(0, 0, 40px) scale(1);
+      opacity: 1;
+      filter: blur(0px);
+      z-index: 30;
+      pointer-events: auto;
+    }
+    .card-left {
+      transform: translate3d(calc(-100% - 24px), 0, -60px) scale(0.88);
+      opacity: 0.6;
+      filter: blur(1.5px);
+      z-index: 10;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .card-right {
+      transform: translate3d(calc(100% + 24px), 0, -60px) scale(0.88);
+      opacity: 0.6;
+      filter: blur(1.5px);
+      z-index: 10;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .card-hidden {
+      transform: translate3d(0, 40px, -120px) scale(0.75);
+      opacity: 0;
+      filter: blur(4px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Progress bar smooth transition */
+    .progress-bar-fill {
+      transition: width 0.1s linear;
+    }
+  </style>
+<!-- END: Custom Layout Styles -->
+</head>
+<body class="bg-[#F8FAFC] text-slate-800 font-bengali min-h-screen flex items-center justify-center p-0 m-0 overflow-x-hidden selection:bg-brand-500 selection:text-white">
+<!-- BEGIN: Testimonials Section -->
+<section class="relative w-full py-14 lg:py-24 overflow-hidden flex flex-col justify-center items-center" data-purpose="testimonials-section">
+<!-- Ambient Radial Lighting / Glow (Matching Reference Clean Aesthetic) -->
+<div aria-hidden="true" class="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[720px] h-[520px] bg-gradient-to-b from-emerald-100/60 via-teal-50/40 to-transparent rounded-full blur-3xl -z-10"></div>
+<div aria-hidden="true" class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[350px] bg-gradient-to-t from-slate-200/40 via-emerald-50/20 to-transparent rounded-full blur-2xl -z-10"></div>
+<!-- Section Header (Mirroring Reference Typography Hierarchy) -->
+<div class="text-center max-w-3xl px-4 mx-auto mb-10 lg:mb-14" data-purpose="section-header">
+<span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold tracking-wider text-emerald-800 bg-emerald-100/70 border border-emerald-200/80 uppercase font-sans mb-3.5">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+        বিশ্বস্ত ও প্রমাণিত সেবা
+      </span>
+<!-- Main Headline matching "Loved by World's Best Architects" style -->
+<h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-950 tracking-tight leading-tight">
+        Loved by
+      </h2>
+<p class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-400 tracking-normal mt-1">
+        ১,৫০০+ শৌখিন পশু প্রেমী
+      </p>
+
+</div>
+<!-- Carousel Outer Container with 3D Depth & Perspective -->
+<div class="relative w-full max-w-6xl px-4 sm:px-6 mx-auto carousel-perspective select-none" data-purpose="carousel-container" id="carouselWrapper">
+<!-- Testimonials Deck Stack -->
+<div class="relative w-full h-[470px] sm:h-[430px] md:h-[400px] flex items-center justify-center" id="cardsTrack">
+<!-- CARD 1: Rayhan Khan (Parakeet) -->
+<article class="testimonial-card absolute w-[94%] sm:w-[540px] md:w-[620px] bg-white rounded-3xl p-6 sm:p-7 md:p-8 border border-slate-200/90 shadow-3d-center flex flex-col justify-between card-hidden" data-index="0" data-purpose="testimonial-card" aria-hidden="true">
+<!-- Quote Icon -->
+<div class="flex items-center justify-between mb-4">
+<span aria-hidden="true" class="text-emerald-400 font-serif text-5xl leading-none select-none font-bold inline-block">“</span>
+<div class="flex items-center gap-1 text-amber-400 text-xs">
+              ★★★★★ <span class="text-slate-400 font-sans text-xs ml-1 font-semibold">5.0</span>
+</div>
+</div>
+<!-- Review Bengali Content -->
+<blockquote class="text-slate-800 text-base sm:text-lg md:text-xl font-medium leading-snug sm:leading-relaxed tracking-normal">
+            “চুয়াডাঙ্গা বড় বাজারের তানভীর ভাইয়ের দোকান থেকে রেয়ার বাজরিগার আর ফিঞ্চের একজোড়া জোড়া নিয়েছিলাম। পাখির হেলথ ও ব্রিডিং কোয়ালিটি সত্যিই অসাধারণ! যেকোনো পরামর্শে ভাই সবসময় ফোনে সক্রিয় থাকেন।”
+          </blockquote>
+<!-- Large Customer Portrait & Profile Area -->
+<div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<!-- Enlarged High-Resolution Customer Portrait -->
+<div class="relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden ring-4 ring-emerald-500/20 shadow-md">
+<img alt="রায়হান খান - পোষা পাখি ব্রিডার" class="w-full h-full object-cover object-center" loading="eager" src="https://lh3.googleusercontent.com/aida/AEtjO1VO5HqnEoeSsrjYQtK8rWPT4R8u3A3po6a_bNhYHipkOYUbi5Eer3bIvzxipHVe7mIcrnyp3lUKUgIZ18MMXY7VauAEG30P1sITUA5lCSxiRSseiqATxc5OdZpLHd0l3TJCGHVejcA4-H2gB6b5WmOhii2ZYZpX_oq8AayslAOVKYYGw3nvLSr2qrvU2QTfS6XZHfKUr507o-imaqauW3MuTkBb-vbPkRqq4K0H9B5itmkEJ1f8LSYKykgi">
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">রায়হান খান</h3>
+<p class="text-xs sm:text-sm text-slate-500 font-medium">পাখি পালক ও ব্রিডার, চুয়াডাঙ্গা সদর</p>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">ভেরিফাইড কাস্টমার</span>
+</div>
+</div>
+</div>
+<!-- Pet Badge -->
+<div class="hidden sm:flex flex-col items-end">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">Pet Type</span>
+<span class="text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full mt-0.5">Bajrigar Pair</span>
+</div>
+</div>
+</article>
+<!-- CARD 2: Sajid Hasan (Aquascaping) -->
+<article class="testimonial-card absolute w-[94%] sm:w-[540px] md:w-[620px] bg-white rounded-3xl p-6 sm:p-7 md:p-8 border border-slate-200/90 shadow-3d-side flex flex-col justify-between card-left" data-index="1" data-purpose="testimonial-card" aria-hidden="true">
+<!-- Quote Icon -->
+<div class="flex items-center justify-between mb-4">
+<span aria-hidden="true" class="text-emerald-400 font-serif text-5xl leading-none select-none font-bold inline-block">“</span>
+<div class="flex items-center gap-1 text-amber-400 text-xs">
+              ★★★★★ <span class="text-slate-400 font-sans text-xs ml-1 font-semibold">5.0</span>
+</div>
+</div>
+<!-- Review Bengali Content -->
+<blockquote class="text-slate-800 text-base sm:text-lg md:text-xl font-medium leading-snug sm:leading-relaxed tracking-normal">
+            “প্ল্যান্টেড ট্যাংকের ফিল্টার, CO2 গ্যাজেট আর নিয়ন টেট্রা ফিশ সরাসরি উনাদের স্টোরে গিয়ে দেখে আনলাম। ঢাকার সমমানের কালেকশন আর প্রফেশনাল অ্যাকুয়াস্কেপিং গাইডলাইন এখন আমাদের চুয়াডাঙ্গাতেই!”
+          </blockquote>
+<!-- Large Customer Portrait & Profile Area -->
+<div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<!-- Enlarged High-Resolution Customer Portrait -->
+<div class="relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden ring-4 ring-emerald-500/20 shadow-md">
+<img alt="সাজিদ হাসান - একুয়ারিয়াম হবিস্ট" class="w-full h-full object-cover object-center" loading="eager" src="https://lh3.googleusercontent.com/aida/AEtjO1UBXF3QwgkypEluwgjE8Lgz8iDJGEwK_Okp-SaEjGvKagwJIh1TP-5Zd5xGcL1vYrix84gVIuHi59i_cCJGfHQeY4Z0Iniusv02_MAHMjaMSgkIh6Hjkh55ImUaGQpYySZfszW8TTzS8Pufgl7YsrxD92v9Wtu7uy_jfvJ5Dy0reYgv072_eWAzVAVKC0lv-OAW98BcBGgnNiFgPp1W9tcBqZiWm9U4rP1yctVOnmH5azro6S8LpjtPfH36">
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">সাজিদ হাসান</h3>
+<p class="text-xs sm:text-sm text-slate-500 font-medium">অ্যাকুয়াস্কেপ হবিস্ট, দামুড়হুদা</p>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">লাইভ সেটআপ ভিজিট</span>
+</div>
+</div>
+</div>
+<!-- Pet Badge -->
+<div class="hidden sm:flex flex-col items-end">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">Tank Setup</span>
+<span class="text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full mt-0.5">High-Tech Planted</span>
+</div>
+</div>
+</article>
+<!-- CARD 3: Nusrat Jahan Mim (Guinea Pig) -->
+<article class="testimonial-card absolute w-[94%] sm:w-[540px] md:w-[620px] bg-white rounded-3xl p-6 sm:p-7 md:p-8 border border-slate-200/90 shadow-3d-side flex flex-col justify-between card-center" data-index="2" data-purpose="testimonial-card" aria-hidden="false">
+<!-- Quote Icon -->
+<div class="flex items-center justify-between mb-4">
+<span aria-hidden="true" class="text-emerald-400 font-serif text-5xl leading-none select-none font-bold inline-block">“</span>
+<div class="flex items-center gap-1 text-amber-400 text-xs">
+              ★★★★★ <span class="text-slate-400 font-sans text-xs ml-1 font-semibold">5.0</span>
+</div>
+</div>
+<!-- Review Bengali Content -->
+<blockquote class="text-slate-800 text-base sm:text-lg md:text-xl font-medium leading-snug sm:leading-relaxed tracking-normal">
+            “আমার গিনিপিগের প্রিমিয়াম হে (Timothy Hay), ব্রিডিং ডায়েট ও ভিটামিন সাপ্লিমেন্ট সব এক ছাদের নিচে পেয়েছি। তানভীর ভাইয়ের আন্তরিক ব্যবহার ও যত্নশীল আচরণ বারবার মন জয় করে।”
+          </blockquote>
+<!-- Large Customer Portrait & Profile Area -->
+<div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<!-- Enlarged High-Resolution Customer Portrait -->
+<div class="relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden ring-4 ring-emerald-500/20 shadow-md">
+<img alt="নুসরাত জাহান মিম - গিনিপিগ লাভার" class="w-full h-full object-cover object-center" loading="eager" src="https://lh3.googleusercontent.com/aida/AEtjO1Vph50o9bCBgbBDf7I-82_w4rRVMtA1gF1UOOXBh5M-5rHM6Mp5tDFq-sHj0e5id9MafiB1eo3ruAznKk4ieLcv1K05K2RblJeY5v84KJgcpz7q6H_n-wE3poNxOXBXdxUY5Tylnr2TNKAl5CJlkmXcmq4NpkqANlaQanB1za2FZbWomllCRzj-GhwUd1kIFmBmKGDE6XP-RbBodREquiOW9ZNjY1uApRkbw8Un2hrWtoIje9Ky3ZBZePMC">
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">নুসরাত জাহান মিম</h3>
+<p class="text-xs sm:text-sm text-slate-500 font-medium">পেট লাভার, চুয়াডাঙ্গা কোর্ট রোড</p>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">রেগুলার কাস্টমার</span>
+</div>
+</div>
+</div>
+<!-- Pet Badge -->
+<div class="hidden sm:flex flex-col items-end">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">Pet Type</span>
+<span class="text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full mt-0.5">Calico Guinea Pig</span>
+</div>
+</div>
+</article>
+<!-- CARD 4: Samiya Akhter (Rabbit) -->
+<article class="testimonial-card absolute w-[94%] sm:w-[540px] md:w-[620px] bg-white rounded-3xl p-6 sm:p-7 md:p-8 border border-slate-200/90 shadow-3d-side flex flex-col justify-between card-right" data-index="3" data-purpose="testimonial-card" aria-hidden="true">
+<!-- Quote Icon -->
+<div class="flex items-center justify-between mb-4">
+<span aria-hidden="true" class="text-emerald-400 font-serif text-5xl leading-none select-none font-bold inline-block">“</span>
+<div class="flex items-center gap-1 text-amber-400 text-xs">
+              ★★★★★ <span class="text-slate-400 font-sans text-xs ml-1 font-semibold">5.0</span>
+</div>
+</div>
+<!-- Review Bengali Content -->
+<blockquote class="text-slate-800 text-base sm:text-lg md:text-xl font-medium leading-snug sm:leading-relaxed tracking-normal">
+            “ছোট খরগোশটির খাবার ও খাঁচার বিষয়ে প্রথমদিকে অনেক চিন্তা হচ্ছিল। বিসমিল্লাহ পাখি শপ সম্পূর্ণ ডায়েট চার্ট এবং টিকা সম্পর্কিত সমস্ত টিপস দিয়ে সাহায্য করেছে। খরগোশটি অত্যন্ত চঞ্চল ও সুস্থ!”
+          </blockquote>
+<!-- Large Customer Portrait & Profile Area -->
+<div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<!-- Enlarged High-Resolution Customer Portrait -->
+<div class="relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden ring-4 ring-emerald-500/20 shadow-md">
+<img alt="সামিয়া আক্তার - খরগোশ পালক" class="w-full h-full object-cover object-center" loading="eager" src="https://lh3.googleusercontent.com/aida/AEtjO1X6JJO5zPCm6PnpP8_9HL6_WcpDbpflGDIgnuo3-koeN6ksTh7CKuFK8YRTFNrAkNquNp3Bb7gW0diHY_LeZV6_JQCc-zSV_ySwUYhjeWRQFfrzCnzrSs5TbiAEW_rgzcdmiiloM0LTiyFRx24CUxpNFo6RMT15ndfv7JWSqsTwXT49Czj1tHnmpjDqodlBjFhw19s2D2LdWat5tjQp_gL5sCq3-89QwXFDZQhxw24yjtbqlpxUmVPKqnrY">
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">সামিয়া আক্তার</h3>
+<p class="text-xs sm:text-sm text-slate-500 font-medium">শিক্ষার্থী ও খরগোশ পালক, আলমডাঙ্গা</p>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">ভেরিফাইড রিভিউ</span>
+</div>
+</div>
+</div>
+<!-- Pet Badge -->
+<div class="hidden sm:flex flex-col items-end">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">Pet Type</span>
+<span class="text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full mt-0.5">Dutch Rabbit</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Navigation & Dynamic Controls Engine -->
+<div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-xl mx-auto px-4" data-purpose="carousel-controls">
+<!-- Left: Previous Button -->
+<button aria-label="পূর্ববর্তী রিভিউ দেখুন" class="p-3 rounded-full bg-white border border-slate-200 shadow-sm text-slate-600 hover:text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500/40" id="prevBtn" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Center: Slide Number & Active Progress Bar Indicator -->
+<div class="flex flex-col items-center gap-2">
+<div class="flex items-center gap-2 font-sans text-xs font-bold text-slate-500">
+<span class="text-emerald-700 font-extrabold text-sm" id="currentSlideDisplay">03</span>
+<span class="text-slate-300">/</span>
+<span class="">04</span>
+</div>
+<!-- Smooth Linear Countdown Progress Bar -->
+<div class="w-36 h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-0 progress-bar-fill rounded-full" id="slideProgressBar" style="width: 20.2%;"></div>
+</div>
+<!-- Clickable Pagination Dots -->
+<div class="flex items-center gap-1.5 mt-1" id="dotsContainer">
+<button aria-label="স্লাইড ১" class="w-2 h-2 rounded-full transition-all duration-300 bg-slate-300 hover:bg-slate-400" data-dot="0"></button>
+<button aria-label="স্লাইড ২" class="w-2 h-2 rounded-full transition-all duration-300 bg-slate-300 hover:bg-slate-400" data-dot="1"></button>
+<button aria-label="স্লাইড ৩" class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-emerald-600 ring-2 ring-emerald-300" data-dot="2"></button>
+<button aria-label="স্লাইড ৪" class="w-2 h-2 rounded-full transition-all duration-300 bg-slate-300 hover:bg-slate-400" data-dot="3"></button>
+</div>
+</div>
+<!-- Right: Next Button -->
+<button aria-label="পরবর্তী রিভিউ দেখুন" class="p-3 rounded-full bg-white border border-slate-200 shadow-sm text-slate-600 hover:text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500/40" id="nextBtn" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Trust Badge Footer Note -->
+<div class="text-center mt-6">
+<p class="text-xs text-slate-400 flex items-center justify-center gap-1.5 font-medium">
+<svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+          ১100% অরিজিনাল কাস্টমার ফিডব্যাক • চুয়াডাঙ্গা জেলা ও পার্শ্ববর্তী অঞ্চলের শীর্ষ রিভিউড শপ
+        </p>
+</div>
+</div>
+</section>
+<!-- END: Testimonials Section -->
+<!-- BEGIN: Interactive Carousel JavaScript Engine -->
+<script data-purpose="carousel-engine">
+    (function init3DTestimonials() {
+      const cards = document.querySelectorAll('.testimonial-card');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const currentSlideDisplay = document.getElementById('currentSlideDisplay');
+      const progressBar = document.getElementById('slideProgressBar');
+      const dots = document.querySelectorAll('#dotsContainer button');
+      const wrapper = document.getElementById('carouselWrapper');
+
+      const TOTAL_CARDS = cards.length;
+      const DURATION = 4500; // 4.5 seconds per slide
+      let currentIndex = 0;
+      let timer = null;
+      let progressTimer = null;
+      let startTime = null;
+      let isPaused = false;
+      let remainingTime = DURATION;
+
+      // Update positions with 3D Depth Classes
+      function updateDeck() {
+        cards.forEach((card, idx) => {
+          card.classList.remove('card-center', 'card-left', 'card-right', 'card-hidden');
+
+          // Relative position relative to current active index
+          const relativeOffset = (idx - currentIndex + TOTAL_CARDS) % TOTAL_CARDS;
+
+          if (relativeOffset === 0) {
+            card.classList.add('card-center');
+            card.setAttribute('aria-hidden', 'false');
+          } else if (relativeOffset === 1) {
+            card.classList.add('card-right');
+            card.setAttribute('aria-hidden', 'true');
+          } else if (relativeOffset === TOTAL_CARDS - 1) {
+            card.classList.add('card-left');
+            card.setAttribute('aria-hidden', 'true');
+          } else {
+            card.classList.add('card-hidden');
+            card.setAttribute('aria-hidden', 'true');
+          }
+        });
+
+        // Update Counter Display (e.g. 01 / 04)
+        if (currentSlideDisplay) {
+          currentSlideDisplay.textContent = String(currentIndex + 1).padStart(2, '0');
+        }
+
+        // Update Dots Style
+        dots.forEach((dot, dotIdx) => {
+          if (dotIdx === currentIndex) {
+            dot.className = "w-2.5 h-2.5 rounded-full transition-all duration-300 bg-emerald-600 ring-2 ring-emerald-300";
+          } else {
+            dot.className = "w-2 h-2 rounded-full transition-all duration-300 bg-slate-300 hover:bg-slate-400";
+          }
+        });
+
+        // Reset progress bar
+        resetProgressBar();
+      }
+
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % TOTAL_CARDS;
+        updateDeck();
+      }
+
+      function prevSlide() {
+        currentIndex = (currentIndex - 1 + TOTAL_CARDS) % TOTAL_CARDS;
+        updateDeck();
+      }
+
+      function goToSlide(targetIdx) {
+        if (targetIdx === currentIndex) return;
+        currentIndex = targetIdx;
+        updateDeck();
+      }
+
+      // Progress bar animation runner
+      function resetProgressBar() {
+        if (progressBar) {
+          progressBar.style.width = '0%';
+        }
+        clearInterval(progressTimer);
+        clearTimeout(timer);
+
+        if (isPaused) return;
+
+        startTime = Date.now();
+        const startWidth = 0;
+
+        progressTimer = setInterval(() => {
+          if (isPaused) return;
+          const elapsed = Date.now() - startTime;
+          const percentage = Math.min((elapsed / DURATION) * 100, 100);
+          if (progressBar) {
+            progressBar.style.width = percentage + '%';
+          }
+          if (elapsed >= DURATION) {
+            clearInterval(progressTimer);
+          }
+        }, 50);
+
+        timer = setTimeout(() => {
+          nextSlide();
+        }, DURATION);
+      }
+
+      // Pause on hover
+      wrapper.addEventListener('mouseenter', () => {
+        isPaused = true;
+        clearTimeout(timer);
+        clearInterval(progressTimer);
+      });
+
+      wrapper.addEventListener('mouseleave', () => {
+        isPaused = false;
+        resetProgressBar();
+      });
+
+      // Arrow Clicks
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+      });
+
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+      });
+
+      // Dots Clicks
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          goToSlide(idx);
+        });
+      });
+
+      // Clicking flanking side cards directly triggers rotation
+      cards.forEach((card, idx) => {
+        card.addEventListener('click', () => {
+          if (card.classList.contains('card-left') || card.classList.contains('card-right')) {
+            goToSlide(idx);
+          }
+        });
+      });
+
+      // Touch / Swipe support
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      wrapper.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      wrapper.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+
+      function handleSwipe() {
+        const swipeThreshold = 40;
+        if (touchEndX < touchStartX - swipeThreshold) {
+          nextSlide();
+        } else if (touchEndX > touchStartX + swipeThreshold) {
+          prevSlide();
+        }
+      }
+
+      // Initial Deck Render
+      updateDeck();
+    })();
+  </script>
+<!-- END: Interactive Carousel JavaScript Engine -->
+
+
+</body><div id="ghostDownloaderMediaDownload" style="display: none; left: 0px; opacity: 0; position: fixed; top: 0px; transition: opacity 300ms; z-index: 2147483647;"></div></html>

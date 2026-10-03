@@ -20,6 +20,7 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
   const [hoverRating, setHoverRating] = useState(0);
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
+  const [petName, setPetName] = useState("");
   const [review, setReview] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -28,17 +29,63 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          
+          const MAX_WIDTH = 400;
+          const MAX_HEIGHT = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              resolve(new File([blob], file.name, { type: "image/jpeg", lastModified: Date.now() }));
+            } else {
+              resolve(file);
+            }
+          }, "image/jpeg", 0.85);
+        };
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        setError(language === "bn" ? "ছবির সাইজ ৫ মেগাবাইটের কম হতে হবে।" : "Image size must be less than 5MB.");
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        setError(language === "bn" ? "ছবির সাইজ ১০ মেগাবাইটের কম হতে হবে।" : "Image size must be less than 10MB.");
         return;
       }
-      setPhoto(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setPhotoPreview(reader.result as string);
-      reader.readAsDataURL(file);
+      
+      const previewReader = new FileReader();
+      previewReader.onloadend = () => setPhotoPreview(previewReader.result as string);
+      previewReader.readAsDataURL(file);
+      
+      const compressedFile = await compressImage(file);
+      setPhoto(compressedFile);
       setError("");
     }
   };
@@ -89,6 +136,7 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
           bn: role || "গ্রাহক",
           en: role || "Customer",
         },
+        petName,
         content: {
           bn: review,
           en: review,
@@ -117,6 +165,7 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
           setIsSuccess(false);
           setName("");
           setRole("");
+          setPetName("");
           setReview("");
           setRating(5);
           clearPhoto();
@@ -282,7 +331,21 @@ export function ReviewFormModal({ isOpen, onClose }: ReviewFormModalProps) {
                           value={role}
                           onChange={(e) => setRole(e.target.value)}
                           className="w-full bg-zinc-100 dark:bg-zinc-800/50 border border-transparent focus:border-emerald-500 rounded-xl px-4 py-3 outline-none transition-colors"
-                          placeholder={language === "bn" ? "যেমন: সন্তুষ্ট গ্রাহক" : "e.g., Happy Customer"}
+                          placeholder={language === "bn" ? "যেমন: পাখি পালক, রেগুলার কাস্টমার" : "e.g., Bird Breeder, Happy Customer"}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="petName" className={cn("block text-sm font-medium mb-1.5", language === "bn" ? "font-bangla" : "font-sans")}>
+                          {language === "bn" ? "প্রাণী বা পণ্যের নাম (ঐচ্ছিক)" : "Pet / Product Name (Optional)"}
+                        </label>
+                        <input
+                          id="petName"
+                          type="text"
+                          value={petName}
+                          onChange={(e) => setPetName(e.target.value)}
+                          className="w-full bg-zinc-100 dark:bg-zinc-800/50 border border-transparent focus:border-emerald-500 rounded-xl px-4 py-3 outline-none transition-colors"
+                          placeholder={language === "bn" ? "যেমন: বাজরিগার, প্ল্যান্টেড ট্যাংক" : "e.g., Bajrigar, Planted Tank"}
                         />
                       </div>
 
