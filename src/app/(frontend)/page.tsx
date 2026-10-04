@@ -83,7 +83,8 @@ export default async function Home() {
       payload.find({
         collection: 'blogs',
         limit: 3,
-        sort: '-publishedAt'
+        sort: '-publishedAt',
+        depth: 1
       }),
     ]);
 

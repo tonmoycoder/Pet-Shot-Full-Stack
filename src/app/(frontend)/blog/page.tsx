@@ -2,6 +2,8 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { BlogClient } from './blog-client';
 
+export const revalidate = 60;
+
 export const metadata = {
   title: 'Blog & Journal - Bismillah Pakhi & Aquarium',
   description: 'Read the latest thoughts, care tips, and news about pets and aquariums.',
@@ -15,7 +17,8 @@ export default async function BlogPage() {
     const blogRes = await payload.find({
       collection: 'blogs',
       limit: 100,
-      sort: '-publishedAt'
+      sort: '-publishedAt',
+      depth: 1
     });
     blogs = blogRes.docs.map((doc: any) => ({
       id: doc.id,

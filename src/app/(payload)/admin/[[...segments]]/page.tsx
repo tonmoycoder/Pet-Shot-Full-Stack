@@ -12,12 +12,19 @@ export async function generateMetadata({ params, searchParams }: Args) {
 }
 
 export default async function Page({ params, searchParams }: Args) {
-  return (
-    <RootPage
-      config={config}
-      importMap={importMap}
-      params={params}
-      searchParams={searchParams}
-    />
-  )
+  const p = await params
+  console.log('[DEBUG page] params:', p)
+  try {
+    return (
+      <RootPage
+        config={config}
+        importMap={importMap}
+        params={params}
+        searchParams={searchParams}
+      />
+    )
+  } catch (e) {
+    console.log('[DEBUG page] error:', e)
+    throw e
+  }
 }

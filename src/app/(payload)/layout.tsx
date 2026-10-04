@@ -7,6 +7,9 @@ import { importMap } from './admin/importMap'
 import { serverFunction } from './serverFunction'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  // TEMP DEBUG
+  const c: any = children
+  console.log('[DEBUG payload layout] children:', typeof c, c === null ? 'null' : c?.$$typeof?.toString(), c?.type?.$$typeof?.toString?.(), c?.type?.name, Object.keys(c?.props ?? {}))
   return (
     <RootLayout 
       config={config} 
