@@ -61,7 +61,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || 'postgres://postgres:postgres@127.0.0.1:5432/petshop',
     },
-    // Auto-push schema changes to DB — new columns (isFeatured, time fields) get added automatically
+    // push: true auto-syncs schema on startup (safe for this project — no destructive changes)
     push: true,
   }),
   typescript: {
