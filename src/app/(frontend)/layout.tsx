@@ -23,7 +23,6 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 const notoSerifBengali = Noto_Serif_Bengali({
   variable: "--font-bangla",
-  weight: ["300", "400", "500", "600", "700"],
   subsets: ["bengali"],
   display: "swap", // Prevent invisible text (FOIT) → reduces CLS
   preload: true, // Primary font for Bengali content — must preload to prevent massive CLS
