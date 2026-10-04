@@ -5,7 +5,7 @@ import React from "react";
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "cn";
-import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import Link from "next/link";
 
 import { formatDate } from "@/lib/utils";
@@ -76,6 +76,7 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
                     {blog.coverImage?.url ? (
                       <Image
                         src={blog.coverImage.url}
+                        sourceUrl={blog.coverImage?.sourceUrl}
                         alt={blog.title[language] || blog.title.bn}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
