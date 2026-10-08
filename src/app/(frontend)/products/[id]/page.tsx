@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   try {
     const payload = await getPayload({ config: configPromise });
-    const product = await payload.findByID({ collection: 'products', id });
+    const product = await payload.findByID({ collection: 'products', id, depth: 2 });
     return {
       title: `${product?.name?.bn || product?.name?.en || 'পণ্য বিস্তারিত'} | Bismillah Pakhi & Aquarium`,
       description: product?.description?.bn || product?.description?.en || '',
@@ -28,6 +28,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     product = await payload.findByID({
       collection: 'products',
       id,
+      depth: 2,
     });
 
     settings = await payload.findGlobal({
@@ -41,5 +42,20 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     notFound();
   }
 
-  return <ProductClient product={product} settings={settings} />;
+  const getImageUrl = (imageField: any): string => {
+    if (typeof imageField === 'object' && imageField?.url) return imageField.url;
+    if (typeof imageField === 'string') return imageField;
+    return '';
+  };
+
+  const resolvedProduct = {
+    ...product,
+    image: getImageUrl(product.imageUpload) || product.image,
+    gallery: product.gallery?.map((g: any) => ({
+      ...g,
+      url: getImageUrl(g.image) || g.url
+    })) || []
+  };
+
+  return <ProductClient product={resolvedProduct} settings={settings} />;
 }

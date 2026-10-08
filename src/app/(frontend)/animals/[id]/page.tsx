@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   try {
     const payload = await getPayload({ config: configPromise });
-    const animal = await payload.findByID({ collection: 'animals', id });
+    const animal = await payload.findByID({ collection: 'animals', id, depth: 2 });
     return {
       title: `${animal?.name?.bn || animal?.name?.en || 'প্রাণী বিস্তারিত'} | Bismillah Pakhi & Aquarium`,
       description: animal?.description?.bn || animal?.description?.en || '',
@@ -28,6 +28,7 @@ export default async function AnimalPage({ params }: { params: Promise<{ id: str
     animal = await payload.findByID({
       collection: 'animals',
       id,
+      depth: 2,
     });
 
     settings = await payload.findGlobal({
@@ -43,5 +44,20 @@ export default async function AnimalPage({ params }: { params: Promise<{ id: str
     notFound();
   }
 
-  return <AnimalClient animal={animal} settings={settings} />;
+  const getImageUrl = (imageField: any): string => {
+    if (typeof imageField === 'object' && imageField?.url) return imageField.url;
+    if (typeof imageField === 'string') return imageField;
+    return '';
+  };
+
+  const resolvedAnimal = {
+    ...animal,
+    image: getImageUrl(animal.imageUpload) || animal.image,
+    gallery: animal.gallery?.map((g: any) => ({
+      ...g,
+      url: getImageUrl(g.image) || g.url
+    })) || []
+  };
+
+  return <AnimalClient animal={resolvedAnimal} settings={settings} />;
 }

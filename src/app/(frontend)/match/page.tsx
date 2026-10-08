@@ -20,7 +20,7 @@ export default function MatchPage() {
       </div>
 
       {/* Layer 3 (z-[-5]): Noise texture overlay */}
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay -z-[5] pointer-events-none" />
+      <div className="absolute inset-0 bg-[url(/noise.png)] opacity-[0.03] mix-blend-overlay -z-[5] pointer-events-none" />
 
       {/* Layer 4 (z-[10]): Quiz content — always on top */}
       <div className="relative z-10">

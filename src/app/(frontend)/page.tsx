@@ -3,8 +3,7 @@ import Image from "next/image";
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
-export const revalidate = 60; // Enable ISR (cache for 60 seconds) to fix slow TTFB
-
+export const revalidate = 60; // Enable ISR (cache for 60 seconds) to fix slow TTFB and show new blogs/reviews
 // Below-the-fold & Heavy components: Lazy-load JS chunks to reduce initial bundle and TBT
 import { HeroSection } from "@/components/home/hero-section";
 const DiscoveryBento = dynamic(() => import("@/components/home/discovery-bento").then(m => ({ default: m.DiscoveryBento })));
@@ -40,6 +39,7 @@ export default async function Home() {
       payload.find({
         collection: 'animals',
         limit: 12,
+        depth: 1,
         where: {
           and: [
             { status: { equals: 'available' } },
@@ -50,6 +50,7 @@ export default async function Home() {
       payload.find({
         collection: 'animals',
         limit: 12,
+        depth: 1,
         where: {
           and: [
             { status: { equals: 'available' } },
@@ -60,6 +61,7 @@ export default async function Home() {
       payload.find({
         collection: 'products',
         limit: 12,
+        depth: 1,
         where: {
           and: [
             { status: { equals: 'in_stock' } },
@@ -88,11 +90,18 @@ export default async function Home() {
       }),
     ]);
 
+    const getImageUrl = (doc: any) => {
+      if (doc.imageUpload && typeof doc.imageUpload === 'object' && doc.imageUpload.url) {
+        return doc.imageUpload.url;
+      }
+      return doc.image || '';
+    };
+
     // Process results
     if (animalsResult.status === 'fulfilled') {
       pets = animalsResult.value.docs.map((doc: any) => ({
         id: doc.id,
-        image: doc.image,
+        image: getImageUrl(doc),
         objectPosition: doc.objectPosition,
         name: doc.name,
         tag: doc.tag,
@@ -107,7 +116,7 @@ export default async function Home() {
       ? rareAnimalsResult.value.docs.map((doc: any) => ({
           id: doc.id,
           isAnimal: true,
-          image: doc.image,
+          image: getImageUrl(doc),
           name: doc.name,
           tag: doc.tag,
           price: doc.price,
@@ -119,7 +128,7 @@ export default async function Home() {
       ? rareProductsResult.value.docs.map((doc: any) => ({
           id: doc.id,
           isAnimal: false,
-          image: doc.image,
+          image: getImageUrl(doc),
           name: doc.name,
           tag: doc.tag,
           price: doc.price,
@@ -206,8 +215,9 @@ export default async function Home() {
         <StoreExperience settings={settingsRes as any} />
       </div>
 
-      {/* 6. Testimonials — customer reviews and form */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
+
+      {/* 6. Testimonials — customer reviews */}
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <TestimonialSection testimonials={testimonials} />
       </div>
 

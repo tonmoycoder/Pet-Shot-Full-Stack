@@ -61,8 +61,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || 'postgres://postgres:postgres@127.0.0.1:5432/petshop',
     },
-    // push: true auto-syncs schema on startup (safe for this project — no destructive changes)
-    push: true,
+    // We disable push locally if it's causing interactive prompt hangs due to storage plugins
+    push: false,
   }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

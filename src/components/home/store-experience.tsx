@@ -248,7 +248,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
 
               {/* Your local video preview PIP */}
               <div className="absolute top-8 right-3 w-12 h-16 bg-zinc-800 rounded-md border border-white/20 overflow-hidden shadow-lg">
-                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay" />
+                <div className="absolute inset-0 bg-[url(/noise.png)] opacity-20 mix-blend-overlay" />
                 <div className="w-full h-full bg-zinc-700/50 backdrop-blur-sm flex items-center justify-center">
                   <span className="text-[10px] text-white/50">You</span>
                 </div>
@@ -279,7 +279,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
           onMouseLeave={() => setCursorType("default")}
         >
           {/* Subtle Map Background Pattern */}
-          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+          <div className="absolute inset-0 bg-[url(/noise.png)] opacity-[0.03] mix-blend-overlay pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-200/50 dark:from-zinc-950/50 to-transparent pointer-events-none" />
 
           <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-8">

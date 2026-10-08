@@ -211,3 +211,81 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+/* Custom Razer Pulse Animation */
+@keyframes razer-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4);
+    }
+    5% {
+        transform: scale(1.01);
+    }
+    15% {
+        transform: scale(1);
+    }
+    70% {
+        box-shadow: 0 0 0 30px rgba(0, 255, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 50px rgba(0, 255, 0, 0);
+    }
+}
+.animate-razer-pulse {
+    animation: razer-pulse 2s infinite;
+}
+
+/* Developer Box Pulse Animation */
+@keyframes developer-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 18px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 18px rgba(16, 185, 129, 0);
+  }
+}
+
+.animate-developer-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  animation: developer-pulse 1.8s cubic-bezier(.4,0,.2,1) infinite;
+}
+
+/* Rose Pulse Animation for Shortlist */
+@keyframes rose-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(244, 63, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(244, 63, 94, 0);
+  }
+}
+
+.animate-rose-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  animation: rose-pulse 1.8s cubic-bezier(.4,0,.2,1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-developer-pulse::after, .animate-rose-pulse::after {
+    animation: none !important;
+  }
+}
+/* force rebuild */
+/* rebuild 2 */
+/* clear 3 */
+/* clear 4 */

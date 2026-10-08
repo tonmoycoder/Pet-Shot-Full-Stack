@@ -21,6 +21,8 @@ const navDict = {
     aquarium: "অ্যাকোয়ারিয়াম",
     food: "খাবার",
     accessories: "অ্যাক্সেসরিজ",
+    medicine: "ওষুধ",
+    others: "অন্যান্য",
     contact: "যোগাযোগ",
     contactMobile: "যোগাযোগ করুন",
     brandPrimary: "বিসমিল্লাহ",
@@ -33,6 +35,8 @@ const navDict = {
     aquarium: "Aquarium",
     food: "Food",
     accessories: "Accessories",
+    medicine: "Medicine",
+    others: "Others",
     contact: "Contact",
     contactMobile: "Contact Us",
     brandPrimary: "Bismillah",
@@ -47,6 +51,8 @@ const navLinks: { key: string, href: string }[] = [
   { key: "aquarium", href: "/categories/aquarium" },
   { key: "food", href: "/categories/food" },
   { key: "accessories", href: "/categories/accessories" },
+  { key: "medicine", href: "/categories/medicine" },
+  { key: "others", href: "/categories/others" },
   { key: "blogs", href: "/blog" },
 ];
 
@@ -142,12 +148,12 @@ export function Header() {
           <div className="hidden md:flex items-center gap-4">
             <button 
               onClick={() => setDrawerOpen(true)}
-              className="relative flex items-center justify-center p-2 rounded-full text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:text-zinc-400 dark:hover:bg-rose-950/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="animate-rose-pulse relative flex items-center justify-center p-2 rounded-full text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:text-zinc-400 dark:hover:bg-rose-950/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="View shortlist"
             >
-              <Heart className="w-5 h-5" />
+              <Heart className="relative z-10 w-5 h-5" />
               {isHydrated && items.length > 0 && (
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-zinc-950" />
+                <span className="absolute z-10 top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-zinc-950" />
               )}
             </button>
             <button 
@@ -167,9 +173,7 @@ export function Header() {
             <ThemeToggle />
             
             <MagneticButton 
-              href="https://wa.me/8801947315330"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/contact"
               variant="default" 
               size="sm" 
               className={cn("rounded-full shadow-lg", language === "bn" ? "font-bangla" : "font-sans")}
@@ -183,12 +187,12 @@ export function Header() {
           <div className="flex md:hidden items-center gap-2 relative z-50">
             <button 
               onClick={() => setDrawerOpen(true)}
-              className="relative p-2 rounded-full text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:text-zinc-400 transition-colors focus:outline-none"
+              className="animate-rose-pulse relative p-2 rounded-full text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:text-zinc-400 transition-colors focus:outline-none"
               aria-label="View shortlist"
             >
-              <Heart className="w-6 h-6" />
+              <Heart className="relative z-10 w-6 h-6" />
               {isHydrated && items.length > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-black" />
+                <span className="absolute z-10 top-1.5 right-1.5 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-black" />
               )}
             </button>
             <button 
@@ -270,17 +274,16 @@ export function Header() {
           </button>
           
           <div>
-            <a
-              href="https://wa.me/8801947315330"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/contact"
+              onClick={() => setIsOpen(false)}
               className={cn(
                 "flex items-center justify-center w-full bg-primary text-primary-foreground py-4 rounded-2xl font-semibold text-lg shadow-xl shadow-primary/20 active:scale-95 transition-transform",
                 language === "bn" ? "font-bangla" : "font-sans"
               )}
             >
               {t.contactMobile}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

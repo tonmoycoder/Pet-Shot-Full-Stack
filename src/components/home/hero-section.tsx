@@ -66,7 +66,7 @@ export function HeroSection({ heroImage, storeSettings, lcpImage, language = 'bn
       <CausticsBackground />
 
       {/* Subtle Texture */}
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay -z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-[url(/noise.png)] opacity-[0.03] mix-blend-overlay -z-10 pointer-events-none" />
 
       {/* Main Content Container — exact original classes: pt-24 md:pt-0 centers content on desktop via section's items-center */}
       <div className="container mx-auto px-4 lg:px-8 w-full h-full flex flex-col-reverse md:flex-row items-center gap-8 md:gap-16 relative z-10 pb-12 md:pb-0 pt-24 md:pt-0">

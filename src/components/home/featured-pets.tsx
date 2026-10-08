@@ -142,7 +142,7 @@ export function FeaturedPets({ pets }: { pets: PetProp[] }) {
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     style={{ objectPosition: pet.objectPosition }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent h-[60%] mt-auto pointer-events-none transition-opacity duration-300 group-hover:opacity-100 opacity-90" />
                   
                   {/* Badges & Fav */}
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-20">
@@ -163,16 +163,16 @@ export function FeaturedPets({ pets }: { pets: PetProp[] }) {
                   </div>
 
                   {/* Content Overlay */}
-                  <div className="absolute bottom-0 inset-x-0 p-4 text-white z-20 pointer-events-none">
-                    <div className="flex flex-col gap-1">
-                      <h3 className={cn("text-xl font-semibold text-white leading-tight drop-shadow-md", fontClass)}>
+                  <div className="absolute bottom-0 inset-x-0 p-5 pt-16 bg-gradient-to-t from-black via-black/80 to-transparent z-20 pointer-events-none">
+                    <div className="flex flex-col gap-1.5">
+                      <h3 className={cn("text-xl font-bold text-white leading-tight drop-shadow-lg", fontClass)}>
                         {petName}
                       </h3>
                       <div className="flex items-center justify-between mt-1">
-                        <span className={cn("text-xs text-white/80 uppercase tracking-wider", fontClass)}>
+                        <span className={cn("text-xs text-white/90 uppercase tracking-wider", fontClass)}>
                           {language === 'bn' ? 'আমাদের সংগ্রহ' : 'Our Collection'}
                         </span>
-                        <span className={cn("text-lg font-bold text-emerald-400 drop-shadow-sm", fontClass)}>
+                        <span className={cn("text-xl font-extrabold text-white drop-shadow-md", fontClass)}>
                           {petPrice}
                         </span>
                       </div>

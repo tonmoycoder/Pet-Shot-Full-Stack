@@ -66,7 +66,8 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
     }
   };
 
-  if (!products || products.length === 0) return null;
+  // Removed early return to show empty state if no products exist
+  const displayProducts = products && products.length > 0 ? products : [];
 
   return (
     <section className="py-20 relative z-20 overflow-hidden bg-[#050505]">
@@ -108,7 +109,8 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
         className="flex gap-4 md:gap-5 px-5 md:px-8 xl:px-[calc((100vw-1400px)/2+32px)] overflow-x-auto snap-x snap-mandatory py-2 pb-4 cursor-grab active:cursor-grabbing scroll-smooth relative z-10"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
       >
-        {products.map((product, index) => {
+        {displayProducts.length > 0 ? (
+          displayProducts.map((product, index) => {
           const productName = product.name?.[language as keyof typeof product.name] || product.name?.bn;
           const productPrice = product.price?.[language as keyof typeof product.price] || '';
           const href = product.isAnimal !== false ? `/animals/${product.id}` : `/products/${product.id}`;
@@ -147,7 +149,7 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
                     <Sparkles className="w-12 h-12 text-amber-500/20" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent h-[60%] mt-auto pointer-events-none transition-opacity duration-300 group-hover:opacity-100 opacity-90 z-10" />
                 
                 {/* Badges & Fav */}
                 <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-20">
@@ -169,16 +171,16 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
                 </div>
 
                 {/* Content Overlay */}
-                <div className="absolute bottom-0 inset-x-0 p-4 text-white z-20 pointer-events-none">
-                  <div className="flex flex-col gap-1">
+                <div className="absolute bottom-0 inset-x-0 p-5 pt-16 bg-gradient-to-t from-black via-black/80 to-transparent z-20 pointer-events-none">
+                  <div className="flex flex-col gap-1.5">
                     <h3 className={cn("text-xl font-semibold text-white leading-tight drop-shadow-md group-hover:text-amber-400 transition-colors", fontClass)}>
                       {productName}
                     </h3>
                     <div className="flex items-center justify-between mt-1">
-                      <span className={cn("text-xs text-white/60 uppercase tracking-wider", fontClass)}>
+                      <span className={cn("text-xs text-white/90 uppercase tracking-wider", fontClass)}>
                         {language === 'bn' ? 'রেয়ার আইটেম' : 'Rare Item'}
                       </span>
-                      <span className={cn("text-lg font-bold text-amber-500 drop-shadow-sm", fontClass)}>
+                      <span className={cn("text-xl font-extrabold text-white drop-shadow-md", fontClass)}>
                         {productPrice}
                       </span>
                     </div>
@@ -207,10 +209,16 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
               </div>
             </div>
           );
-        })}
+        })
+        ) : (
+          <div className="w-full flex items-center justify-center p-12 text-zinc-500">
+            {language === 'en' ? 'No rare/exotic items available.' : 'বর্তমানে কোনো এক্সক্লুসিভ কালেকশন উপলব্ধ নেই।'}
+          </div>
+        )}
       </div>
 
       {/* Interactive Controls & Indicator */}
+      {displayProducts.length > 0 && (
       <div className="px-5 md:px-8 max-w-[1400px] mx-auto w-full pt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-10">
         
         {/* Swipe guide hint */}
@@ -232,7 +240,7 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
           {/* Arrow Controls and Counter */}
           <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
             <span className="text-sm font-medium text-zinc-400 tabular-nums">
-              {String(activeIndex + 1).padStart(2, '0')} / {String(products.length).padStart(2, '0')}
+              {String(activeIndex + 1).padStart(2, '0')} / {String(displayProducts.length).padStart(2, '0')}
             </span>
             <div className="flex items-center gap-1.5">
               <button 
@@ -253,6 +261,7 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
           </div>
         </div>
       </div>
+      )}
     </section>
   );
 }

@@ -86,7 +86,7 @@ function BentoCard({ title, desc, imageSrc, className, href, delay = 0, fontClas
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-700 ease-out" />
         
         {/* Subtle Grain Overlay */}
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.04] mix-blend-overlay pointer-events-none" />
+        <div className="absolute inset-0 bg-[url(/noise.png)] opacity-[0.04] mix-blend-overlay pointer-events-none" />
 
         {/* Content Box */}
         <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
