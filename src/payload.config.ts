@@ -41,6 +41,9 @@ export default buildConfig({
           path: '/bulk-upload',
         },
       },
+      providers: [
+        '@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler'
+      ],
     },
   },
   collections: [
@@ -70,16 +73,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   plugins: [
-    ...(process.env.BLOB_READ_WRITE_TOKEN
-      ? [
-          vercelBlobStorage({
-            collections: {
-              media: true,
-            },
-            token: process.env.BLOB_READ_WRITE_TOKEN,
-          }),
-        ]
-      : process.env.S3_ENDPOINT && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY
+    ...(process.env.S3_ENDPOINT && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY
       ? [
           s3Storage({
             collections: {
@@ -97,6 +91,13 @@ export default buildConfig({
             },
           }),
         ]
-      : []),
+      : [
+          vercelBlobStorage({
+            collections: {
+              media: true,
+            },
+            token: process.env.BLOB_READ_WRITE_TOKEN || 'dummy_token_to_force_importmap_generation',
+          }),
+        ]),
   ],
 });
