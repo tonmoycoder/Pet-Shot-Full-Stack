@@ -10,13 +10,13 @@ export async function GET() {
     const blogs = await payload.find({
       collection: 'blogs',
       limit: 10,
-      depth: 1
+      depth: 0
     });
     
     const testimonials = await payload.find({
       collection: 'testimonials',
       limit: 10,
-      depth: 1
+      depth: 0
     });
 
     return NextResponse.json({
