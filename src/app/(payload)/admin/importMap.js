@@ -27,6 +27,7 @@ import { ThemeToggle as ThemeToggle_b365ace62efbcb847151a48980b5dea6 } from '@/c
 import { BulkUploadLink as BulkUploadLink_eed201a87533e694ccd7d8c08fca57ce } from '@/components/admin/BulkUploadLink'
 import { BulkUploadView as BulkUploadView_d88449dab2fcd057472ca00599218c07 } from '@/components/admin/BulkUploadView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_3e5c4e4e4c2484eb56f5d20e4a59d839 } from '@payloadcms/storage-vercel-blob/client'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -58,5 +59,6 @@ export const importMap = {
   "@/components/admin/ThemeToggle#ThemeToggle": ThemeToggle_b365ace62efbcb847151a48980b5dea6,
   "@/components/admin/BulkUploadLink#BulkUploadLink": BulkUploadLink_eed201a87533e694ccd7d8c08fca57ce,
   "@/components/admin/BulkUploadView#BulkUploadView": BulkUploadView_d88449dab2fcd057472ca00599218c07,
-  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_3e5c4e4e4c2484eb56f5d20e4a59d839
 }
