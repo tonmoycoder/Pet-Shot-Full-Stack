@@ -14,7 +14,12 @@ This file documents all known production issues and their exact fixes.
 ### Root Cause
 The `importMap.js` file is missing the `VercelBlobClientUploadHandler` entry.
 Payload CMS uses this file to register all React components for the admin UI.
-When it's missing, the entire admin JS bundle fails silently.
+When it's missing, the entire admin JS bundle fails silently on hydration, resulting in a blank white screen.
+
+**Why does this happen?**
+1. Locally, `npx payload generate:importmap` crashes due to an ESM bug (`ERR_REQUIRE_ASYNC_MODULE`). Because it fails, it doesn't correctly parse `payload.config.ts` to inject the Vercel Blob handler.
+2. Vercel's `next build` command relies on the `importMap.js` that is checked into Git.
+3. If you don't manually commit the fixed `importMap.js` to GitHub, Vercel will keep deploying the broken version forever, no matter what you change in `payload.config.ts`.
 
 ### Fix
 Open [`src/app/(payload)/admin/importMap.js`](./src/app/%28payload%29/admin/importMap.js) and make sure these two lines exist:
@@ -26,13 +31,14 @@ import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_3e5c4e4e
 
 **At the bottom (exportMap object):**
 ```js
-"@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_3e5c4e4e4c2484eb56f5d20e4a59d839
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_3e5c4e4e4c2484eb56f5d20e4a59d839
 ```
 
-⚠️ **WARNING:** Running `npx payload generate:importmap` locally may REMOVE this entry because it doesn't detect it statically. Always check after running that command!
+🚨 **CRITICAL WARNING:**
+After you manually add these lines, you **MUST run `git add .` and `git commit` to push `importMap.js` to GitHub!** Vercel needs this exact file to build successfully.
 
 ### Reference Commit
-`ec94873` — "fix: manual importMap entry for VercelBlobClientUploadHandler"
+`9b01bd1` — "fix: MANUALLY commit importMap.js changes for VercelBlob handler"
 
 ---
 
@@ -82,11 +88,11 @@ If it returns `{"success": true, "blogsCount": 12, "testimonialsCount": 3}` → 
 ## ⚠️ Problem 3: `importMap.js` Gets Reset After Code Changes
 
 ### Symptom
-Admin white page reappears after someone runs `npx payload generate:importmap` locally
+Admin white page reappears after someone runs `npx payload generate:importmap` locally.
 
 ### Prevention
 The `VercelBlobClientUploadHandler` entry in `importMap.js` must be manually preserved.
-After any `generate:importmap` run, always verify the entry is still there before committing.
+If `importMap.js` is ever generated or modified again, you MUST verify the Vercel Blob handler is still inside it before pushing to GitHub.
 
 ---
 
