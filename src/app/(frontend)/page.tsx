@@ -106,7 +106,7 @@ export default async function Home() {
       homepageRes = await payload.findGlobal({ slug: 'homepage' });
     } catch (e) { console.warn("Homepage query failed", e); }
 
-    // Fetch testimonials (depth:0 avoids broken media table JOIN on production)
+    // Fetch testimonials
     try {
       const testimonialsResult = await payload.find({
         collection: 'testimonials',
@@ -118,7 +118,7 @@ export default async function Home() {
           ]
         },
         sort: '-createdAt',
-        depth: 0
+        depth: 1
       });
       testimonials = testimonialsResult.docs.map((doc: any) => ({
         id: doc.id,
@@ -126,23 +126,23 @@ export default async function Home() {
         authorRole: doc.authorRole,
         content: doc.content,
         rating: doc.rating || 5,
-        authorImage: null, // depth:0 — no image join
+        authorImage: doc.authorImage,
       }));
     } catch (e) { console.warn("Testimonials query failed", e); }
 
-    // Fetch blogs (depth:0 avoids broken media table JOIN on production)
+    // Fetch blogs
     try {
       const blogsResult = await payload.find({
         collection: 'blogs',
         limit: 3,
         sort: '-publishedAt',
-        depth: 0
+        depth: 1
       });
       blogs = blogsResult.docs.map((doc: any) => ({
         id: doc.id,
         title: doc.title,
         excerpt: doc.excerpt,
-        coverImage: null, // depth:0 — no image join
+        coverImage: doc.coverImage,
         publishedAt: doc.publishedAt,
       }));
     } catch (e) { console.warn("Blogs query failed", e); }

@@ -61,8 +61,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || 'postgres://postgres:postgres@127.0.0.1:5432/petshop',
     },
-    // We disable push locally if it's causing interactive prompt hangs due to storage plugins
+    // Auto-migrate schema changes on production startup
+    // This fixes missing columns like _objectkey, thumbnail_url in media table
     push: false,
+    migrationDir: './src/migrations',
   }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
