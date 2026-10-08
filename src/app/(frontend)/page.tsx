@@ -26,17 +26,9 @@ export default async function Home() {
   try {
     const payload = await getPayload({ config: configPromise });
 
-    // ✅ Run ALL queries in PARALLEL — reduces wait from ~2.3s to ~600ms
-    const [
-      animalsResult,
-      rareAnimalsResult,
-      rareProductsResult,
-      settingsResult,
-      homepageResult,
-      testimonialsResult,
-      blogsResult,
-    ] = await Promise.allSettled([
-      payload.find({
+    // Fetch animals
+    try {
+      const animalsResult = await payload.find({
         collection: 'animals',
         limit: 12,
         depth: 1,
@@ -46,8 +38,20 @@ export default async function Home() {
             { isFeatured: { equals: true } }
           ]
         }
-      }),
-      payload.find({
+      });
+      pets = animalsResult.docs.map((doc: any) => ({
+        id: doc.id,
+        image: doc.imageUpload?.url || doc.image || '',
+        objectPosition: doc.objectPosition,
+        name: doc.name,
+        tag: doc.tag,
+        price: doc.price,
+      }));
+    } catch (e) { console.warn("Animals query failed", e); }
+
+    // Fetch rare animals and products
+    try {
+      const rareAnimalsResult = await payload.find({
         collection: 'animals',
         limit: 12,
         depth: 1,
@@ -57,8 +61,8 @@ export default async function Home() {
             { isRareExotic: { equals: true } }
           ]
         }
-      }),
-      payload.find({
+      });
+      const rareProductDocs = await payload.find({
         collection: 'products',
         limit: 12,
         depth: 1,
@@ -68,10 +72,42 @@ export default async function Home() {
             { isRareExotic: { equals: true } }
           ]
         }
-      }),
-      payload.findGlobal({ slug: 'store-settings' }),
-      payload.findGlobal({ slug: 'homepage' }),
-      payload.find({
+      });
+      
+      const rareA = rareAnimalsResult.docs.map((doc: any) => ({
+        id: doc.id,
+        isAnimal: true,
+        image: doc.imageUpload?.url || doc.image || '',
+        name: doc.name,
+        tag: doc.tag,
+        price: doc.price,
+        description: doc.description,
+      }));
+      const rareP = rareProductDocs.docs.map((doc: any) => ({
+        id: doc.id,
+        isAnimal: false,
+        image: doc.imageUpload?.url || doc.image || '',
+        name: doc.name,
+        tag: doc.tag,
+        price: doc.price,
+        description: doc.description,
+      }));
+      rareProducts = [...rareA, ...rareP];
+    } catch (e) { console.warn("Rare products query failed", e); }
+
+    // Fetch settings
+    try {
+      settingsRes = await payload.findGlobal({ slug: 'store-settings' });
+    } catch (e) { console.warn("Settings query failed", e); }
+
+    // Fetch homepage
+    try {
+      homepageRes = await payload.findGlobal({ slug: 'homepage' });
+    } catch (e) { console.warn("Homepage query failed", e); }
+
+    // Fetch testimonials
+    try {
+      const testimonialsResult = await payload.find({
         collection: 'testimonials',
         limit: 10,
         where: {
@@ -80,74 +116,10 @@ export default async function Home() {
             { status: { exists: false } }
           ]
         },
-        sort: '-createdAt'
-      }),
-      payload.find({
-        collection: 'blogs',
-        limit: 3,
-        sort: '-publishedAt',
+        sort: '-createdAt',
         depth: 1
-      }),
-    ]);
-
-    const getImageUrl = (doc: any) => {
-      if (doc.imageUpload && typeof doc.imageUpload === 'object' && doc.imageUpload.url) {
-        return doc.imageUpload.url;
-      }
-      return doc.image || '';
-    };
-
-    // Process results
-    if (animalsResult.status === 'fulfilled') {
-      pets = animalsResult.value.docs.map((doc: any) => ({
-        id: doc.id,
-        image: getImageUrl(doc),
-        objectPosition: doc.objectPosition,
-        name: doc.name,
-        tag: doc.tag,
-        price: doc.price,
-      }));
-    } else {
-      console.warn("Could not query animals:", animalsResult.reason);
-    }
-
-    // Combine rare animals + rare products into one list
-    const rareAnimalDocs = rareAnimalsResult.status === 'fulfilled'
-      ? rareAnimalsResult.value.docs.map((doc: any) => ({
-          id: doc.id,
-          isAnimal: true,
-          image: getImageUrl(doc),
-          name: doc.name,
-          tag: doc.tag,
-          price: doc.price,
-          description: doc.description,
-        }))
-      : [];
-
-    const rareProductDocs = rareProductsResult.status === 'fulfilled'
-      ? rareProductsResult.value.docs.map((doc: any) => ({
-          id: doc.id,
-          isAnimal: false,
-          image: getImageUrl(doc),
-          name: doc.name,
-          tag: doc.tag,
-          price: doc.price,
-          description: doc.description,
-        }))
-      : [];
-
-    rareProducts = [...rareAnimalDocs, ...rareProductDocs];
-
-    if (settingsResult.status === 'fulfilled') {
-      settingsRes = settingsResult.value;
-    }
-
-    if (homepageResult.status === 'fulfilled') {
-      homepageRes = homepageResult.value;
-    }
-
-    if (testimonialsResult.status === 'fulfilled') {
-      testimonials = testimonialsResult.value.docs.map((doc: any) => ({
+      });
+      testimonials = testimonialsResult.docs.map((doc: any) => ({
         id: doc.id,
         authorName: doc.authorName,
         authorRole: doc.authorRole,
@@ -155,17 +127,24 @@ export default async function Home() {
         rating: doc.rating || 5,
         authorImage: doc.authorImage,
       }));
-    }
+    } catch (e) { console.warn("Testimonials query failed", e); }
 
-    if (blogsResult.status === 'fulfilled') {
-      blogs = blogsResult.value.docs.map((doc: any) => ({
+    // Fetch blogs
+    try {
+      const blogsResult = await payload.find({
+        collection: 'blogs',
+        limit: 3,
+        sort: '-publishedAt',
+        depth: 1
+      });
+      blogs = blogsResult.docs.map((doc: any) => ({
         id: doc.id,
         title: doc.title,
         excerpt: doc.excerpt,
         coverImage: doc.coverImage,
         publishedAt: doc.publishedAt,
       }));
-    }
+    } catch (e) { console.warn("Blogs query failed", e); }
 
   } catch (error) {
     console.error("Failed to connect to Payload or Database. Is Postgres running?", error);
