@@ -96,7 +96,7 @@ export default buildConfig({
             collections: {
               media: true,
             },
-            token: process.env.BLOB_READ_WRITE_TOKEN || 'dummy_token_to_force_importmap_generation',
+            token: process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_dummy_1234567890abcdef',
           }),
         ]),
   ],
