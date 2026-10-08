@@ -2,7 +2,7 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { BlogClient } from './blog-client';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Blog & Journal - Bismillah Pakhi & Aquarium',
