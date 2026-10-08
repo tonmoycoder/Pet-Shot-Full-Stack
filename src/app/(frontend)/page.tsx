@@ -3,7 +3,7 @@ import Image from "next/image";
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
-export const dynamic = 'force-dynamic'; // Force dynamic to fix stale data issues on Vercel
+export const revalidate = 0; // Force dynamic (disable caching) to fix stale data on Vercel
 // Below-the-fold & Heavy components: Lazy-load JS chunks to reduce initial bundle and TBT
 import { HeroSection } from "@/components/home/hero-section";
 const DiscoveryBento = dynamic(() => import("@/components/home/discovery-bento").then(m => ({ default: m.DiscoveryBento })));
