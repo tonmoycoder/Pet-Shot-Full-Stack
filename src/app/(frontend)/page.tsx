@@ -1,19 +1,20 @@
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import Image from "next/image";
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
-export const revalidate = 0; // Force dynamic (disable caching) to fix stale data on Vercel
+export const dynamic = 'force-dynamic'; // Bypasses all Next.js and Vercel Caching!
+export const revalidate = 0; 
 // Below-the-fold & Heavy components: Lazy-load JS chunks to reduce initial bundle and TBT
 import { HeroSection } from "@/components/home/hero-section";
-const DiscoveryBento = dynamic(() => import("@/components/home/discovery-bento").then(m => ({ default: m.DiscoveryBento })));
-const FeaturedPets = dynamic(() => import("@/components/home/featured-pets").then(m => ({ default: m.FeaturedPets })));
-const TrustStrip = dynamic(() => import("@/components/home/trust-strip").then(m => ({ default: m.TrustStrip })));
-const StoreExperience = dynamic(() => import("@/components/home/store-experience").then(m => ({ default: m.StoreExperience })));
-const TestimonialSection = dynamic(() => import("@/components/home/testimonial-section").then(m => ({ default: m.TestimonialSection })));
-const BlogPeek = dynamic(() => import("@/components/home/blog-peek").then(m => ({ default: m.BlogPeek })));
-const FinalCTA = dynamic(() => import("@/components/home/final-cta").then(m => ({ default: m.FinalCTA })));
-const RareExoticCollection = dynamic(() => import("@/components/home/rare-exotic-collection").then(m => ({ default: m.RareExoticCollection })));
+const DiscoveryBento = nextDynamic(() => import("@/components/home/discovery-bento").then(m => ({ default: m.DiscoveryBento })));
+const FeaturedPets = nextDynamic(() => import("@/components/home/featured-pets").then(m => ({ default: m.FeaturedPets })));
+const TrustStrip = nextDynamic(() => import("@/components/home/trust-strip").then(m => ({ default: m.TrustStrip })));
+const StoreExperience = nextDynamic(() => import("@/components/home/store-experience").then(m => ({ default: m.StoreExperience })));
+const TestimonialSection = nextDynamic(() => import("@/components/home/testimonial-section").then(m => ({ default: m.TestimonialSection })));
+const BlogPeek = nextDynamic(() => import("@/components/home/blog-peek").then(m => ({ default: m.BlogPeek })));
+const FinalCTA = nextDynamic(() => import("@/components/home/final-cta").then(m => ({ default: m.FinalCTA })));
+const RareExoticCollection = nextDynamic(() => import("@/components/home/rare-exotic-collection").then(m => ({ default: m.RareExoticCollection })));
 
 export default async function Home() {
   let pets: any[] = [];
