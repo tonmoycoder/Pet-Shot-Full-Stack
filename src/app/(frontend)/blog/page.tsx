@@ -18,13 +18,13 @@ export default async function BlogPage() {
       collection: 'blogs',
       limit: 100,
       sort: '-publishedAt',
-      depth: 1
+      depth: 0  // depth:0 avoids broken media table JOIN on production Supabase
     });
     blogs = blogRes.docs.map((doc: any) => ({
       id: doc.id,
       title: doc.title,
       excerpt: doc.excerpt,
-      coverImage: doc.coverImage,
+      coverImage: null, // depth:0 — no image join (avoids broken media schema on prod)
       publishedAt: doc.publishedAt,
     }));
   } catch (error) {
