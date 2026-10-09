@@ -11,9 +11,30 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       collection: 'blogs',
       id: resolvedParams.id,
     });
+    
+    const title = `${blog.title.en || blog.title.bn} - Journal | Bismillah Pakhi & Aquarium`;
+    const description = blog.excerpt?.en || blog.excerpt?.bn || "Read our latest journal post.";
+    
+    let imageUrl = '';
+    if (blog.coverImage && typeof blog.coverImage === 'object' && blog.coverImage.url) {
+      imageUrl = blog.coverImage.url;
+    }
+
     return {
-      title: `${blog.title.en || blog.title.bn} - Journal | Bismillah Pakhi & Aquarium`,
-      description: blog.excerpt?.en || blog.excerpt?.bn || "Read our latest journal post.",
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: 'article',
+        ...(imageUrl && { images: [imageUrl] }),
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        ...(imageUrl && { images: [imageUrl] }),
+      },
     };
   } catch (error) {
     return { title: 'Blog Not Found' };

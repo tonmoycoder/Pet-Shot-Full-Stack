@@ -8,9 +8,32 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   try {
     const payload = await getPayload({ config: configPromise });
     const product = await payload.findByID({ collection: 'products', id, depth: 2 });
+    
+    const title = `${product?.name?.bn || product?.name?.en || 'পণ্য বিস্তারিত'} | Bismillah Pakhi & Aquarium`;
+    const description = product?.description?.bn || product?.description?.en || '';
+    
+    let imageUrl = '';
+    if (product?.imageUpload && typeof product.imageUpload === 'object' && product.imageUpload.url) {
+      imageUrl = product.imageUpload.url;
+    } else if (product?.image && typeof product.image === 'string') {
+      imageUrl = product.image;
+    }
+
     return {
-      title: `${product?.name?.bn || product?.name?.en || 'পণ্য বিস্তারিত'} | Bismillah Pakhi & Aquarium`,
-      description: product?.description?.bn || product?.description?.en || '',
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: 'website',
+        ...(imageUrl && { images: [imageUrl] }),
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        ...(imageUrl && { images: [imageUrl] }),
+      },
     };
   } catch {
     return { title: 'পণ্য বিস্তারিত | Bismillah Pakhi & Aquarium' };
