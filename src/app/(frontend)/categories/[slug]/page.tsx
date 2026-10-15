@@ -7,6 +7,8 @@ import { ArrowLeft, MessageCircle, ShoppingBag } from "lucide-react";
 import { SkeletonImage as Image } from "@/components/ui/skeleton-image";
 import { CategoryClient } from "./category-client";
 
+import { BreadcrumbJsonLd } from "@/components/seo/structured-data";
+
 const CATEGORY_META: Record<string, { title: string; titleBn: string; desc: string; descBn: string; color: string; icon: string }> = {
   birds: {
     title: "Bird Collection",
@@ -21,6 +23,14 @@ const CATEGORY_META: Record<string, { title: string; titleBn: string; desc: stri
     titleBn: "অ্যাকোয়ারিয়াম ও মাছ",
     desc: "Premium fish & aquascaping",
     descBn: "প্রিমিয়াম মাছ ও অ্যাকোয়ারিয়াম",
+    color: "from-blue-600 to-cyan-700",
+    icon: "🐟",
+  },
+  fish: {
+    title: "Fish Collection",
+    titleBn: "অ্যাকোয়ারিয়াম মাছ",
+    desc: "Premium colorful aquarium fishes",
+    descBn: "প্রিমিয়াম রঙিন মাছ ও অ্যাকোয়ারিয়াম কালেকশন",
     color: "from-blue-600 to-cyan-700",
     icon: "🐟",
   },
@@ -63,9 +73,25 @@ export const revalidate = 60;
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const meta = CATEGORY_META[slug];
+  const title = meta ? `${meta.titleBn} (${meta.title})` : slug;
+  const description = meta ? `${meta.descBn} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা।` : '';
+
   return {
-    title: meta?.titleBn || slug,
-    description: meta?.descBn || '',
+    title,
+    description,
+    alternates: {
+      canonical: `/categories/${slug}`,
+    },
+    openGraph: {
+      title: `${title} | Bismillah Pakhi & Aquarium`,
+      description,
+      url: `/categories/${slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | Bismillah Pakhi & Aquarium`,
+      description,
+    },
   };
 }
 
@@ -79,7 +105,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   let items: any[] = [];
   let isAnimal = false;
 
-  if (slug === 'birds') {
+  if (slug === 'birds' || slug === 'bird') {
     const data = await payload.find({
       collection: 'animals',
       where: { category: { equals: 'bird' } },
@@ -88,7 +114,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     });
     items = data.docs;
     isAnimal = true;
-  } else if (slug === 'aquarium') {
+  } else if (slug === 'aquarium' || slug === 'fish') {
     const data = await payload.find({
       collection: 'animals',
       where: { category: { equals: 'fish' } },
@@ -154,6 +180,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   }));
 
   return (
-    <CategoryClient meta={meta} items={mappedItems} isAnimal={isAnimal} />
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "হোম", url: "/" },
+          { name: "কালেকশন", url: "/collection" },
+          { name: meta.titleBn, url: `/categories/${slug}` },
+        ]}
+      />
+      <CategoryClient meta={meta} items={mappedItems} isAnimal={isAnimal} />
+    </>
   );
 }

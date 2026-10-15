@@ -1,9 +1,23 @@
 import React from "react";
 import { Metadata } from "next";
+import { FAQJsonLd, BreadcrumbJsonLd } from "@/components/seo/structured-data";
 
 export const metadata: Metadata = {
   title: "সাধারণ জিজ্ঞাসা (FAQ)",
-  description: "আমাদের দোকান, পণ্য এবং সেবাসমূহ সম্পর্কে সাধারণ জিজ্ঞাসার উত্তর।",
+  description: "আমাদের দোকান, পোষা পাখি, অ্যাকোয়ারিয়াম মাছ, ডেলিভারি এবং সেবাসমূহ সম্পর্কে সাধারণ জিজ্ঞাসার উত্তর। বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা।",
+  alternates: {
+    canonical: "/faq",
+  },
+  openGraph: {
+    title: "সাধারণ জিজ্ঞাসা (FAQ) | Bismillah Pakhi & Aquarium",
+    description: "আমাদের দোকান, পণ্য এবং সেবাসমূহ সম্পর্কে সাধারণ জিজ্ঞাসার উত্তর।",
+    url: "/faq",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "সাধারণ জিজ্ঞাসা (FAQ) | Bismillah Pakhi & Aquarium",
+    description: "আমাদের দোকান, পণ্য এবং সেবাসমূহ সম্পর্কে সাধারণ জিজ্ঞাসার উত্তর।",
+  },
 };
 
 export default function FAQPage() {
@@ -36,6 +50,13 @@ export default function FAQPage() {
 
   return (
     <main className="min-h-screen pt-32 pb-16 px-4 md:px-8 max-w-[800px] mx-auto font-bangla text-zinc-800 dark:text-zinc-200">
+      <FAQJsonLd faqs={faqs} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "হোম", url: "/" },
+          { name: "সাধারণ জিজ্ঞাসা", url: "/faq" },
+        ]}
+      />
       <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-emerald-900 dark:text-emerald-100">সাধারণ জিজ্ঞাসা (FAQ)</h1>
       <p className="text-zinc-600 dark:text-zinc-400 mb-10 text-lg">আপনার মনে হতে পারে এমন কিছু সাধারণ প্রশ্নের উত্তর নিচে দেওয়া হলো।</p>
       

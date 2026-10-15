@@ -1,10 +1,21 @@
+import type { Metadata } from "next";
 import nextDynamic from "next/dynamic";
 import Image from "next/image";
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
-export const dynamic = 'force-dynamic'; // Bypasses all Next.js and Vercel Caching!
-export const revalidate = 0; 
+// ISR: Cache at Vercel Edge with 60s background revalidation for instant TTFB & fast LCP
+export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম | Premium Pet Shop in Chuadanga",
+  description:
+    "চুয়াডাঙ্গার শীর্ষস্থানীয় বিশ্বস্ত দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ, অ্যাকোয়াস্কেপিং ও পেট সামগ্রীর দোকান। সুস্থ পাখি, রঙিন মাছ, অ্যাকোয়ারিয়াম ফিল্টার ও পাখির পুষ্টিকর খাবার।",
+  alternates: {
+    canonical: "/",
+  },
+};
+
 // Below-the-fold & Heavy components: Lazy-load JS chunks to reduce initial bundle and TBT
 import { HeroSection } from "@/components/home/hero-section";
 const DiscoveryBento = nextDynamic(() => import("@/components/home/discovery-bento").then(m => ({ default: m.DiscoveryBento })));
@@ -160,11 +171,11 @@ export default async function Home() {
         lcpImage={
           <Image
             src={typeof homepageRes?.heroImage === 'object' && homepageRes?.heroImage?.url ? homepageRes.heroImage.url : "/images/hero.webp"}
-            alt="Beautiful Aquarium and Birds"
+            alt="বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম - Beautiful Birds & Aquarium Store in Chuadanga"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
-            unoptimized
+            fetchPriority="high"
             className="w-full h-full object-cover origin-center z-10"
           />
         }

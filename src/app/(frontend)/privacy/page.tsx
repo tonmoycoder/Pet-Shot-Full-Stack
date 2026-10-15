@@ -1,14 +1,34 @@
 import React from "react";
 import { Metadata } from "next";
+import { BreadcrumbJsonLd } from "@/components/seo/structured-data";
 
 export const metadata: Metadata = {
   title: "গোপনীয়তা নীতি (Privacy Policy)",
   description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর গ্রাহক তথ্য সুরক্ষা ও গোপনীয়তা নীতি।",
+  alternates: {
+    canonical: "/privacy",
+  },
+  openGraph: {
+    title: "গোপনীয়তা নীতি (Privacy Policy) | Bismillah Pakhi & Aquarium",
+    description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর গ্রাহক তথ্য সুরক্ষা ও গোপনীয়তা নীতি।",
+    url: "/privacy",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "গোপনীয়তা নীতি (Privacy Policy) | Bismillah Pakhi & Aquarium",
+    description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর গ্রাহক তথ্য সুরক্ষা ও গোপনীয়তা নীতি।",
+  },
 };
 
 export default function PrivacyPage() {
   return (
     <main className="min-h-screen pt-32 pb-20 px-4 md:px-8 max-w-[800px] mx-auto font-bangla text-zinc-800 dark:text-zinc-200">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "হোম", url: "/" },
+          { name: "গোপনীয়তা নীতি", url: "/privacy" },
+        ]}
+      />
       <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-emerald-900 dark:text-emerald-100">গোপনীয়তা নীতি (Privacy Policy)</h1>
       <p className="text-zinc-600 dark:text-zinc-400 mb-10 text-lg border-b border-zinc-200 dark:border-zinc-800 pb-6">
         সর্বশেষ আপডেট: অক্টোবর ২০২৬

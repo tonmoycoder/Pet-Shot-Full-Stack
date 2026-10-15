@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { withPayload } from "@payloadcms/next/withPayload";
 
 const nextConfig: NextConfig = {
+  compress: true,
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -58,13 +59,22 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      // 1-week caching for public static images
+      // 1-year immutable caching for public static images & favicons
       {
         source: "/images/(.*)",
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=604800, stale-while-revalidate=86400",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/(favicon.ico|apple-icon.png|icon.png)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
@@ -82,7 +92,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Referrer-Policy",
-            value: "origin-when-cross-origin",
+            value: "strict-origin-when-cross-origin",
           },
           {
             key: "Permissions-Policy",

@@ -73,7 +73,7 @@ function BentoCard({ title, desc, imageSrc, className, href, delay = 0, fontClas
           <VanillaParallax offset={50} reverse className="w-full h-full">
             <Image
               src={imageSrc}
-              alt={title}
+              alt={`${title} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা`}
               fill
               className="object-cover"
               style={{ objectPosition }}

@@ -29,14 +29,63 @@ const notoSerifBengali = Noto_Serif_Bengali({
   preload: true, // Primary font for Bengali content — must preload to prevent massive CLS
 });
 
+import { PetStoreAndWebSiteJsonLd } from "@/components/seo/structured-data";
+
+const siteBaseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 
+  process.env.NEXT_PUBLIC_SITE_URL || 
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : null) || 
+  "https://bismillahpakhiandaquarium.vercel.app";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bismillahpakhi.com"), // Use the correct domain here
+  metadataBase: new URL(siteBaseUrl),
   title: {
-    default: "Bismillah Pakhi & Aquarium | Premium Pet Shop in Chuadanga",
+    default: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম | Bismillah Pakhi & Aquarium - Chuadanga",
     template: "%s | Bismillah Pakhi & Aquarium",
   },
-  description: "Your trusted destination for premium birds, aquariums, and pet accessories in Chuadanga. Quality pets, expert advice.",
-  keywords: ["pet shop", "chuadanga", "birds", "aquarium", "pet accessories", "dog", "cat", "fish"],
+  description:
+    "চুয়াডাঙ্গার শীর্ষস্থানীয় বিশ্বস্ত পেট শপ। সুস্থ ও সুন্দর দেশি-বিদেশি পাখি (বাজরিগার, ককাটেল, লাভবার্ড, সান কনুর), রঙিন অ্যাকোয়ারিয়াম মাছ (গোল্ডফিশ, ফাইটার, গাপ্পি, কই কার্প, অ্যারোওয়ানা), খাঁচা, অ্যাকোয়ারিয়াম ফিল্টার, ও পুষ্টিকর পাখির খাবার। Premium Pet Shop in Chuadanga offering exotic birds, aquarium fish, feeds, and supplies across Bangladesh.",
+  keywords: [
+    // Bengali high-intent search queries
+    "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম",
+    "বিসমিল্লাহ পাখি ঘর চুয়াডাঙ্গা",
+    "পাখির দোকান চুয়াডাঙ্গা",
+    "বাজরিগার পাখির দাম বাংলাদেশ",
+    "ককাটেল পাখির দাম",
+    "লাভবার্ড পাখি",
+    "সান কনুর পাখি",
+    "ম্যাকাও পাখি প্রি-বুকিং",
+    "অ্যাকোয়ারিয়াম মাছের দাম",
+    "গোল্ডফিশ",
+    "ফাইটার মাছ",
+    "গাপ্পি মাছ",
+    "কই কার্প",
+    "অ্যারোওয়ানা মাছ",
+    "পাখির খাবার সিড মিক্স",
+    "অ্যাকোয়ারিয়াম ফিল্টার ও অ্যাকুয়া সয়েল",
+    "চুয়াডাঙ্গা পেট শপ",
+    "দর্শনা পেট শপ",
+    // English search queries
+    "Bismillah Pakhi & Aquarium",
+    "Best Pet Shop in Chuadanga",
+    "Bird Shop Chuadanga Bangladesh",
+    "Buy Exotic Birds BD",
+    "Budgerigar Price in BD",
+    "Cockatiel Price BD",
+    "Sun Conure Bangladesh",
+    "Aquarium Fish Shop BD",
+    "Goldfish Betta Guppy Price BD",
+    "Arowana Fish Bangladesh",
+    "Planted Aquarium Supplies BD",
+    "Chuadanga Pet Store",
+    "Darshana Pet Store",
+  ],
+  alternates: {
+    canonical: "/",
+    languages: {
+      "bn-BD": "/",
+      "en-US": "/",
+    },
+  },
   icons: {
     icon: [
       { url: "/images/favicon.webp", type: "image/webp" },
@@ -51,16 +100,17 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
   },
   openGraph: {
-    title: "Bismillah Pakhi & Aquarium",
-    description: "Premium birds, aquariums, and pet accessories in Chuadanga.",
-    url: "https://bismillahpakhi.com",
+    title: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম | Bismillah Pakhi & Aquarium",
+    description:
+      "চুয়াডাঙ্গার শীর্ষস্থানীয় বিশ্বস্ত দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ, অ্যাকোয়াস্কেপিং ও পেট সামগ্রীর দোকান।",
+    url: siteBaseUrl,
     siteName: "Bismillah Pakhi & Aquarium",
     images: [
       {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Bismillah Pakhi & Aquarium Logo & Storefront",
+        alt: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম - Chuadanga Pet Shop Storefront & Logo",
       },
     ],
     locale: "bn_BD",
@@ -68,8 +118,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bismillah Pakhi & Aquarium",
-    description: "Premium birds, aquariums, and pet accessories in Chuadanga.",
+    title: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম | Bismillah Pakhi & Aquarium",
+    description:
+      "চুয়াডাঙ্গার শীর্ষস্থানীয় বিশ্বস্ত দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ, অ্যাকোয়াস্কেপিং ও পেট সামগ্রীর দোকান।",
     images: ["/images/og-image.png"],
   },
 };
@@ -100,6 +151,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <StoreSettingsProvider value={storeSettings}>
+            <PetStoreAndWebSiteJsonLd storeSettings={storeSettings} />
             <LanguageProvider>
             <CursorProvider>
               <ShortlistProvider>

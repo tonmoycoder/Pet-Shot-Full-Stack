@@ -77,7 +77,7 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
                       <Image
                         src={blog.coverImage.url}
                         sourceUrl={blog.coverImage?.sourceUrl}
-                        alt={blog.title[language] || blog.title.bn}
+                        alt={`${blog.title[language] || blog.title.bn} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা`}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover transition-transform duration-700 group-hover:scale-105"

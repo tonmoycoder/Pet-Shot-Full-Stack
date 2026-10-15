@@ -1,14 +1,34 @@
 import React from "react";
 import { Metadata } from "next";
+import { BreadcrumbJsonLd } from "@/components/seo/structured-data";
 
 export const metadata: Metadata = {
   title: "শর্তাবলী (Terms of Service)",
-  description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর সেবা ও পণ্য ক্রয়ের শর্তাবলী।",
+  description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর সেবা ও পণ্য ক্রয়ের শর্তাবলী। পাখি ও মাছ ক্রয়, গ্যারান্টি ও নীতিমালা।",
+  alternates: {
+    canonical: "/terms",
+  },
+  openGraph: {
+    title: "শর্তাবলী (Terms of Service) | Bismillah Pakhi & Aquarium",
+    description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর সেবা ও পণ্য ক্রয়ের শর্তাবলী।",
+    url: "/terms",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "শর্তাবলী (Terms of Service) | Bismillah Pakhi & Aquarium",
+    description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর সেবা ও পণ্য ক্রয়ের শর্তাবলী।",
+  },
 };
 
 export default function TermsPage() {
   return (
     <main className="min-h-screen pt-32 pb-20 px-4 md:px-8 max-w-[800px] mx-auto font-bangla text-zinc-800 dark:text-zinc-200">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "হোম", url: "/" },
+          { name: "শর্তাবলী", url: "/terms" },
+        ]}
+      />
       <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-emerald-900 dark:text-emerald-100">শর্তাবলী (Terms of Service)</h1>
       <p className="text-zinc-600 dark:text-zinc-400 mb-10 text-lg border-b border-zinc-200 dark:border-zinc-800 pb-6">
         সর্বশেষ আপডেট: অক্টোবর ২০২৬

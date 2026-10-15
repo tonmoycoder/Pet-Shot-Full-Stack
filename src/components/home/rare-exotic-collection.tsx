@@ -203,6 +203,7 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
                   href={href}
                   className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors shrink-0"
                   title={language === 'bn' ? 'বিস্তারিত জানুন' : 'Learn More'}
+                  aria-label={language === 'bn' ? `বিস্তারিত জানুন - ${productName}` : `Learn More - ${productName}`}
                 >
                   <Info className="w-5 h-5" />
                 </Link>

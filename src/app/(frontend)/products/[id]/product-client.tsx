@@ -106,38 +106,37 @@ export function ProductClient({ product, settings }: ProductClientProps) {
           
           {/* Left: Image Gallery — relative on mobile, sticky on desktop */}
           <div className="flex flex-col gap-4 relative md:sticky md:top-24">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={getTransition("fluid")}
+            <div
+              className="w-full"
               onMouseEnter={() => setCursorType("view")}
               onMouseLeave={() => setCursorType("default")}
             >
-              <ImageZoom src={images[activeImageIndex].url} alt={name || "Product Image"} className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+              <ImageZoom src={images[activeImageIndex].url} alt={`${name || "Product Image"} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা`} className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeImageIndex}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.2 }}
                     className="absolute inset-0"
                     style={{ willChange: "opacity" }}
                   >
-                    {/* LCP: priority on the main product image */}
+                    {/* LCP: priority & high fetchPriority on the main product image */}
                     <Image
                       src={images[activeImageIndex].url}
-                      alt={name || 'Product Image'}
+                      alt={`${name || 'Product Image'} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা`}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
                       style={{ objectPosition: "center center" }}
                       priority={activeImageIndex === 0}
+                      fetchPriority={activeImageIndex === 0 ? "high" : "auto"}
                     />
                   </motion.div>
                 </AnimatePresence>
               </ImageZoom>
-            </motion.div>
+            </div>
 
             {/* Thumbnails — lazy loaded */}
             {images.length > 1 && (
@@ -146,6 +145,7 @@ export function ProductClient({ product, settings }: ProductClientProps) {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
+                    aria-label={`View photo ${idx + 1} of ${name}`}
                     className={cn(
                       "relative w-20 h-20 shrink-0 rounded-2xl overflow-hidden border-2 transition-all",
                       activeImageIndex === idx 
@@ -153,19 +153,16 @@ export function ProductClient({ product, settings }: ProductClientProps) {
                         : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
-                    <Image src={img.url} alt={`${name || 'Product'} ${idx}`} fill sizes="80px" className="object-cover" loading="lazy" />
+                    <Image src={img.url} alt={`${name || 'Product'} photo ${idx + 1}`} fill sizes="80px" className="object-cover" loading="lazy" />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Right: Details */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...getTransition("fluid"), delay: 0.1 }}
-            className="flex flex-col pt-4 lg:pt-12"
+          {/* Right: Details — render at full opacity for instant SSR paint */}
+          <div 
+            className="flex flex-col pt-4 lg:pt-12 animate-in fade-in duration-500"
           >
             <div className="mb-8">
               {categoryLabel && (
@@ -260,7 +257,7 @@ export function ProductClient({ product, settings }: ProductClientProps) {
               </a>
             </div>
 
-          </motion.div>
+          </div>
         </div>
       </div>
 

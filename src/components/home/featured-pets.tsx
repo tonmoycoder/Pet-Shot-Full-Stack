@@ -195,6 +195,7 @@ export function FeaturedPets({ pets }: { pets: PetProp[] }) {
                     href={`/animals/${pet.id}`}
                     className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors shrink-0"
                     title={t.inquire}
+                    aria-label={`${t.inquire} - ${petName}`}
                   >
                     <Info className="w-5 h-5" />
                   </Link>

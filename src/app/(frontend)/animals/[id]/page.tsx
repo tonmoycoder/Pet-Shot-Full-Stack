@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { AnimalClient } from './animal-client';
+import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/seo/structured-data';
 
 export const revalidate = 60;
 
@@ -11,8 +12,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const payload = await getPayload({ config: configPromise });
     const animal = await payload.findByID({ collection: 'animals', id, depth: 2 });
     
-    const title = animal?.name?.bn || animal?.name?.en || 'প্রাণী বিস্তারিত';
-    const description = animal?.description?.bn || animal?.description?.en || '';
+    const nameBn = animal?.name?.bn || animal?.internalName || 'পাখি ও পোষা প্রাণী';
+    const nameEn = animal?.name?.en || '';
+    const title = nameEn ? `${nameBn} (${nameEn})` : nameBn;
+    const description = animal?.description?.bn || animal?.description?.en || 'বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম - সুস্থ ও সুন্দর পোষা পাখি ও অ্যাকোয়ারিয়াম মাছ। চুয়াডাঙ্গা, বাংলাদেশ।';
     
     let imageUrl = '';
     if (animal?.imageUpload && typeof animal.imageUpload === 'object' && animal.imageUpload.url) {
@@ -24,21 +27,30 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     return {
       title,
       description,
+      alternates: {
+        canonical: `/animals/${id}`,
+      },
       openGraph: {
-        title,
+        title: `${title} | Bismillah Pakhi & Aquarium`,
         description,
         type: 'website',
+        url: `/animals/${id}`,
         ...(imageUrl && { images: [imageUrl] }),
       },
       twitter: {
         card: 'summary_large_image',
-        title,
+        title: `${title} | Bismillah Pakhi & Aquarium`,
         description,
         ...(imageUrl && { images: [imageUrl] }),
       },
     };
   } catch {
-    return { title: 'প্রাণী বিস্তারিত' };
+    return {
+      title: 'প্রাণী বিস্তারিত',
+      alternates: {
+        canonical: `/animals/${id}`,
+      },
+    };
   }
 }
 
@@ -84,5 +96,20 @@ export default async function AnimalPage({ params }: { params: Promise<{ id: str
     })) || []
   };
 
-  return <AnimalClient animal={resolvedAnimal} settings={settings} />;
+  const animalTitle = resolvedAnimal.name?.bn || resolvedAnimal.name?.en || resolvedAnimal.internalName || 'পাখি ও পোষা প্রাণী';
+
+  return (
+    <>
+      <ProductJsonLd item={resolvedAnimal} isAnimal={true} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "হোম", url: "/" },
+          { name: "কালেকশন", url: "/collection" },
+          { name: "পাখি ও পোষা প্রাণী", url: "/categories/birds" },
+          { name: animalTitle, url: `/animals/${id}` },
+        ]}
+      />
+      <AnimalClient animal={resolvedAnimal} settings={settings} />
+    </>
+  );
 }

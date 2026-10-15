@@ -101,35 +101,35 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
           
           {/* Left: Image Gallery */}
           <div className="flex flex-col gap-4 relative md:sticky md:top-24">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={getTransition("fluid")}
+            <div 
+              className="w-full"
               onMouseEnter={() => setCursorType("view")}
               onMouseLeave={() => setCursorType("default")}
             >
-              <ImageZoom src={images[activeImageIndex].url} alt={name || "Animal Image"} className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+              <ImageZoom src={images[activeImageIndex].url} alt={`${name || "Animal"} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা`} className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeImageIndex}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.2 }}
                     className="absolute inset-0"
                   >
                     <Image
                       src={images[activeImageIndex].url}
-                      alt={name || 'Animal'}
+                      alt={`${name || 'Animal'} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা`}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
+                      priority={activeImageIndex === 0}
+                      fetchPriority={activeImageIndex === 0 ? "high" : "auto"}
                       className="object-cover"
                       style={{ objectPosition: activeImageIndex === 0 ? animal.objectPosition : "center center" }}
                     />
                   </motion.div>
                 </AnimatePresence>
               </ImageZoom>
-            </motion.div>
+            </div>
 
             {/* Thumbnails */}
             {images.length > 1 && (
@@ -138,6 +138,7 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
+                    aria-label={`View photo ${idx + 1} of ${name}`}
                     className={cn(
                       "relative w-20 h-20 shrink-0 rounded-2xl overflow-hidden border-2 transition-all",
                       activeImageIndex === idx 
@@ -145,19 +146,16 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                         : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
-                    <Image src={img.url} alt={`${name || 'Animal'} ${idx}`} fill sizes="80px" className="object-cover" />
+                    <Image src={img.url} alt={`${name || 'Animal'} photo ${idx + 1}`} fill sizes="80px" className="object-cover" loading="lazy" />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Right: Details */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...getTransition("fluid"), delay: 0.1 }}
-            className="flex flex-col pt-4 lg:pt-12"
+          {/* Right: Details — render at full opacity for instant SSR paint */}
+          <div 
+            className="flex flex-col pt-4 lg:pt-12 animate-in fade-in duration-500"
           >
             <div className="mb-8">
               <div className="flex flex-wrap gap-2 items-center mb-6">
@@ -261,7 +259,7 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
               </a>
             </div>
 
-          </motion.div>
+          </div>
         </div>
       </div>
 

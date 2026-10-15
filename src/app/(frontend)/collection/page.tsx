@@ -3,11 +3,21 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { CollectionClient } from "./collection-client";
 
+import { BreadcrumbJsonLd } from "@/components/seo/structured-data";
+
 export const revalidate = 60;
 
 export const metadata = {
   title: "আমাদের কালেকশন (Our Collection)",
-  description: "দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ এবং পোষা প্রাণীর সব সামগ্রীর বিশাল সংগ্রহ।",
+  description: "দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ এবং পোষা প্রাণীর সব সামগ্রীর বিশাল সংগ্রহ। চুয়াডাঙ্গা ও সারা বাংলাদেশে ডেলিভারি।",
+  alternates: {
+    canonical: "/collection",
+  },
+  openGraph: {
+    title: "আমাদের কালেকশন (Our Collection) | Bismillah Pakhi & Aquarium",
+    description: "দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ এবং পোষা প্রাণীর সব সামগ্রীর বিশাল সংগ্রহ।",
+    url: "/collection",
+  },
 };
 
 export default async function CollectionPage({
@@ -226,18 +236,26 @@ export default async function CollectionPage({
   ];
 
   return (
-    <CollectionClient 
-      items={combinedItems as any[]} 
-      serverData={{
-        page,
-        totalPages,
-        totalDocs,
-        category,
-        q,
-        sort: sortParam,
-        inStock: inStockParam,
-        tabCounts
-      }}
-    />
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "হোম", url: "/" },
+          { name: "কালেকশন", url: "/collection" },
+        ]}
+      />
+      <CollectionClient 
+        items={combinedItems as any[]} 
+        serverData={{
+          page,
+          totalPages,
+          totalDocs,
+          category,
+          q,
+          sort: sortParam,
+          inStock: inStockParam,
+          tabCounts
+        }}
+      />
+    </>
   );
 }
