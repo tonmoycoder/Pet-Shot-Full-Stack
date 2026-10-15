@@ -1,11 +1,14 @@
 {
-  "nameBn": "বিসমিল্লাহ পাখি এন্ড একুরিয়াম",
+  "nameBn": "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম",
   "nameEn": "Bismillah Pakhi & Aquarium",
   "addressBn": "সাত ভাই পুকুর পাড়, আব্দুল্লাহ সিটির পিছনে, বড় বাজার, চুয়াডাঙ্গা, বাংলাদেশ",
   "phone": "০১৯৪৭৩১৫৩৩০",
   "whatsapp": "০১৯৪৭৩১৫৩৩০",
   "tagline": "বিদেশি পোষা পাখি, কবুতর, একুরিয়ামের মাছ, খাবার, খাঁচা ও বিভিন্ন সরঞ্জাম।",
-  "openingHours": null,
-  "openStatus": null,
-  "status": "SHOP_CONFIRMATION_REQUIRED"
+  "storeFacebookPageUrl": "https://www.facebook.com/bismillahpakhiandaquarium",
+  "logoUrl": "/images/logo.webp",
+  "logoFaviconUrl": "/images/favicon.webp",
+  "openingHours": "9:00 AM - 9:00 PM",
+  "openStatus": "open",
+  "status": "VERIFIED_OPERATIONAL"
 }

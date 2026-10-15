@@ -10,9 +10,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import dynamic from "next/dynamic";
 
 import { Header } from "@/components/layout/header";
-
 import { LayoutOverlays } from "@/components/layout/layout-overlays";
 import { Footer } from "@/components/layout/footer";
+import { StoreSettingsProvider } from "@/lib/store-settings-context";
+import { getSafeStoreSettings } from "@/lib/store-fallback";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -37,7 +38,17 @@ export const metadata: Metadata = {
   description: "Your trusted destination for premium birds, aquariums, and pet accessories in Chuadanga. Quality pets, expert advice.",
   keywords: ["pet shop", "chuadanga", "birds", "aquarium", "pet accessories", "dog", "cat", "fish"],
   icons: {
-    icon: "/images/logo.webp",
+    icon: [
+      { url: "/images/favicon.webp", type: "image/webp" },
+      { url: "/images/favicon.png", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/icon.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
   },
   openGraph: {
     title: "Bismillah Pakhi & Aquarium",
@@ -46,10 +57,10 @@ export const metadata: Metadata = {
     siteName: "Bismillah Pakhi & Aquarium",
     images: [
       {
-        url: "/images/hero.png", // Update with actual OG image
+        url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Bismillah Pakhi & Aquarium - Storefront",
+        alt: "Bismillah Pakhi & Aquarium Logo & Storefront",
       },
     ],
     locale: "bn_BD",
@@ -59,33 +70,49 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Bismillah Pakhi & Aquarium",
     description: "Premium birds, aquariums, and pet accessories in Chuadanga.",
-    images: ["/images/hero.png"], // Update with actual Twitter image
+    images: ["/images/og-image.png"],
   },
 };
 
-export default function RootLayout({
+async function fetchStoreSettings() {
+  try {
+    const { getPayload } = await import("payload");
+    const configPromise = (await import("@payload-config")).default;
+    const payload = await getPayload({ config: configPromise });
+    const raw = await payload.findGlobal({ slug: "store-settings" });
+    return getSafeStoreSettings(raw as any);
+  } catch {
+    return getSafeStoreSettings();
+  }
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const storeSettings = await fetchStoreSettings();
+
   return (
     <html lang="bn" suppressHydrationWarning data-scroll-behavior="smooth"
       className={`${plusJakartaSans.variable} ${notoSerifBengali.variable}`}
     >
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <LanguageProvider>
-          <CursorProvider>
-            <ShortlistProvider>
-              <Header />
-              <main className="flex-1 pt-20 flex flex-col">
-                {children}
-              </main>
-              <Footer />
-              <LayoutOverlays />
-            </ShortlistProvider>
-          </CursorProvider>
-          </LanguageProvider>
+          <StoreSettingsProvider value={storeSettings}>
+            <LanguageProvider>
+            <CursorProvider>
+              <ShortlistProvider>
+                <Header />
+                <main className="flex-1 pt-20 flex flex-col">
+                  {children}
+                </main>
+                <Footer />
+                <LayoutOverlays />
+              </ShortlistProvider>
+            </CursorProvider>
+            </LanguageProvider>
+          </StoreSettingsProvider>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

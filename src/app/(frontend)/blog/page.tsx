@@ -3,9 +3,10 @@ import configPromise from '@payload-config';
 import { BlogClient } from './blog-client';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export const metadata = {
-  title: 'Blog & Journal - Bismillah Pakhi & Aquarium',
+  title: 'ব্লগ ও পরামর্শ (Blog & Journal)',
   description: 'Read the latest thoughts, care tips, and news about pets and aquariums.',
 };
 

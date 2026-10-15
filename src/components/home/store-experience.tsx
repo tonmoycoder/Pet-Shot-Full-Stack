@@ -174,12 +174,12 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-[#25D366]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-          {/* Caustic Texture Background — local compressed WebP */}
+          {/* Caustic Texture Background — high definition caustic texture */}
           <div
             aria-hidden="true"
             className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
             style={{
-              backgroundImage: "url('/images/caustics.webp')",
+              backgroundImage: "url('https://i.postimg.cc/k4s8FFgR/caust-016.png')",
               backgroundSize: "cover",
               backgroundPosition: "center",
               opacity: 0.18,

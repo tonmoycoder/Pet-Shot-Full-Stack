@@ -2,12 +2,17 @@
 
 import * as React from "react";
 import { MessageCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { cn } from "cn";
 import { useLanguage } from "@/lib/language-context";
 
 export function FloatingContact() {
+  const pathname = usePathname();
   const { language } = useLanguage();
   const [isHovered, setIsHovered] = React.useState(false);
+
+  // Hide on mobile screens if the sticky product/animal CTA bar is already present
+  const isDetailPage = pathname?.startsWith("/products/") || pathname?.startsWith("/animals/");
 
   // WhatsApp link format: https://wa.me/<number>
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330"; 
@@ -16,7 +21,10 @@ export function FloatingContact() {
   const label = language === "bn" ? "জিজ্ঞাসা করুন" : "Ask Us";
 
   return (
-    <div className="fixed bottom-24 md:bottom-8 right-4 md:right-8 z-50 pointer-events-none flex flex-col items-end gap-3 animate-in fade-in slide-in-from-bottom-5 duration-700">
+    <div className={cn(
+      "fixed bottom-24 md:bottom-8 right-4 md:right-8 z-40 pointer-events-none flex flex-col items-end gap-3 animate-in fade-in slide-in-from-bottom-5 duration-700",
+      isDetailPage && "hidden md:flex"
+    )}>
       
       {/* Label Tooltip (Desktop Only) */}
       <div className="hidden md:block pointer-events-none origin-bottom-right">

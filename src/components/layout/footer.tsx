@@ -8,6 +8,7 @@ import { cn } from "cn";
 import { MapPin, Phone, MessageCircle, Bird, Fish, ShoppingBag, Home, Mail, Video, ArrowRight, ShieldCheck, Lock } from "lucide-react";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { useCursor } from "@/lib/cursor-context";
+import { useStoreSettings } from "@/lib/store-settings-context";
 
 const footerDict = {
   bn: {
@@ -81,8 +82,26 @@ const footerDict = {
 export function Footer() {
   const { language } = useLanguage();
   const { setCursorType } = useCursor();
+  const storeSettings = useStoreSettings();
   const t = footerDict[language];
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
+
+  // Resolve dynamic data from CMS with fallbacks
+  const logoSrc = (
+    storeSettings?.branding?.logo &&
+    typeof storeSettings.branding.logo === 'object' &&
+    (storeSettings.branding.logo as any).url
+  ) ? (storeSettings.branding.logo as any).url
+    : (storeSettings?.branding?.logoUrl || "/images/logo_shop.webp");
+
+  const facebookUrl = storeSettings?.contact?.storeFacebookPageUrl ||
+    "https://www.facebook.com/bismillahpakhiandaquarium";
+  const whatsappNum = storeSettings?.contact?.whatsappNumber || "8801947315330";
+  const phoneDisplay = storeSettings?.contact?.phoneNumber || t.phone;
+  const addressDisplay = storeSettings?.location?.address || t.address;
+  const hoursDisplay = storeSettings?.hours?.openingTime ||
+    `${storeSettings?.hours?.openHour || '9'}:${storeSettings?.hours?.openMinute || '00'} ${storeSettings?.hours?.openPeriod || 'AM'} - ${storeSettings?.hours?.closeHour || '9'}:${storeSettings?.hours?.closeMinute || '00'} ${storeSettings?.hours?.closePeriod || 'PM'}`;
+
 
   return (
     <footer className={cn("relative overflow-hidden", fontClass)}>
@@ -98,7 +117,7 @@ export function Footer() {
           </p>
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mt-8">
             <MagneticButton
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330"}`}
+              href={`https://wa.me/${whatsappNum}`}
               target="_blank"
               rel="noopener noreferrer"
               variant="default"
@@ -139,12 +158,12 @@ export function Footer() {
           {/* Brand & Contact */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-4 mb-6">
-              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-500/40 bg-slate-900/60 shadow-[0_0_15px_rgba(16,185,129,0.2)] p-0.5 flex items-center justify-center shrink-0">
                 <Image 
-                  src="/images/logo.webp" 
+                  src={logoSrc} 
                   alt="Bismillah Pakhi & Aquarium Logo" 
                   fill 
-                  className="object-cover"
+                  className="object-contain rounded-full"
                   sizes="56px"
                 />
               </div>
@@ -157,15 +176,15 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-zinc-400">
                 <MapPin className="w-5 h-5 mt-0.5 text-blue-400 shrink-0" />
-                <span className="text-sm leading-relaxed whitespace-pre-line">{t.address}</span>
+                <span className="text-sm leading-relaxed whitespace-pre-line">{addressDisplay}</span>
               </li>
               <li>
                 <a
-                  href={`tel:+880${t.phone.replace(/^0/, '')}`}
+                  href={`tel:+880${phoneDisplay.replace(/^\+?880/, '').replace(/[^0-9]/g, '')}`}
                   className="flex items-start gap-3 text-zinc-400 hover:text-white transition-colors group"
                 >
                   <Phone className="w-5 h-5 mt-0.5 text-emerald-500 shrink-0" />
-                  <span className="text-sm">{t.phone}</span>
+                  <span className="text-sm">{phoneDisplay}</span>
                 </a>
               </li>
               <li>
@@ -177,6 +196,19 @@ export function Footer() {
                 >
                   <MessageCircle className="w-5 h-5 mt-0.5 text-[#25D366] shrink-0" />
                   <span className="text-sm">WhatsApp</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 text-zinc-400 hover:text-[#1877F2] transition-colors group"
+                >
+                  <svg className="w-5 h-5 mt-0.5 text-[#1877F2] shrink-0 fill-current" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                  <span className="text-sm">ফেসবুক পেজ (Facebook Page)</span>
                 </a>
               </li>
             </ul>

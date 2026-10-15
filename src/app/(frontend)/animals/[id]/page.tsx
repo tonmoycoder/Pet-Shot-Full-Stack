@@ -3,13 +3,15 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { AnimalClient } from './animal-client';
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   try {
     const payload = await getPayload({ config: configPromise });
     const animal = await payload.findByID({ collection: 'animals', id, depth: 2 });
     
-    const title = `${animal?.name?.bn || animal?.name?.en || 'প্রাণী বিস্তারিত'} | Bismillah Pakhi & Aquarium`;
+    const title = animal?.name?.bn || animal?.name?.en || 'প্রাণী বিস্তারিত';
     const description = animal?.description?.bn || animal?.description?.en || '';
     
     let imageUrl = '';
@@ -36,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
     };
   } catch {
-    return { title: 'প্রাণী বিস্তারিত | Bismillah Pakhi & Aquarium' };
+    return { title: 'প্রাণী বিস্তারিত' };
   }
 }
 

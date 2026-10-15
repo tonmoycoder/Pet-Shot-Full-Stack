@@ -14,7 +14,7 @@ export const StoreSettings: GlobalConfig = {
   label: 'সাধারণ সেটিংস (Store Settings)',
   admin: {
     group: 'দোকানের সেটিংস (Store Settings)',
-    description: 'এখানে দোকানের ঠিকানা, ফোন নাম্বার এবং খোলার সময় পরিবর্তন করতে পারবেন।',
+    description: 'এখানে দোকানের ব্র্যান্ডিং, লোগো, ফেসবুক পেজ, ঠিকানা, ফোন নাম্বার এবং খোলার সময় পরিবর্তন করতে পারবেন।',
   },
   hooks: {
     beforeChange: [
@@ -36,13 +36,54 @@ export const StoreSettings: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'যোগাযোগ (Contact Info)',
+          label: 'ব্র্যান্ডিং ও লোগো (Branding & Logo)',
+          fields: [
+            {
+              name: 'branding',
+              type: 'group',
+              label: 'ব্র্যান্ড লোগো ও মিডিয়া',
+              fields: [
+                {
+                  name: 'logo',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'দোকানের লোগো (Store Logo Media)',
+                  required: false,
+                  admin: {
+                    description: 'নতুন লোগো আপলোড করুন। খালি থাকলে ডিফল্ট /images/logo.webp ব্যবহৃত হবে।',
+                  },
+                },
+                {
+                  name: 'logoUrl',
+                  type: 'text',
+                  label: 'লোগো ইমেজ লিঙ্ক (Logo Image URL Fallback)',
+                  defaultValue: '/images/logo_shop.webp',
+                  admin: {
+                    description: 'বাহ্যিক বা লোকাল লোগো লিঙ্ক (যেমন: /images/logo_shop.webp বা https://...)',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'যোগাযোগ ও সোশ্যাল (Contact & Social)',
           fields: [
             {
               name: 'contact',
               type: 'group',
               label: 'যোগাযোগের মাধ্যম',
               fields: [
+                {
+                  name: 'storeFacebookPageUrl',
+                  type: 'text',
+                  label: 'দোকানের ফেসবুক পেজ লিংক (Store Facebook Page URL)',
+                  required: true,
+                  defaultValue: 'https://www.facebook.com/bismillahpakhiandaquarium',
+                  admin: {
+                    description: 'দোকানের অফিসিয়াল ফেসবুক পেজের লিঙ্ক (যেমন: https://www.facebook.com/bismillahpakhiandaquarium)',
+                  },
+                },
                 {
                   name: 'whatsappNumber',
                   type: 'text',
@@ -51,7 +92,7 @@ export const StoreSettings: GlobalConfig = {
                   defaultValue: '8801947315330',
                   admin: {
                     description: 'দেশ কোড সহ দিন (যেমন: 8801947315330)',
-                  }
+                  },
                 },
                 {
                   name: 'phoneNumber',
@@ -61,17 +102,17 @@ export const StoreSettings: GlobalConfig = {
                   defaultValue: '+880 1947-315330',
                   admin: {
                     description: 'ওয়েবসাইটে যেভাবে দেখাবে (যেমন: +880 1947-315330)',
-                  }
+                  },
                 },
                 {
                   name: 'emailAddress',
                   type: 'text',
                   label: 'ইমেইল ঠিকানা (Email Address)',
                   required: true,
-                  defaultValue: 'info@petshop.com',
+                  defaultValue: 'info@bismillahpakhi.com',
                   admin: {
-                    description: 'যোগাযোগের ইমেইল (যেমন: info@petshop.com)',
-                  }
+                    description: 'যোগাযোগের ইমেইল (যেমন: info@bismillahpakhi.com)',
+                  },
                 },
                 {
                   name: 'adminEmail',
@@ -81,12 +122,21 @@ export const StoreSettings: GlobalConfig = {
                   admin: {
                     description: 'কন্টাক্ট ফর্মের সকল মেসেজ এই ইমেইলে আসবে। খালি রাখলে emailAddress ব্যবহার হবে।',
                     placeholder: 'admin@bismillahpakhi.com',
-                  }
-                }
-
-              ]
-            }
-          ]
+                  },
+                },
+                {
+                  name: 'liveVideoConsultationUrl',
+                  type: 'text',
+                  label: 'লাইভ ভিডিও কনসালটেশন লিংক (Live Video Consultation URL)',
+                  required: false,
+                  defaultValue: 'https://wa.me/8801947315330?text=Live%20Video%20Consultation%20Request',
+                  admin: {
+                    description: 'হোয়াটসঅ্যাপ লাইভ ভিডিও কনসালটেশন লিঙ্ক',
+                  },
+                },
+              ],
+            },
+          ],
         },
         {
           label: 'ঠিকানা (Location)',
@@ -109,10 +159,10 @@ export const StoreSettings: GlobalConfig = {
                   label: 'গুগল ম্যাপস লিংক (Google Maps Link)',
                   required: true,
                   defaultValue: 'https://maps.google.com/?q=Boro+Bazar+Chuadanga',
-                }
-              ]
-            }
-          ]
+                },
+              ],
+            },
+          ],
         },
         {
           label: 'সময়সূচী (Hours)',
@@ -223,7 +273,7 @@ export const StoreSettings: GlobalConfig = {
                   defaultValue: 'প্রতিদিন (Everyday)',
                   admin: {
                     description: 'উদাহরণ: প্রতিদিন অথবা সোম-শুক্র',
-                  }
+                  },
                 },
                 // ── Manual override ───────────────────────────────────
                 {
@@ -249,11 +299,11 @@ export const StoreSettings: GlobalConfig = {
                     description: 'যখন Override চালু থাকবে, তখন এই স্ট্যাটাস দেখাবে।',
                   },
                 },
-              ]
-            }
-          ]
-        }
-      ]
-    }
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 };

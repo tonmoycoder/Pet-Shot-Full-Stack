@@ -2,7 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "সাধারণ জিজ্ঞাসা (FAQ) | Bismillah Pakhi & Aquarium",
+  title: "সাধারণ জিজ্ঞাসা (FAQ)",
   description: "আমাদের দোকান, পণ্য এবং সেবাসমূহ সম্পর্কে সাধারণ জিজ্ঞাসার উত্তর।",
 };
 

@@ -3,13 +3,15 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { ProductClient } from './product-client';
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   try {
     const payload = await getPayload({ config: configPromise });
     const product = await payload.findByID({ collection: 'products', id, depth: 2 });
     
-    const title = `${product?.name?.bn || product?.name?.en || 'পণ্য বিস্তারিত'} | Bismillah Pakhi & Aquarium`;
+    const title = product?.name?.bn || product?.name?.en || 'পণ্য বিস্তারিত';
     const description = product?.description?.bn || product?.description?.en || '';
     
     let imageUrl = '';
@@ -36,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
     };
   } catch {
-    return { title: 'পণ্য বিস্তারিত | Bismillah Pakhi & Aquarium' };
+    return { title: 'পণ্য বিস্তারিত' };
   }
 }
 

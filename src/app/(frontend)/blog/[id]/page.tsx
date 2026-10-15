@@ -3,6 +3,8 @@ import configPromise from '@payload-config';
 import { notFound } from 'next/navigation';
 import { BlogDetailClient } from './blog-detail-client';
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
@@ -12,8 +14,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       id: resolvedParams.id,
     });
     
-    const title = `${blog.title.en || blog.title.bn} - Journal | Bismillah Pakhi & Aquarium`;
-    const description = blog.excerpt?.en || blog.excerpt?.bn || "Read our latest journal post.";
+    const title = blog.title?.bn || blog.title?.en || 'ব্লগ বিস্তারিত';
+    const description = blog.excerpt?.bn || blog.excerpt?.en || "Read our latest journal post.";
     
     let imageUrl = '';
     if (blog.coverImage && typeof blog.coverImage === 'object' && blog.coverImage.url) {
@@ -37,7 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
     };
   } catch (error) {
-    return { title: 'Blog Not Found' };
+    return { title: 'ব্লগ বিস্তারিত' };
   }
 }
 

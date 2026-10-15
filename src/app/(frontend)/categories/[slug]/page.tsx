@@ -58,11 +58,13 @@ const CATEGORY_META: Record<string, { title: string; titleBn: string; desc: stri
   }
 };
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const meta = CATEGORY_META[slug];
   return {
-    title: `${meta?.titleBn || slug} | Bismillah Pakhi & Aquarium`,
+    title: meta?.titleBn || slug,
     description: meta?.descBn || '',
   };
 }

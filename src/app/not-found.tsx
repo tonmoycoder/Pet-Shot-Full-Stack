@@ -53,9 +53,9 @@ export default function NotFound() {
         <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative", zIndex: 1 }}>
           {/* Header */}
           <header style={{ padding: "clamp(14px,4vw,28px) clamp(16px,5vw,40px)", display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: 1280, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
-            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }}>
-              <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", border: "1.5px solid #d1fae5", flexShrink: 0 }}>
-                <Image src="/images/logo.png" alt="Logo" fill className="object-cover" sizes="40px" priority />
+            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", color: "inherit" }}>
+              <div style={{ position: "relative", width: 44, height: 44, borderRadius: "50%", overflow: "hidden", border: "1.5px solid #10b981", background: "#0a192f", flexShrink: 0, padding: "2px" }}>
+                <Image src="/images/logo_shop.webp" alt="Bismillah Pakhi & Aquarium Logo" fill className="object-contain" sizes="44px" priority />
               </div>
               <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
                 <span style={{ fontSize: "clamp(13px,3.5vw,18px)", fontWeight: 700, color: "#064e3b" }} className={fontClass}>{t.brandPrimary}</span>

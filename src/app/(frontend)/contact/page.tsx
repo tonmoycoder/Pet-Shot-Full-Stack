@@ -2,8 +2,10 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { ContactClient } from "./contact-client";
 
+export const revalidate = 60;
+
 export const metadata = {
-  title: "Contact Us | Bismillah Pakhi & Aquarium",
+  title: "যোগাযোগ (Contact Us)",
   description: "Reach out to us for any inquiries about our pets or services.",
 };
 

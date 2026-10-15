@@ -44,3 +44,10 @@ yarn-error.log*
 next-env.d.ts
 # Added by code-review-graph
 .code-review-graph/
+
+# Gravitas
+.gravitas/
+
+# Testing & Artifacts
+.playwright-mcp/
+*.backup*

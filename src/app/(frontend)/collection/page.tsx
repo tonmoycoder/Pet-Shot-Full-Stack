@@ -3,8 +3,10 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { CollectionClient } from "./collection-client";
 
+export const revalidate = 60;
+
 export const metadata = {
-  title: "আমাদের কালেকশন | Bismillah Pakhi & Aquarium",
+  title: "আমাদের কালেকশন (Our Collection)",
   description: "দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ এবং পোষা প্রাণীর সব সামগ্রীর বিশাল সংগ্রহ।",
 };
 

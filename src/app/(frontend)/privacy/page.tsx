@@ -2,7 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "গোপনীয়তা নীতি (Privacy Policy) | Bismillah Pakhi & Aquarium",
+  title: "গোপনীয়তা নীতি (Privacy Policy)",
   description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর গ্রাহক তথ্য সুরক্ষা ও গোপনীয়তা নীতি।",
 };
 

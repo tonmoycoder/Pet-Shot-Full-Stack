@@ -2,7 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "শর্তাবলী (Terms of Service) | Bismillah Pakhi & Aquarium",
+  title: "শর্তাবলী (Terms of Service)",
   description: "বিসমিল্লাহ পাখি & অ্যাকোয়ারিয়াম-এর সেবা ও পণ্য ক্রয়ের শর্তাবলী।",
 };
 

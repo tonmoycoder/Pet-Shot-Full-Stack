@@ -1,12 +1,40 @@
 import type { CollectionConfig, CollectionBeforeOperationHook } from 'payload';
 import { revalidateCollection } from '../lib/revalidate';
+import fs from 'fs';
+import path from 'path';
 
 const fetchImageFromUrl: CollectionBeforeOperationHook = async ({ args, operation }) => {
   if (operation === 'create' || operation === 'update') {
     const { data, req } = args;
-    if (data?.sourceUrl && !req.file && (!req.files || !req.files.file)) {
+    const rawUrl = data?.sourceUrl;
+    
+    if (rawUrl && typeof rawUrl === 'string' && rawUrl.trim().length > 0 && !req.file && (!req.files || !req.files.file)) {
+      const url = rawUrl.trim();
+
+      // If updating, check if the sourceUrl didn't change and the file already exists on disk
+      const docId = (args as Record<string, unknown>).id;
+      if (operation === 'update' && docId && req?.payload) {
+        try {
+          const existing = await req.payload.findByID({
+            collection: 'media',
+            id: String(docId),
+            depth: 0,
+            req,
+          });
+          if (existing && existing.sourceUrl === url && existing.filename) {
+            const localPath = path.resolve(process.cwd(), 'public/media', existing.filename);
+            if (fs.existsSync(localPath)) {
+              // File already exists and URL is unchanged, no need to re-download
+              return args;
+            }
+          }
+        } catch {
+          // If fetch fails, proceed with downloading
+        }
+      }
+
       try {
-        const response = await fetch(data.sourceUrl, {
+        const response = await fetch(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
@@ -18,21 +46,42 @@ const fetchImageFromUrl: CollectionBeforeOperationHook = async ({ args, operatio
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         
-        const mimeType = response.headers.get('content-type') || 'image/jpeg';
-        let filename = data.sourceUrl.split('/').pop()?.split('?')[0] || 'downloaded-image';
-        if (!filename.includes('.')) {
-          filename += mimeType === 'image/webp' ? '.webp' : mimeType === 'image/png' ? '.png' : '.jpg';
+        if (buffer.length === 0) {
+          throw new Error('Downloaded file is empty (0 bytes)');
+        }
+
+        const rawContentType = response.headers.get('content-type') || 'image/jpeg';
+        const mimeType = rawContentType.split(';')[0].trim().toLowerCase();
+        
+        // Extract a clean filename from the URL
+        let rawFilename = 'downloaded-image';
+        try {
+          const parsedUrl = new URL(url);
+          const pathname = decodeURIComponent(parsedUrl.pathname);
+          const baseName = pathname.split('/').filter(Boolean).pop();
+          if (baseName) {
+            rawFilename = baseName;
+          }
+        } catch {
+          rawFilename = decodeURIComponent(url.split('/').pop()?.split('?')[0] || 'downloaded-image');
+        }
+        
+        // Sanitize filename to safe characters
+        let cleanName = rawFilename.replace(/[^a-zA-Z0-9._-]/g, '_');
+        if (!cleanName.includes('.')) {
+          const ext = mimeType === 'image/webp' ? '.webp' : mimeType === 'image/png' ? '.png' : mimeType === 'image/gif' ? '.gif' : '.jpg';
+          cleanName += ext;
         }
 
         req.file = {
           data: buffer,
-          mimetype: mimeType,
-          name: filename,
+          mimetype: mimeType.startsWith('image/') ? mimeType : 'image/jpeg',
+          name: cleanName,
           size: buffer.length,
         };
       } catch (error) {
         console.error('Error fetching image from URL:', error);
-        throw new Error(`Failed to download image from source URL: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        throw new Error(`অনলাইন লিংক থেকে ছবি ডাউনলোড করা যায়নি (Failed to download image from source URL): ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
   }
@@ -60,6 +109,7 @@ export const Media: CollectionConfig = {
   },
   upload: {
     staticDir: 'public/media',
+    filesRequiredOnCreate: false,
     imageSizes: [
       {
         name: 'avatar',

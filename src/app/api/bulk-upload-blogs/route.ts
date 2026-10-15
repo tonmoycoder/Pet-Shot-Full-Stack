@@ -6,6 +6,17 @@ import { markdownToLexical } from './markdownToLexical';
 
 export async function POST(request: Request) {
   try {
+    const payload = await getPayload({ config });
+
+    // Security check: in production, require admin session or secret header
+    if (process.env.NODE_ENV === 'production') {
+      const authHeader = request.headers.get('x-secret-key') || request.headers.get('authorization');
+      const { user } = await payload.auth({ headers: request.headers });
+      if (!user && authHeader !== process.env.PAYLOAD_SECRET && authHeader !== `Bearer ${process.env.PAYLOAD_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized: Admin session required for bulk upload' }, { status: 401 });
+      }
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
@@ -22,7 +33,6 @@ export async function POST(request: Request) {
       trim: true,
     });
 
-    const payload = await getPayload({ config });
     let successCount = 0;
     let errors: string[] = [];
 
