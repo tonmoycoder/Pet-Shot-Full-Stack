@@ -21,10 +21,11 @@ const fetchImageFromUrl: CollectionBeforeOperationHook = async ({ args, operatio
             depth: 0,
             req,
           });
-          if (existing && existing.sourceUrl === url && existing.filename) {
-            const localPath = path.resolve(process.cwd(), 'public/media', existing.filename);
-            if (fs.existsSync(localPath)) {
-              // File already exists and URL is unchanged, no need to re-download
+          if (existing && existing.sourceUrl === url) {
+            const hasRemoteUrl = typeof existing.url === 'string' && existing.url.startsWith('http');
+            const hasLocalFile = existing.filename && fs.existsSync(path.resolve(process.cwd(), 'public/media', existing.filename));
+            if (hasRemoteUrl || hasLocalFile) {
+              // File already exists on remote storage or local disk and URL is unchanged, no need to re-download
               return args;
             }
           }

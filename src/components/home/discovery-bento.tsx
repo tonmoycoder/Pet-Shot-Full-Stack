@@ -119,11 +119,26 @@ export function DiscoveryBento({ discoveryCards }: { discoveryCards?: any }) {
   const containerRef = useRef(null);
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
 
-  // Resolve images from CMS or local WebP fallback
-  const birdsImage = typeof discoveryCards?.birdsImage === 'object' && discoveryCards?.birdsImage?.url ? discoveryCards.birdsImage.url : "/images/bento/birds.webp";
-  const aquariumImage = typeof discoveryCards?.aquariumImage === 'object' && discoveryCards?.aquariumImage?.url ? discoveryCards.aquariumImage.url : "/images/bento/aquarium.webp";
-  const foodImage = typeof discoveryCards?.foodImage === 'object' && discoveryCards?.foodImage?.url ? discoveryCards.foodImage.url : "/images/bento/food.webp";
-  const accessoriesImage = typeof discoveryCards?.accessoriesImage === 'object' && discoveryCards?.accessoriesImage?.url ? discoveryCards.accessoriesImage.url : "/images/bento/accessories.webp";
+  // Resolve images from CMS (remote Blob URL or valid local URL) or static fallback
+  const resolveBentoImage = (cmsImage: any, fallback: string) => {
+    if (cmsImage && typeof cmsImage === 'object' && cmsImage.url) {
+      const url = String(cmsImage.url);
+      // Valid remote URL from Vercel Blob or S3
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        return url;
+      }
+      // If local /api/media/file URL, use fallback on production/Vercel
+      if (!url.startsWith('/api/media/file/')) {
+        return url;
+      }
+    }
+    return fallback;
+  };
+
+  const birdsImage = resolveBentoImage(discoveryCards?.birdsImage, "/images/bento/birds.webp");
+  const aquariumImage = resolveBentoImage(discoveryCards?.aquariumImage, "/images/bento/aquarium.webp");
+  const foodImage = resolveBentoImage(discoveryCards?.foodImage, "/images/bento/food.webp");
+  const accessoriesImage = resolveBentoImage(discoveryCards?.accessoriesImage, "/images/bento/accessories.webp");
 
   return (
     <section ref={containerRef} className="py-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full relative z-20">
