@@ -3,6 +3,7 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { ProductClient } from './product-client';
 import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/seo/structured-data';
+import { getFallbackProductById } from '@/lib/data-fallback';
 
 export const revalidate = 60;
 
@@ -45,10 +46,24 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
     };
   } catch {
+    const fallback = getFallbackProductById(id);
+    const title = fallback ? `${fallback.name.bn} (${fallback.name.en})` : 'পণ্য বিস্তারিত';
+    const description = fallback ? fallback.description.bn : 'বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা।';
     return {
-      title: 'পণ্য বিস্তারিত',
+      title,
+      description,
       alternates: {
         canonical: `/products/${id}`,
+      },
+      openGraph: {
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
+        url: `/products/${id}`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
       },
     };
   }
@@ -72,7 +87,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       slug: 'store-settings',
     });
   } catch (error) {
-    console.error("Error fetching product data:", error);
+    console.warn("Error fetching product data from Payload, checking fallback:", error);
+  }
+
+  if (!product) {
+    product = getFallbackProductById(id);
   }
 
   if (!product) {

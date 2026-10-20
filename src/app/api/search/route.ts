@@ -1,7 +1,7 @@
 import { getPayload } from 'payload';
 import configPromise from '@/payload.config';
-import { sql } from '@payloadcms/db-postgres/drizzle';
 import { NextRequest, NextResponse } from 'next/server';
+import { getFallbackAnimals, getFallbackProducts } from '@/lib/data-fallback';
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,47 +12,78 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ results: [] });
     }
 
-    const payload = await getPayload({ config: configPromise });
-    const db = payload.db;
+    // Sanitize and limit query length to 60 chars to prevent heavy regex / ReDoS
+    const searchStr = query.trim().slice(0, 60).replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
 
-    const searchStr = query.trim();
+    if (!searchStr) {
+      return NextResponse.json({ results: [] });
+    }
 
-    // Query for animals
-    const animalsData = await payload.find({
-      collection: 'animals',
-      where: {
-        or: [
-          { internalName: { like: searchStr } },
-          { 'name.bn': { like: searchStr } },
-          { 'name.en': { like: searchStr } },
-          { 'tag.bn': { like: searchStr } },
-          { 'tag.en': { like: searchStr } },
-        ]
-      },
-      limit: 5,
-    });
-    
-    // Query for products
-    const productsData = await payload.find({
-      collection: 'products',
-      where: {
-        or: [
-          { internalName: { like: searchStr } },
-          { 'name.bn': { like: searchStr } },
-          { 'name.en': { like: searchStr } },
-        ]
-      },
-      limit: 5,
-    });
+    try {
+      const payload = await getPayload({ config: configPromise });
 
-    const fullAnimals = animalsData.docs.map(doc => ({ ...doc, type: 'animal' }));
-    const fullProducts = productsData.docs.map(doc => ({ ...doc, type: 'product' }));
+      // Query for animals
+      const animalsData = await payload.find({
+        collection: 'animals',
+        where: {
+          or: [
+            { internalName: { like: searchStr } },
+            { 'name.bn': { like: searchStr } },
+            { 'name.en': { like: searchStr } },
+            { 'tag.bn': { like: searchStr } },
+            { 'tag.en': { like: searchStr } },
+          ]
+        },
+        limit: 5,
+      });
+      
+      // Query for products
+      const productsData = await payload.find({
+        collection: 'products',
+        where: {
+          or: [
+            { internalName: { like: searchStr } },
+            { 'name.bn': { like: searchStr } },
+            { 'name.en': { like: searchStr } },
+          ]
+        },
+        limit: 5,
+      });
 
-    const combined = [...fullAnimals, ...fullProducts];
+      const fullAnimals = animalsData.docs.map(doc => ({ ...doc, type: 'animal' }));
+      const fullProducts = productsData.docs.map(doc => ({ ...doc, type: 'product' }));
 
-    return NextResponse.json({ results: combined.slice(0, 8) });
+      const combined = [...fullAnimals, ...fullProducts];
+
+      return NextResponse.json({ results: combined.slice(0, 8) });
+    } catch (dbErr) {
+      console.warn('Payload search failed, falling back to local dataset:', dbErr);
+      
+      const qLower = searchStr.toLowerCase();
+      const fbAnimals = getFallbackAnimals()
+        .filter(a => 
+          a.internalName.toLowerCase().includes(qLower) ||
+          a.name.bn.toLowerCase().includes(qLower) ||
+          a.name.en.toLowerCase().includes(qLower) ||
+          (a.tag?.bn && a.tag.bn.toLowerCase().includes(qLower)) ||
+          (a.tag?.en && a.tag.en.toLowerCase().includes(qLower))
+        )
+        .slice(0, 5)
+        .map(a => ({ ...a, type: 'animal' }));
+
+      const fbProducts = getFallbackProducts()
+        .filter(p => 
+          p.internalName.toLowerCase().includes(qLower) ||
+          p.name.bn.toLowerCase().includes(qLower) ||
+          p.name.en.toLowerCase().includes(qLower)
+        )
+        .slice(0, 5)
+        .map(p => ({ ...p, type: 'product' }));
+
+      return NextResponse.json({ results: [...fbAnimals, ...fbProducts].slice(0, 8) });
+    }
   } catch (error) {
     console.error('Search error:', error);
-    return NextResponse.json({ error: 'Search failed' }, { status: 500 });
+    return NextResponse.json({ results: [] });
   }
 }

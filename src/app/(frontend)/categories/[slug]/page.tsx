@@ -95,9 +95,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+import { getFallbackAnimals, getFallbackProducts } from "@/lib/data-fallback";
+
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const payload = await getPayload({ config: configPromise });
 
   const meta = CATEGORY_META[slug];
   if (!meta) notFound();
@@ -105,64 +106,97 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   let items: any[] = [];
   let isAnimal = false;
 
-  if (slug === 'birds' || slug === 'bird') {
-    const data = await payload.find({
-      collection: 'animals',
-      where: { category: { equals: 'bird' } },
-      limit: 100,
-      depth: 1,
-    });
-    items = data.docs;
-    isAnimal = true;
-  } else if (slug === 'aquarium' || slug === 'fish') {
-    const data = await payload.find({
-      collection: 'animals',
-      where: { category: { equals: 'fish' } },
-      limit: 100,
-      depth: 1,
-    });
-    items = data.docs;
-    isAnimal = true;
-  } else if (slug === 'food') {
-    const data = await payload.find({
-      collection: 'products',
-      where: { category: { equals: 'food' } },
-      limit: 100,
-      depth: 1,
-    });
-    items = data.docs;
-    isAnimal = false;
-  } else if (slug === 'accessories') {
-    const data = await payload.find({
-      collection: 'products',
-      where: { category: { equals: 'accessories' } },
-      limit: 100,
-      depth: 1,
-    });
-    items = data.docs;
-    isAnimal = false;
-  } else if (slug === 'medicine') {
-    const data = await payload.find({
-      collection: 'products',
-      where: { category: { equals: 'medicine' } },
-      limit: 100,
-      depth: 1,
-    });
-    items = data.docs;
-    isAnimal = false;
-  } else if (slug === 'others') {
-    // For others, combine 'other' category from both animals and products
-    const [animalsData, productsData] = await Promise.all([
-      payload.find({ collection: 'animals', where: { category: { equals: 'other' } }, limit: 50, depth: 1 }),
-      payload.find({ collection: 'products', where: { category: { equals: 'other' } }, limit: 50, depth: 1 })
-    ]);
-    
-    // Mix them together
-    items = [
-      ...animalsData.docs.map((doc: any) => ({ ...doc, collectionType: 'animals' })),
-      ...productsData.docs.map((doc: any) => ({ ...doc, collectionType: 'products' }))
-    ];
-    isAnimal = false; // Mixed context, handled per item in client
+  try {
+    const payload = await getPayload({ config: configPromise });
+
+    if (slug === 'birds' || slug === 'bird') {
+      const data = await payload.find({
+        collection: 'animals',
+        where: { category: { equals: 'bird' } },
+        limit: 100,
+        depth: 1,
+      });
+      items = data.docs;
+      isAnimal = true;
+    } else if (slug === 'aquarium' || slug === 'fish') {
+      const data = await payload.find({
+        collection: 'animals',
+        where: { category: { equals: 'fish' } },
+        limit: 100,
+        depth: 1,
+      });
+      items = data.docs;
+      isAnimal = true;
+    } else if (slug === 'food') {
+      const data = await payload.find({
+        collection: 'products',
+        where: { category: { equals: 'food' } },
+        limit: 100,
+        depth: 1,
+      });
+      items = data.docs;
+      isAnimal = false;
+    } else if (slug === 'accessories') {
+      const data = await payload.find({
+        collection: 'products',
+        where: { category: { equals: 'accessories' } },
+        limit: 100,
+        depth: 1,
+      });
+      items = data.docs;
+      isAnimal = false;
+    } else if (slug === 'medicine') {
+      const data = await payload.find({
+        collection: 'products',
+        where: { category: { equals: 'medicine' } },
+        limit: 100,
+        depth: 1,
+      });
+      items = data.docs;
+      isAnimal = false;
+    } else if (slug === 'others') {
+      const [animalsData, productsData] = await Promise.all([
+        payload.find({ collection: 'animals', where: { category: { equals: 'other' } }, limit: 50, depth: 1 }),
+        payload.find({ collection: 'products', where: { category: { equals: 'other' } }, limit: 50, depth: 1 })
+      ]);
+      
+      items = [
+        ...animalsData.docs.map((doc: any) => ({ ...doc, collectionType: 'animals' })),
+        ...productsData.docs.map((doc: any) => ({ ...doc, collectionType: 'products' }))
+      ];
+      isAnimal = false;
+    }
+  } catch (error) {
+    console.warn(`CategoryPage Payload query failed for ${slug}, applying fallback data:`, error);
+  }
+
+  // Fallback resilience when Payload DB returns empty or is unreachable
+  if (items.length === 0) {
+    const fallbackAnimals = getFallbackAnimals();
+    const fallbackProducts = getFallbackProducts();
+
+    if (slug === 'birds' || slug === 'bird') {
+      items = fallbackAnimals.filter((a) => a.category === 'bird');
+      isAnimal = true;
+    } else if (slug === 'aquarium' || slug === 'fish') {
+      items = fallbackAnimals.filter((a) => a.category === 'fish');
+      isAnimal = true;
+    } else if (slug === 'food') {
+      items = fallbackProducts.filter((p) => p.category === 'food');
+      isAnimal = false;
+    } else if (slug === 'accessories') {
+      items = fallbackProducts.filter((p) => p.category === 'accessories');
+      isAnimal = false;
+    } else if (slug === 'medicine') {
+      items = fallbackProducts.filter((p) => p.category === 'medicine');
+      isAnimal = false;
+    } else if (slug === 'others') {
+      items = [
+        ...fallbackAnimals.filter((a) => a.category === 'other').map((doc) => ({ ...doc, collectionType: 'animals' })),
+        ...fallbackProducts.filter((p) => p.category === 'other').map((doc) => ({ ...doc, collectionType: 'products' })),
+      ];
+      isAnimal = false;
+    }
   }
 
   // Helper to safely get image string from upload fields

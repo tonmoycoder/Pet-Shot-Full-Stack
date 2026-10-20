@@ -68,8 +68,10 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
   const sectionRef = useRef<HTMLElement>(null);
 
-  const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
-  const whatsappLink = settings?.contact?.whatsappNumber ? `https://wa.me/${settings.contact.whatsappNumber}` : `https://wa.me/${defaultNumber}`;
+  const defaultNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330").replace(/[^0-9]/g, '');
+  const whatsappLink = settings?.contact?.whatsappNumber 
+    ? `https://wa.me/${settings.contact.whatsappNumber.replace(/[^0-9]/g, '')}` 
+    : `https://wa.me/${defaultNumber}`;
   const facebookUrl = settings?.contact?.storeFacebookPageUrl || storeSettings?.contact?.storeFacebookPageUrl || "https://www.facebook.com/bismillahpakhiandaquarium";
   const displayPhone = settings?.contact?.phoneNumber || storeSettings?.contact?.phoneNumber || "01947315330";
   const displayAddress = settings?.location?.address || storeSettings?.location?.address || "সাত ভাই পুকুড় পাড়, চুয়াডাঙ্গা";

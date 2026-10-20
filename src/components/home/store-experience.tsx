@@ -65,8 +65,10 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
   const t = storeDict[language];
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
 
-  const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
-  const whatsappLink = settings?.contact?.whatsappNumber ? `https://wa.me/${settings.contact.whatsappNumber}` : `https://wa.me/${defaultNumber}`;
+  const defaultNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330").replace(/[^0-9]/g, '');
+  const whatsappLink = settings?.contact?.whatsappNumber 
+    ? `https://wa.me/${settings.contact.whatsappNumber.replace(/[^0-9]/g, '')}` 
+    : `https://wa.me/${defaultNumber}`;
   const displayPhone = settings?.contact?.phoneNumber || "01947315330";
   const displayAddress = settings?.location?.address || t.storeAddress;
   const mapsLink = settings?.location?.googleMapsLink || "https://maps.app.goo.gl/j1NbDKU1zVpx533x8";
@@ -167,7 +169,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
 
         {/* Left Pane: Live Video */}
         <div
-          className="group relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-[#075E54]/5 dark:bg-[#075E54]/10 border border-[#25D366]/20 p-8 md:p-12 flex flex-col justify-between animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+          className="group relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-[#075E54]/5 dark:bg-[#075E54]/10 border border-[#25D366]/20 p-6 sm:p-8 md:p-12 flex flex-col justify-between animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
           style={{ animationDelay: "100ms" }}
           onMouseEnter={() => setCursorType("view")}
           onMouseLeave={() => setCursorType("default")}
@@ -224,7 +226,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
               {t.liveCta}
             </MagneticButton>
 
-            <div className={cn("whitespace-nowrap text-white font-semibold bg-emerald-500/10 dark:bg-emerald-500/20 px-5 py-3 rounded-full border border-emerald-500/20 backdrop-blur-md shadow-sm", fontClass)}>
+            <div className={cn("whitespace-normal sm:whitespace-nowrap text-center text-white font-semibold bg-emerald-500/10 dark:bg-emerald-500/20 px-5 py-3 rounded-full border border-emerald-500/20 backdrop-blur-md shadow-sm", fontClass)}>
               যোগাযোগ: {displayPhone}
             </div>
           </div>
@@ -273,7 +275,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
 
         {/* Right Pane: Physical Store */}
         <div
-          className="group relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 md:p-12 flex flex-col justify-between animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+          className="group relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 md:p-12 flex flex-col justify-between animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
           style={{ animationDelay: "200ms" }}
           onMouseEnter={() => setCursorType("view")}
           onMouseLeave={() => setCursorType("default")}
@@ -300,15 +302,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
 
               {/* Map Preview on Mobile */}
               <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="md:hidden block w-full mt-6 overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-sm opacity-90 hover:opacity-100 transition-opacity" aria-label="View store on Google Maps">
-                <iframe
-                  title="Google Maps Location Mobile"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14631.956691657801!2d88.8410292!3d23.6335191!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f9479b12a52f95%3A0xe7a50da83c67d3df!2sBismillah%20Pakhi%20And%20Aquarium!5e0!3m2!1sen!2sbd!4v1714000000000!5m2!1sen!2sbd"
-                  className="w-full h-[200px]"
-                  style={{ border: 0, pointerEvents: "none" }}
-                  allowFullScreen={false}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+                <LazyMapIframe className="w-full h-[200px]" />
               </a>
             </div>
 
@@ -326,16 +320,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
                 </div>
               </div>
               <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm opacity-80 hover:opacity-100 transition-opacity mt-2" aria-label="View store on Google Maps">
-                <iframe
-                  title="Google Maps Location Desktop"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14631.956691657801!2d88.8410292!3d23.6335191!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f9479b12a52f95%3A0xe7a50da83c67d3df!2sBismillah%20Pakhi%20And%20Aquarium!5e0!3m2!1sen!2sbd!4v1714000000000!5m2!1sen!2sbd"
-                  width="180"
-                  height="120"
-                  style={{ border: 0, pointerEvents: "none" }}
-                  allowFullScreen={false}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+                <LazyMapIframe width={180} height={120} />
               </a>
             </div>
           </div>
@@ -388,5 +373,47 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
 
       </div>
     </section>
+  );
+}
+
+function LazyMapIframe({ className, width, height }: { className?: string; width?: string | number; height?: string | number }) {
+  const [mounted, setMounted] = useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setMounted(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className={cn("relative bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center overflow-hidden", className)} style={{ width, height }}>
+      {mounted ? (
+        <iframe
+          title="Google Maps Location"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14631.956691657801!2d88.8410292!3d23.6335191!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f9479b12a52f95%3A0xe7a50da83c67d3df!2sBismillah%20Pakhi%20And%20Aquarium!5e0!3m2!1sen!2sbd!4v1714000000000!5m2!1sen!2sbd"
+          className="w-full h-full"
+          style={{ border: 0, pointerEvents: "none" }}
+          allowFullScreen={false}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      ) : (
+        <div className="flex items-center justify-center gap-1.5 text-xs text-zinc-400">
+          <MapPin className="w-3.5 h-3.5" />
+          <span>Google Maps</span>
+        </div>
+      )}
+    </div>
   );
 }

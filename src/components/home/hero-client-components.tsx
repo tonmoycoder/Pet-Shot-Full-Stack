@@ -58,7 +58,24 @@ export function StoreStatusClient({ storeSettings, dicts }: { storeSettings: any
     return () => clearInterval(iv);
   }, [storeSettings, language]);
 
-  if (isStoreOpen === null) return null;
+  if (isStoreOpen === null) {
+    return (
+      <div
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-transparent opacity-0 pointer-events-none select-none"
+        aria-hidden="true"
+      >
+        <div className="relative flex h-2 w-2">
+          <span className="relative inline-flex rounded-full h-2 w-2" />
+        </div>
+        <span className={cn(
+          "text-xs font-bold tracking-wider",
+          language === "bn" ? "font-bangla" : "font-sans"
+        )}>
+          {dict.liveStatusOpen}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div

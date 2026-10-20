@@ -4,9 +4,18 @@ import React from "react";
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-zinc-50/70 dark:bg-[#051114]/70 backdrop-blur-md pointer-events-none overflow-hidden">
+    <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-zinc-50/70 dark:bg-[#051114]/70 backdrop-blur-md pointer-events-none overflow-hidden loader-container">
       
       <style>{`
+        @keyframes loader-fade-in {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        .loader-container {
+          opacity: 0;
+          animation: loader-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) 150ms forwards;
+        }
+
         .tetrominos-wrapper {
           position: relative;
           width: 144px;

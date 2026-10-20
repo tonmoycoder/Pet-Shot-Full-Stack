@@ -3,6 +3,7 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import fs from 'fs';
 import path from 'path';
+import { getFallbackAnimals, getFallbackProducts, getFallbackBlogs } from '@/lib/data-fallback';
 
 // ISR revalidation: regenerated in background every hour
 export const revalidate = 3600;
@@ -148,8 +149,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn('[sitemap] Payload initialization failed, applying fallback data:', payloadInitErr);
   }
 
-  // 4. Local Static Fallback Check: ensure blog detail pages from blogs_utf8.json are represented
+  // 4. Local Static Fallback Check: ensure items from master fallback data are represented
   try {
+    const fbAnimals = getFallbackAnimals();
+    fbAnimals.forEach((animal) => {
+      if (animal?.id) {
+        addEntry({
+          url: `${baseUrl}/animals/${animal.id}`,
+          lastModified: now,
+          changeFrequency: 'weekly',
+          priority: 0.85,
+        });
+      }
+    });
+
+    const fbProducts = getFallbackProducts();
+    fbProducts.forEach((product) => {
+      if (product?.id) {
+        addEntry({
+          url: `${baseUrl}/products/${product.id}`,
+          lastModified: now,
+          changeFrequency: 'weekly',
+          priority: 0.85,
+        });
+      }
+    });
+
+    const fbBlogs = getFallbackBlogs();
+    fbBlogs.forEach((blog) => {
+      if (blog?.id) {
+        addEntry({
+          url: `${baseUrl}/blog/${blog.id}`,
+          lastModified: blog.publishedAt ? new Date(blog.publishedAt) : now,
+          changeFrequency: 'weekly',
+          priority: 0.8,
+        });
+      }
+    });
+
     const blogsFilePath = path.join(process.cwd(), 'blogs_utf8.json');
     if (fs.existsSync(blogsFilePath)) {
       const rawBlogs = fs.readFileSync(blogsFilePath, 'utf8');
@@ -168,7 +205,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }
   } catch (fsErr) {
-    console.warn('[sitemap] Fallback blogs check skipped:', fsErr);
+    console.warn('[sitemap] Fallback entries check skipped:', fsErr);
   }
 
   return Array.from(entriesMap.values());

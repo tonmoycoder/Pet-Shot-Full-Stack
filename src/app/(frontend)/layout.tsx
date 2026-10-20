@@ -16,15 +16,16 @@ import { StoreSettingsProvider } from "@/lib/store-settings-context";
 import { getSafeStoreSettings } from "@/lib/store-fallback";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-sans",
+  variable: "--font-jakarta",
   subsets: ["latin"],
   display: "swap", // Prevent invisible text (FOIT) → reduces CLS
   preload: true,
 });
 
 const notoSerifBengali = Noto_Serif_Bengali({
-  variable: "--font-bangla",
+  variable: "--font-noto-bengali",
   subsets: ["bengali"],
+  weight: ["400", "600", "700"],
   display: "swap", // Prevent invisible text (FOIT) → reduces CLS
   preload: true, // Primary font for Bengali content — must preload to prevent massive CLS
 });
@@ -156,7 +157,7 @@ export default async function RootLayout({
             <CursorProvider>
               <ShortlistProvider>
                 <Header />
-                <main className="flex-1 pt-20 flex flex-col">
+                <main className="flex-1 pt-20 flex flex-col w-full max-w-full overflow-x-clip">
                   {children}
                 </main>
                 <Footer />

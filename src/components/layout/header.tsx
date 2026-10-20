@@ -294,6 +294,7 @@ export function Header() {
               toggleLanguage();
               setIsOpen(false);
             }}
+            aria-label={`Switch to ${language === 'bn' ? 'English' : 'Bangla'}`}
             className="w-full text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground py-4 border-t border-border focus:outline-none transition-colors hover:text-foreground"
           >
             {language === "bn" ? "Switch to English" : "বাংলায় দেখুন"}

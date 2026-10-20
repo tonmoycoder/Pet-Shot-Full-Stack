@@ -113,7 +113,7 @@ export function ContactClient({ storeSettings }: { storeSettings: any }) {
   }
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-[#ddf1fa] via-[#eaf6fd] to-[#d0ecf8] dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 py-24 px-4 ${fontClass}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-[#ddf1fa] via-[#eaf6fd] to-[#d0ecf8] dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 py-24 px-4 overflow-x-hidden w-full max-w-full ${fontClass}`}>
       <div className="max-w-5xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="text-center mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#09334F]/10 dark:bg-[#67B1E0]/10 rounded-full mb-5">
@@ -125,8 +125,8 @@ export function ContactClient({ storeSettings }: { storeSettings: any }) {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <motion.div initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="flex flex-col gap-6">
-            <div className="bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-white/60 dark:border-zinc-800">
+          <motion.div initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="flex flex-col gap-6 min-w-0 w-full">
+            <div className="bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl p-5 sm:p-8 rounded-3xl shadow-lg border border-white/60 dark:border-zinc-800">
               <h2 className={`text-2xl font-bold text-[#09334F] dark:text-zinc-100 mb-8 ${fontClass}`}>{t.infoCard}</h2>
               <div className="space-y-6">
                 {[
@@ -136,12 +136,12 @@ export function ContactClient({ storeSettings }: { storeSettings: any }) {
                 ].map(({ icon, label, el }) => (
                   <div key={label} className="flex items-start gap-4">
                     <div className="shrink-0 w-10 h-10 rounded-full bg-[#67B1E0]/20 dark:bg-[#67B1E0]/10 flex items-center justify-center text-[#265D85] dark:text-[#67B1E0]">{icon}</div>
-                    <div><p className={`font-semibold text-sm text-zinc-900 dark:text-zinc-100 mb-0.5 ${fontClass}`}>{label}</p>{el}</div>
+                    <div className="min-w-0 flex-1 break-words"><p className={`font-semibold text-sm text-zinc-900 dark:text-zinc-100 mb-0.5 ${fontClass}`}>{label}</p>{el}</div>
                   </div>
                 ))}
               </div>
             </div>
-            <a href={`https://wa.me/${whatsappNum}`} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-3xl p-6 transition-all shadow-sm">
+            <a href={`https://wa.me/${whatsappNum}`} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-3xl p-4 sm:p-6 transition-all shadow-sm">
               <div className="shrink-0 w-12 h-12 rounded-full bg-[#25D366] flex items-center justify-center shadow-lg shadow-[#25D366]/30 group-hover:scale-105 transition-transform">
                 <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.528 5.849L0 24l6.336-1.497A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.013-1.373l-.36-.213-3.762.889.952-3.659-.233-.376A9.796 9.796 0 012.182 12c0-5.419 4.399-9.818 9.818-9.818 5.419 0 9.818 4.399 9.818 9.818 0 5.42-4.399 9.818-9.818 9.818z"/></svg>
               </div>
@@ -156,7 +156,7 @@ export function ContactClient({ storeSettings }: { storeSettings: any }) {
               href={storeSettings?.contact?.storeFacebookPageUrl || "https://www.facebook.com/bismillahpakhiandaquarium"} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="group flex items-center gap-4 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 border border-[#1877F2]/30 rounded-3xl p-6 transition-all shadow-sm"
+              className="group flex items-center gap-4 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 border border-[#1877F2]/30 rounded-3xl p-4 sm:p-6 transition-all shadow-sm"
             >
               <div className="shrink-0 w-12 h-12 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-lg shadow-[#1877F2]/30 group-hover:scale-105 transition-transform">
                 <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
@@ -174,7 +174,7 @@ export function ContactClient({ storeSettings }: { storeSettings: any }) {
             </a>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-white/60 dark:border-zinc-800">
+          <motion.div initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="min-w-0 w-full bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl p-5 sm:p-8 rounded-3xl shadow-lg border border-white/60 dark:border-zinc-800">
             <h2 className={`text-2xl font-bold text-[#09334F] dark:text-zinc-100 mb-6 ${fontClass}`}>{t.formCard}</h2>
             <AnimatePresence mode="wait">
               {status === "success" ? (

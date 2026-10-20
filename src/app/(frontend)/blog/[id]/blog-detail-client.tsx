@@ -43,7 +43,7 @@ function serializeRichText(nodes: any[], language: "en" | "bn") {
 
     switch (node.type) {
       case "h1":
-        return <h1 key={i}>{children}</h1>;
+        return <h2 key={i}>{children}</h2>;
       case "h2":
         return <h2 key={i}>{children}</h2>;
       case "h3":
@@ -123,7 +123,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
   
   const renderContent = () => {
     const markdownComponents = {
-      h1: ({ node, ...props }: any) => <h1 className="text-3xl md:text-4xl font-extrabold text-[#09334F] dark:text-white mt-8 mb-4 tracking-tight leading-snug" {...props} />,
+      h1: ({ node, ...props }: any) => <h2 className="text-2xl md:text-3xl font-bold text-[#09334F] dark:text-white mt-8 mb-4 tracking-tight leading-snug" {...props} />,
       h2: ({ node, ...props }: any) => <h2 className="text-2xl md:text-3xl font-bold text-[#09334F] dark:text-white mt-8 mb-4 tracking-tight leading-snug" {...props} />,
       h3: ({ node, ...props }: any) => <h3 className="text-xl md:text-2xl font-bold text-[#09334F] dark:text-white mt-6 mb-3 leading-snug" {...props} />,
       p: ({ node, ...props }: any) => <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed mb-5 text-lg" {...props} />,
@@ -172,7 +172,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
   const facebookShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`;
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-[#051114] pt-28 pb-24">
+    <div className="min-h-screen bg-zinc-50 dark:bg-[#051114] pt-28 pb-24 overflow-x-hidden w-full">
       {/* Decorative Background */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-emerald-500/5 dark:bg-emerald-900/10 blur-3xl pointer-events-none rounded-b-full" />
 
@@ -266,7 +266,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
             className="flex-1 min-w-0 bg-white dark:bg-zinc-900 p-8 md:p-12 rounded-3xl shadow-xl shadow-zinc-200/20 dark:shadow-black/20 border border-zinc-100 dark:border-zinc-800/50"
           >
             <article className={cn(
-              "prose prose-lg md:prose-xl dark:prose-invert max-w-none prose-emerald prose-headings:font-bold prose-headings:text-[#09334F] dark:prose-headings:text-white prose-a:text-emerald-600 prose-img:rounded-2xl",
+              "prose prose-lg md:prose-xl dark:prose-invert max-w-none prose-emerald prose-headings:font-bold prose-headings:text-[#09334F] dark:prose-headings:text-white prose-a:text-emerald-600 prose-img:rounded-2xl break-words overflow-x-hidden",
               language === "bn" ? "font-bangla" : "font-sans"
             )}>
               {renderContent()}
@@ -278,7 +278,7 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="w-full lg:w-80 shrink-0 space-y-8"
+            className="w-full lg:w-80 shrink-0 space-y-8 min-w-0"
           >
             {/* Share Widget */}
             <div className="bg-white dark:bg-zinc-900 p-6 rounded-3xl shadow-xl shadow-zinc-200/20 dark:shadow-black/20 border border-zinc-100 dark:border-zinc-800/50 relative lg:sticky lg:top-32">

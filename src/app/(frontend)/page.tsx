@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import nextDynamic from "next/dynamic";
 import Image from "next/image";
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
@@ -8,7 +7,9 @@ import configPromise from '@payload-config';
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম | Premium Pet Shop in Chuadanga",
+  title: {
+    absolute: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম | Premium Pet Shop in Chuadanga",
+  },
   description:
     "চুয়াডাঙ্গার শীর্ষস্থানীয় বিশ্বস্ত দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ, অ্যাকোয়াস্কেপিং ও পেট সামগ্রীর দোকান। সুস্থ পাখি, রঙিন মাছ, অ্যাকোয়ারিয়াম ফিল্টার ও পাখির পুষ্টিকর খাবার।",
   alternates: {
@@ -16,16 +17,17 @@ export const metadata: Metadata = {
   },
 };
 
-// Below-the-fold & Heavy components: Lazy-load JS chunks to reduce initial bundle and TBT
+// Below-the-fold components: Statically imported for instant SSR layout generation (0 CLS)
 import { HeroSection } from "@/components/home/hero-section";
-const DiscoveryBento = nextDynamic(() => import("@/components/home/discovery-bento").then(m => ({ default: m.DiscoveryBento })));
-const FeaturedPets = nextDynamic(() => import("@/components/home/featured-pets").then(m => ({ default: m.FeaturedPets })));
-const TrustStrip = nextDynamic(() => import("@/components/home/trust-strip").then(m => ({ default: m.TrustStrip })));
-const StoreExperience = nextDynamic(() => import("@/components/home/store-experience").then(m => ({ default: m.StoreExperience })));
-const TestimonialSection = nextDynamic(() => import("@/components/home/testimonial-section").then(m => ({ default: m.TestimonialSection })));
-const BlogPeek = nextDynamic(() => import("@/components/home/blog-peek").then(m => ({ default: m.BlogPeek })));
-const FinalCTA = nextDynamic(() => import("@/components/home/final-cta").then(m => ({ default: m.FinalCTA })));
-const RareExoticCollection = nextDynamic(() => import("@/components/home/rare-exotic-collection").then(m => ({ default: m.RareExoticCollection })));
+import { DiscoveryBento } from "@/components/home/discovery-bento";
+import { FeaturedPets } from "@/components/home/featured-pets";
+import { TrustStrip } from "@/components/home/trust-strip";
+import { StoreExperience } from "@/components/home/store-experience";
+import { TestimonialSection } from "@/components/home/testimonial-section";
+import { BlogPeek } from "@/components/home/blog-peek";
+import { FinalCTA } from "@/components/home/final-cta";
+import { RareExoticCollection } from "@/components/home/rare-exotic-collection";
+import { getFallbackAnimals, getFallbackProducts, getFallbackBlogs } from "@/lib/data-fallback";
 
 export default async function Home() {
   let pets: any[] = [];
@@ -34,6 +36,18 @@ export default async function Home() {
   let testimonials: any[] = [];
   let blogs: any[] = [];
   let rareProducts: any[] = [];
+
+  const truncateDesc = (desc: any) => {
+    if (!desc) return '';
+    if (typeof desc === 'string') return desc.slice(0, 140);
+    if (typeof desc === 'object') {
+      return {
+        en: desc.en ? desc.en.slice(0, 140) : '',
+        bn: desc.bn ? desc.bn.slice(0, 140) : '',
+      };
+    }
+    return '';
+  };
 
   try {
     const payload = await getPayload({ config: configPromise });
@@ -93,7 +107,7 @@ export default async function Home() {
         name: doc.name,
         tag: doc.tag,
         price: doc.price,
-        description: doc.description,
+        description: truncateDesc(doc.description),
       }));
       const rareP = rareProductDocs.docs.map((doc: any) => ({
         id: doc.id,
@@ -102,7 +116,7 @@ export default async function Home() {
         name: doc.name,
         tag: doc.tag,
         price: doc.price,
-        description: doc.description,
+        description: truncateDesc(doc.description),
       }));
       rareProducts = [...rareA, ...rareP];
     } catch (e) { console.warn("Rare products query failed", e); }
@@ -162,6 +176,50 @@ export default async function Home() {
     console.error("Failed to connect to Payload or Database. Is Postgres running?", error);
   }
 
+  // Master local fallback resolution for zero blank renders
+  if (pets.length === 0) {
+    pets = getFallbackAnimals().filter(a => a.isFeatured).map(a => ({
+      id: a.id,
+      image: a.image,
+      objectPosition: a.objectPosition,
+      name: a.name,
+      tag: a.tag,
+      price: a.price,
+    }));
+  }
+
+  if (rareProducts.length === 0) {
+    const fbRareA = getFallbackAnimals().filter(a => a.isRareExotic).map(a => ({
+      id: a.id,
+      isAnimal: true,
+      image: a.image,
+      name: a.name,
+      tag: a.tag,
+      price: a.price,
+      description: truncateDesc(a.description),
+    }));
+    const fbRareP = getFallbackProducts().filter(p => p.isRareExotic).map(p => ({
+      id: p.id,
+      isAnimal: false,
+      image: p.image,
+      name: p.name,
+      tag: p.tag,
+      price: p.price,
+      description: truncateDesc(p.description),
+    }));
+    rareProducts = [...fbRareA, ...fbRareP];
+  }
+
+  if (blogs.length === 0) {
+    blogs = getFallbackBlogs().slice(0, 3).map(b => ({
+      id: b.id,
+      title: b.title,
+      excerpt: b.excerpt,
+      coverImage: typeof b.coverImage === 'object' ? b.coverImage?.url : b.coverImage,
+      publishedAt: b.publishedAt,
+    }));
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* 1. Hero — pass settings so badge syncs with backend hours, and LCP image statically */}
@@ -182,45 +240,28 @@ export default async function Home() {
       />
 
       {/* 2. Discovery surface — animals, food, accessories */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
-        <DiscoveryBento discoveryCards={homepageRes?.discoveryCards} />
-      </div>
+      <DiscoveryBento discoveryCards={homepageRes?.discoveryCards} />
 
       {/* 3. Featured pets — filtered by isFeatured */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
-        <FeaturedPets pets={pets} />
-      </div>
+      <FeaturedPets pets={pets} />
 
-      {/* RARE & EXOTIC COLLECTION — lazy */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
-        <RareExoticCollection products={rareProducts} storeNumber={settingsRes?.contact?.whatsappNumber || settingsRes?.contact?.phoneNumber || '8801947315330'} />
-      </div>
+      {/* RARE & EXOTIC COLLECTION */}
+      <RareExoticCollection products={rareProducts} storeNumber={settingsRes?.contact?.whatsappNumber || settingsRes?.contact?.phoneNumber || '8801947315330'} />
 
       {/* 4. Trust strip — live signal + proof points */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 200px' }}>
-        <TrustStrip />
-      </div>
+      <TrustStrip />
 
       {/* 5. Store experience — live video + physical store */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
-        <StoreExperience settings={settingsRes as any} />
-      </div>
-
+      <StoreExperience settings={settingsRes as any} />
 
       {/* 6. Testimonials — customer reviews */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
-        <TestimonialSection testimonials={testimonials} />
-      </div>
+      <TestimonialSection testimonials={testimonials} />
 
       {/* 7. Blog Peek — latest articles */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
-        <BlogPeek blogs={blogs} />
-      </div>
+      <BlogPeek blogs={blogs} />
 
       {/* 8. Final invitation CTA — warm closing section */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
-        <FinalCTA settings={settingsRes as any} />
-      </div>
+      <FinalCTA settings={settingsRes as any} />
     </div>
   );
 }

@@ -96,7 +96,7 @@ export function Footer() {
 
   const facebookUrl = storeSettings?.contact?.storeFacebookPageUrl ||
     "https://www.facebook.com/bismillahpakhiandaquarium";
-  const whatsappNum = storeSettings?.contact?.whatsappNumber || "8801947315330";
+  const whatsappNum = (storeSettings?.contact?.whatsappNumber || "8801947315330").replace(/[^0-9]/g, '');
   const phoneDisplay = storeSettings?.contact?.phoneNumber || t.phone;
   const addressDisplay = storeSettings?.location?.address || t.address;
   const hoursDisplay = storeSettings?.hours?.openingTime ||

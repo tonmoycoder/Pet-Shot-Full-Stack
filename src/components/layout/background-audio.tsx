@@ -157,7 +157,7 @@ export function BackgroundAudio() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ delay: 2.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className={`fixed z-[45] select-none flex items-center gap-2 sm:gap-3 cursor-grab transition-all duration-300 ${
-          isDetailPage ? "bottom-24 left-3 md:bottom-6 md:left-6" : "bottom-6 left-3 sm:left-6"
+          isDetailPage ? "bottom-24 md:bottom-6 left-4 md:left-6" : "bottom-6 left-4 sm:left-6"
         }`}
       >
         <button

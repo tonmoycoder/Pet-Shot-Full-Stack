@@ -3,6 +3,7 @@ import configPromise from '@payload-config';
 import { notFound } from 'next/navigation';
 import { BlogDetailClient } from './blog-detail-client';
 import { BlogPostingJsonLd, BreadcrumbJsonLd } from '@/components/seo/structured-data';
+import { getFallbackBlogById } from '@/lib/data-fallback';
 
 export const revalidate = 60;
 
@@ -43,11 +44,29 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         ...(imageUrl && { images: [imageUrl] }),
       },
     };
-  } catch (error) {
+  } catch {
+    const fallback = getFallbackBlogById(resolvedParams.id);
+    const title = fallback ? `${fallback.title.bn} (${fallback.title.en})` : 'ব্লগ বিস্তারিত';
+    const description = fallback ? fallback.excerpt.bn : 'বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা।';
+    const imageUrl = fallback?.coverImage && typeof fallback.coverImage === 'object' ? fallback.coverImage.url : '';
     return {
-      title: 'ব্লগ বিস্তারিত',
+      title,
+      description,
       alternates: {
         canonical: `/blog/${resolvedParams.id}`,
+      },
+      openGraph: {
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
+        type: 'article',
+        url: `/blog/${resolvedParams.id}`,
+        ...(imageUrl && { images: [imageUrl] }),
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
+        ...(imageUrl && { images: [imageUrl] }),
       },
     };
   }
@@ -64,8 +83,11 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ id:
       id: resolvedParams.id,
     });
   } catch (error) {
-    console.error("Failed to fetch blog post", error);
-    notFound();
+    console.warn("Failed to fetch blog post from Payload, checking fallback:", error);
+  }
+
+  if (!blog) {
+    blog = getFallbackBlogById(resolvedParams.id);
   }
 
   if (!blog) notFound();

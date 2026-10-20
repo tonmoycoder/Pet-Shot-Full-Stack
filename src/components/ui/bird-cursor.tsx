@@ -43,12 +43,19 @@ export function BirdCursor() {
   });
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
     const mediaQuery = window.matchMedia("(pointer: fine) and (hover: hover)");
-    setIsDesktop(mediaQuery.matches);
+    if (isCoarse || !mediaQuery.matches) {
+      setIsDesktop(false);
+      return;
+    }
+    setIsDesktop(true);
     
-    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    const handler = (e: MediaQueryListEvent) => {
+      const coarseNow = window.matchMedia("(pointer: coarse)").matches;
+      setIsDesktop(!coarseNow && e.matches);
+    };
     mediaQuery.addEventListener("change", handler);
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
@@ -57,27 +64,44 @@ export function BirdCursor() {
     const ghost = ghostsRef.current[ghostIndex.current];
     if (!ghost) return;
 
-    ghost.classList.remove("active");
-    void ghost.offsetWidth; // force reflow
-
     // Assign color
     const color = IRIDESCENT_COLORS[ghostIndex.current % IRIDESCENT_COLORS.length];
     ghost.style.setProperty("--ghost-color", color);
-    
-    // Staggered opacity and scale via CSS nth-child if possible, but here we just animate them identically and let lifetime handle it
     ghost.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg)`;
-    ghost.classList.add("active");
+
+    if (typeof ghost.animate === "function") {
+      ghost.animate(
+        [
+          { opacity: 0.15, transform: `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg) scale(1)` },
+          { opacity: 0, transform: `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg) scale(0.7)` }
+        ],
+        { duration: 320, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)", fill: "forwards" }
+      );
+    } else {
+      ghost.classList.remove("active");
+      requestAnimationFrame(() => ghost.classList.add("active"));
+    }
 
     ghostIndex.current = (ghostIndex.current + 1) % GHOST_COUNT;
   };
 
   const triggerClickEffect = (x: number, y: number) => {
-    // Click Ring
+    // Click Ring without forced reflow
     if (rippleRef.current) {
-      rippleRef.current.classList.remove("active");
-      void rippleRef.current.offsetWidth;
-      rippleRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      rippleRef.current.classList.add("active");
+      const ripple = rippleRef.current;
+      ripple.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      if (typeof ripple.animate === "function") {
+        ripple.animate(
+          [
+            { transform: `translate3d(${x}px, ${y}px, 0) scale(0.8)`, opacity: 0.8 },
+            { transform: `translate3d(${x}px, ${y}px, 0) scale(3.5)`, opacity: 0 }
+          ],
+          { duration: 350, easing: "ease-out", fill: "forwards" }
+        );
+      } else {
+        ripple.classList.remove("active");
+        requestAnimationFrame(() => ripple.classList.add("active"));
+      }
     }
     
     // Compression
@@ -106,7 +130,15 @@ export function BirdCursor() {
     document.body.classList.add("cursor-none-global");
 
     let animationFrameId: number;
+    let isRunning = false;
     const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const startLoop = () => {
+      if (!isRunning) {
+        isRunning = true;
+        animationFrameId = requestAnimationFrame(loop);
+      }
+    };
 
     const onMouseMove = (e: MouseEvent) => {
       state.current.targetX = e.clientX;
@@ -116,12 +148,14 @@ export function BirdCursor() {
         state.current.x = e.clientX;
         state.current.y = e.clientY;
       }
+      startLoop();
     };
 
     const onClick = (e: MouseEvent) => {
       if (!isReducedMotion) {
         triggerClickEffect(e.clientX, e.clientY);
       }
+      startLoop();
     };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
@@ -130,18 +164,17 @@ export function BirdCursor() {
     const loop = (time: number) => {
       if (!state.current.lastTime) state.current.lastTime = time;
       
+      let shouldContinue = true;
+
       if (cursorRef.current && state.current.x !== -100) {
         const dx = state.current.targetX - state.current.x;
         const dy = state.current.targetY - state.current.y;
         
         // Dead-zone epsilon to kill jitter
         if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
-          // Damped interpolation (higher ease = faster follow)
-          const ease = 0.85; // Increased from 0.55 for much less lag, almost 1:1 hardware feel
-          
+          const ease = 0.85;
           state.current.x += dx * ease;
           state.current.y += dy * ease;
-          
           state.current.vx = dx * ease;
           state.current.vy = dy * ease;
         } else {
@@ -154,35 +187,39 @@ export function BirdCursor() {
 
         const speed = Math.sqrt(state.current.vx ** 2 + state.current.vy ** 2);
         
-        // Rotation smoothing (only rotate if moving decently fast)
         if (!isReducedMotion && speed > 2) {
           let targetAngle = Math.atan2(state.current.vy, state.current.vx) * (180 / Math.PI);
-          // Clamp angle to -14 to 14 degrees for subtle physical leaning, not 360 spinning
           targetAngle = Math.max(-14, Math.min(14, targetAngle));
-          
-          // Interpolate angle
           state.current.angle += (targetAngle - state.current.angle) * 0.2;
         } else {
-          // Settle back to 0
           state.current.angle += (0 - state.current.angle) * 0.1;
         }
 
-        // Apply transforms
         const angleToApply = isReducedMotion ? 0 : state.current.angle;
         cursorRef.current.style.transform = `translate3d(${state.current.x}px, ${state.current.y}px, 0) rotate(${angleToApply}deg)`;
 
-        // Drop ghost if moving fast enough
         if (!isReducedMotion && speed > 2.5 && time - state.current.lastGhostTime > 25) {
           state.current.lastGhostTime = time;
           dropGhost(state.current.x, state.current.y, angleToApply);
         }
+
+        // Settle check: pause rAF loop when stationary to preserve battery & eliminate idle CPU
+        const isSettled = Math.abs(dx) <= 0.1 && Math.abs(dy) <= 0.1 && Math.abs(state.current.angle) < 0.1;
+        if (isSettled) {
+          shouldContinue = false;
+        }
       }
       
       state.current.lastTime = time;
-      animationFrameId = requestAnimationFrame(loop);
+      if (shouldContinue) {
+        animationFrameId = requestAnimationFrame(loop);
+      } else {
+        isRunning = false;
+      }
     };
 
-    animationFrameId = requestAnimationFrame(loop);
+    // Kick off initial loop
+    startLoop();
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);

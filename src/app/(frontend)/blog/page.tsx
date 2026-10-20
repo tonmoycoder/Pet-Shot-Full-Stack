@@ -2,6 +2,7 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { BlogClient } from './blog-client';
 import { BreadcrumbJsonLd } from '@/components/seo/structured-data';
+import { getFallbackBlogs } from '@/lib/data-fallback';
 
 export const revalidate = 60;
 
@@ -42,7 +43,17 @@ export default async function BlogPage() {
       publishedAt: doc.publishedAt,
     }));
   } catch (error) {
-    console.error("Failed to fetch blogs", error);
+    console.warn("Failed to fetch blogs from Payload, falling back to local data:", error);
+  }
+
+  if (blogs.length === 0) {
+    blogs = getFallbackBlogs().map((b) => ({
+      id: b.id,
+      title: b.title,
+      excerpt: b.excerpt,
+      coverImage: b.coverImage,
+      publishedAt: b.publishedAt,
+    }));
   }
 
   return (

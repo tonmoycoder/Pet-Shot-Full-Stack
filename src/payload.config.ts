@@ -75,11 +75,11 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || 'postgres://postgres:postgres@127.0.0.1:5432/petshop',
+      max: 3,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 8000,
     },
-    // Auto-migrate schema changes on production startup
-    // This fixes missing columns like _objectkey, thumbnail_url in media table
-    push: false,
-    migrationDir: './src/migrations',
+    push: process.env.NODE_ENV !== 'production',
   }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

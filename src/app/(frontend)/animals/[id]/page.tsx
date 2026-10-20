@@ -3,6 +3,7 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { AnimalClient } from './animal-client';
 import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/seo/structured-data';
+import { getFallbackAnimalById } from '@/lib/data-fallback';
 
 export const revalidate = 60;
 
@@ -45,10 +46,24 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
     };
   } catch {
+    const fallback = getFallbackAnimalById(id);
+    const title = fallback ? `${fallback.name.bn} (${fallback.name.en})` : 'পাখি ও পোষা প্রাণী';
+    const description = fallback ? fallback.description.bn : 'বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা।';
     return {
-      title: 'প্রাণী বিস্তারিত',
+      title,
+      description,
       alternates: {
         canonical: `/animals/${id}`,
+      },
+      openGraph: {
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
+        url: `/animals/${id}`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
       },
     };
   }
@@ -73,8 +88,12 @@ export default async function AnimalPage({ params }: { params: Promise<{ id: str
     });
   } catch (error: any) {
     if (error?.message !== 'Not Found' && error?.name !== 'NotFound') {
-      console.error("Error fetching animal data:", error);
+      console.warn("Error fetching animal data from Payload, checking fallback:", error);
     }
+  }
+
+  if (!animal) {
+    animal = getFallbackAnimalById(id);
   }
 
   if (!animal) {
