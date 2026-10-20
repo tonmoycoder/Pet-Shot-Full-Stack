@@ -53,9 +53,9 @@ export default function NotFound() {
         <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", position: "relative", zIndex: 1 }}>
           {/* Header */}
           <header style={{ padding: "clamp(14px,4vw,28px) clamp(16px,5vw,40px)", display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: 1280, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
-            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }}>
-              <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", border: "1.5px solid #d1fae5", flexShrink: 0 }}>
-                <Image src="/images/logo.png" alt="Logo" fill className="object-cover" sizes="40px" priority />
+            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", color: "inherit" }}>
+              <div style={{ position: "relative", width: 44, height: 44, borderRadius: "50%", overflow: "hidden", border: "1.5px solid #10b981", background: "#0a192f", flexShrink: 0, padding: "2px" }}>
+                <Image src="/images/logo_shop.webp" alt="Bismillah Pakhi & Aquarium Logo" fill className="object-contain" sizes="44px" priority />
               </div>
               <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
                 <span style={{ fontSize: "clamp(13px,3.5vw,18px)", fontWeight: 700, color: "#064e3b" }} className={fontClass}>{t.brandPrimary}</span>
@@ -77,7 +77,7 @@ export default function NotFound() {
               <motion.div key={lang} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: .35, ease: [.4,0,.2,1] }} style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
                 {/* Floating illustration */}
                 <motion.div animate={{ y: [0,-12,0] }} transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }} style={{ position: "relative", width: "clamp(160px,50vw,280px)", height: "clamp(160px,50vw,280px)", marginBottom: "clamp(16px,4vw,32px)", flexShrink: 0 }}>
-                  <Image src="/media/404-image.jpg" alt="404 Not Found" fill className="object-contain" priority sizes="(max-width:480px) 55vw, 280px" style={{ borderRadius: 20, filter: "drop-shadow(0 16px 32px rgba(0,0,0,.12))" }} />
+                  <Image src="/images/404-image.jpg" alt="404 Not Found" fill className="object-contain" priority sizes="(max-width:480px) 55vw, 280px" style={{ borderRadius: 20, filter: "drop-shadow(0 16px 32px rgba(0,0,0,.12))" }} />
                 </motion.div>
 
                 {/* Gradient badge */}

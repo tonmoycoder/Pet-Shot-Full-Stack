@@ -8,3 +8,11 @@ export function formatDate(dateStr: string) {
     year: 'numeric'
   }).format(date);
 }
+
+export function resolveImageUrl(url: string | null | undefined): string {
+  if (!url) return '';
+  if (url.startsWith('/api/media/file/')) {
+    return url.replace('/api/media/file/', '/media/');
+  }
+  return url;
+}

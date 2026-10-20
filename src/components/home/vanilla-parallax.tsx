@@ -22,45 +22,77 @@ export function VanillaParallax({
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
-    let rafId: number;
-    let lastScrollY = window.scrollY;
-    let currentY = 0;
-    
-    // Smooth interpolation factor
-    const ease = 0.1;
+    const el = ref.current;
+    if (!el) return;
+
+    let rafId: number | null = null;
+    let ticking = false;
+    let isVisible = false;
+    let viewportHeight = window.innerHeight;
 
     const updateParallax = () => {
-      if (!ref.current) return;
+      if (!el || !isVisible) {
+        ticking = false;
+        return;
+      }
       
-      const rect = ref.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
+      const rect = el.getBoundingClientRect();
       
       // Check if element is in viewport
       if (rect.top <= viewportHeight && rect.bottom >= 0) {
-        // Calculate scroll progress (0 to 1) relative to element visibility
         const totalDistance = viewportHeight + rect.height;
         const scrolled = viewportHeight - rect.top;
         const progress = Math.max(0, Math.min(1, scrolled / totalDistance));
         
-        // Target Y translation
         const direction = reverse ? -1 : 1;
         const targetY = progress * offset * direction;
         
-        // Lerp
-        currentY += (targetY - currentY) * ease;
-        
-        // Apply transform using 3d for hardware acceleration
-        ref.current.style.transform = `translate3d(0, ${currentY}px, 0)`;
+        el.style.transform = `translate3d(0, ${targetY.toFixed(2)}px, 0)`;
       }
-      
+      ticking = false;
+    };
+
+    const onScrollOrResize = () => {
+      if (!isVisible || ticking) return;
+      ticking = true;
       rafId = requestAnimationFrame(updateParallax);
     };
 
-    // Start animation loop
-    rafId = requestAnimationFrame(updateParallax);
+    const onResize = () => {
+      viewportHeight = window.innerHeight;
+      onScrollOrResize();
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        isVisible = entry?.isIntersecting ?? false;
+        if (isVisible) {
+          window.addEventListener("scroll", onScrollOrResize, { passive: true });
+          window.addEventListener("resize", onResize, { passive: true });
+          onScrollOrResize();
+        } else {
+          window.removeEventListener("scroll", onScrollOrResize);
+          window.removeEventListener("resize", onResize);
+          if (rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+          ticking = false;
+        }
+      },
+      { rootMargin: "50px" }
+    );
+
+    observer.observe(el);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      observer.disconnect();
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onResize);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
     };
   }, [offset, reverse]);
 

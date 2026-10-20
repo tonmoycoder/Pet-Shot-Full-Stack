@@ -4,8 +4,9 @@ import * as React from "react";
 import { cn } from "cn";
 import { useLanguage } from "@/lib/language-context";
 
-export function HeroTextClient({ dict }: { dict: any }) {
+export function HeroTextClient({ dicts }: { dicts: any }) {
   const { language } = useLanguage();
+  const dict = dicts[language as 'en' | 'bn'] || dicts['bn'];
   
   return (
     <>

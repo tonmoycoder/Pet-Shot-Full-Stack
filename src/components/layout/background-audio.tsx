@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const VIDEO_ID = "pj3iV9OjCgM";
 const START_TIME = 88;
 
 export function BackgroundAudio() {
+  const pathname = usePathname();
+  const isDetailPage = pathname?.startsWith("/products/") || pathname?.startsWith("/animals/");
   const [permission, setPermission] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -153,7 +156,9 @@ export function BackgroundAudio() {
         initial={{ opacity: 0, scale: 0.7, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ delay: 2.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed bottom-6 left-6 z-[50] select-none flex items-center gap-3 cursor-grab"
+        className={`fixed z-[45] select-none flex items-center gap-2 sm:gap-3 cursor-grab transition-all duration-300 ${
+          isDetailPage ? "bottom-24 md:bottom-6 left-4 md:left-6" : "bottom-6 left-4 sm:left-6"
+        }`}
       >
         <button
           onClick={toggleAudio}
@@ -238,7 +243,7 @@ export function BackgroundAudio() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -8 }}
             transition={{ duration: 0.25 }}
-            className="font-bangla text-xs px-3 py-1.5 rounded-full pointer-events-none whitespace-nowrap shadow-sm"
+            className="font-bangla text-xs px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full pointer-events-none whitespace-nowrap shadow-sm hidden sm:block"
             style={{
               background: "rgba(9, 51, 79, 0.85)",
               backdropFilter: "blur(12px)",

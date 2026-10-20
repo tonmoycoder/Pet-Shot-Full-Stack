@@ -78,6 +78,28 @@ export const Testimonials: CollectionConfig = {
               min: 1,
               max: 5,
             },
+            {
+              name: 'petName',
+              type: 'text',
+              label: 'প্রাণী/পণ্যের নাম (Pet/Product Name)',
+              admin: {
+                description: 'e.g. Bajrigar Pair, High-Tech Planted Tank',
+              }
+            },
+            {
+              name: 'verificationStatus',
+              type: 'select',
+              label: 'ভেরিফিকেশন স্ট্যাটাস (Verification Status)',
+              options: [
+                { label: 'ভেরিফাইড কাস্টমার (Verified Customer)', value: 'verified' },
+                { label: 'রেগুলার কাস্টমার (Regular Customer)', value: 'regular' },
+                { label: 'লাইভ সেটআপ ভিজিট (Live Setup Visit)', value: 'live_setup' },
+              ],
+              defaultValue: 'regular',
+              admin: {
+                description: 'গ্রাহকের ভেরিফিকেশন ব্যাজ',
+              }
+            },
           ]
         },
         {

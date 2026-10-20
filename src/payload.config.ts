@@ -19,6 +19,18 @@ import { Homepage } from './globals/Homepage';
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+const isVercelBlob = Boolean(
+  process.env.BLOB_READ_WRITE_TOKEN &&
+  process.env.BLOB_READ_WRITE_TOKEN.startsWith('vercel_blob_rw_') &&
+  !process.env.BLOB_READ_WRITE_TOKEN.includes('dummy')
+);
+
+const isS3 = Boolean(
+  process.env.S3_ENDPOINT &&
+  process.env.S3_ACCESS_KEY_ID &&
+  process.env.S3_SECRET_ACCESS_KEY
+);
+
 export default buildConfig({
   sharp,
   admin: {
@@ -41,6 +53,9 @@ export default buildConfig({
           path: '/bulk-upload',
         },
       },
+      providers: [
+        '@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler'
+      ],
     },
   },
   collections: [
@@ -60,24 +75,17 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || 'postgres://postgres:postgres@127.0.0.1:5432/petshop',
+      max: 3,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 8000,
     },
-    // Auto-push schema changes to DB — new columns (isFeatured, time fields) get added automatically
-    push: true,
+    push: process.env.NODE_ENV !== 'production',
   }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   plugins: [
-    ...(process.env.BLOB_READ_WRITE_TOKEN
-      ? [
-          vercelBlobStorage({
-            collections: {
-              media: true,
-            },
-            token: process.env.BLOB_READ_WRITE_TOKEN,
-          }),
-        ]
-      : process.env.S3_ENDPOINT && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY
+    ...(isS3
       ? [
           s3Storage({
             collections: {
@@ -86,13 +94,22 @@ export default buildConfig({
             bucket: process.env.S3_BUCKET || 'media',
             config: {
               credentials: {
-                accessKeyId: process.env.S3_ACCESS_KEY_ID,
-                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+                accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
               },
-              endpoint: process.env.S3_ENDPOINT,
+              endpoint: process.env.S3_ENDPOINT!,
               region: process.env.S3_REGION || 'auto',
               forcePathStyle: true,
             },
+          }),
+        ]
+      : isVercelBlob
+      ? [
+          vercelBlobStorage({
+            collections: {
+              media: true,
+            },
+            token: process.env.BLOB_READ_WRITE_TOKEN!,
           }),
         ]
       : []),

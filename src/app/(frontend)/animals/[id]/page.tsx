@@ -2,18 +2,70 @@ import { notFound } from 'next/navigation';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { AnimalClient } from './animal-client';
+import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/seo/structured-data';
+import { getFallbackAnimalById } from '@/lib/data-fallback';
+
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   try {
     const payload = await getPayload({ config: configPromise });
-    const animal = await payload.findByID({ collection: 'animals', id });
+    const animal = await payload.findByID({ collection: 'animals', id, depth: 2 });
+    
+    const nameBn = animal?.name?.bn || animal?.internalName || 'পাখি ও পোষা প্রাণী';
+    const nameEn = animal?.name?.en || '';
+    const title = nameEn ? `${nameBn} (${nameEn})` : nameBn;
+    const description = animal?.description?.bn || animal?.description?.en || 'বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম - সুস্থ ও সুন্দর পোষা পাখি ও অ্যাকোয়ারিয়াম মাছ। চুয়াডাঙ্গা, বাংলাদেশ।';
+    
+    let imageUrl = '';
+    if (animal?.imageUpload && typeof animal.imageUpload === 'object' && animal.imageUpload.url) {
+      imageUrl = animal.imageUpload.url;
+    } else if (animal?.image && typeof animal.image === 'string') {
+      imageUrl = animal.image;
+    }
+
     return {
-      title: `${animal?.name?.bn || animal?.name?.en || 'প্রাণী বিস্তারিত'} | Bismillah Pakhi & Aquarium`,
-      description: animal?.description?.bn || animal?.description?.en || '',
+      title,
+      description,
+      alternates: {
+        canonical: `/animals/${id}`,
+      },
+      openGraph: {
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
+        type: 'website',
+        url: `/animals/${id}`,
+        ...(imageUrl && { images: [imageUrl] }),
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
+        ...(imageUrl && { images: [imageUrl] }),
+      },
     };
   } catch {
-    return { title: 'প্রাণী বিস্তারিত | Bismillah Pakhi & Aquarium' };
+    const fallback = getFallbackAnimalById(id);
+    const title = fallback ? `${fallback.name.bn} (${fallback.name.en})` : 'পাখি ও পোষা প্রাণী';
+    const description = fallback ? fallback.description.bn : 'বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা।';
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: `/animals/${id}`,
+      },
+      openGraph: {
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
+        url: `/animals/${id}`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${title} | Bismillah Pakhi & Aquarium`,
+        description,
+      },
+    };
   }
 }
 
@@ -28,6 +80,7 @@ export default async function AnimalPage({ params }: { params: Promise<{ id: str
     animal = await payload.findByID({
       collection: 'animals',
       id,
+      depth: 2,
     });
 
     settings = await payload.findGlobal({
@@ -35,13 +88,47 @@ export default async function AnimalPage({ params }: { params: Promise<{ id: str
     });
   } catch (error: any) {
     if (error?.message !== 'Not Found' && error?.name !== 'NotFound') {
-      console.error("Error fetching animal data:", error);
+      console.warn("Error fetching animal data from Payload, checking fallback:", error);
     }
+  }
+
+  if (!animal) {
+    animal = getFallbackAnimalById(id);
   }
 
   if (!animal) {
     notFound();
   }
 
-  return <AnimalClient animal={animal} settings={settings} />;
+  const getImageUrl = (imageField: any): string => {
+    if (typeof imageField === 'object' && imageField?.url) return imageField.url;
+    if (typeof imageField === 'string') return imageField;
+    return '';
+  };
+
+  const resolvedAnimal = {
+    ...animal,
+    image: getImageUrl(animal.imageUpload) || animal.image,
+    gallery: animal.gallery?.map((g: any) => ({
+      ...g,
+      url: getImageUrl(g.image) || g.url
+    })) || []
+  };
+
+  const animalTitle = resolvedAnimal.name?.bn || resolvedAnimal.name?.en || resolvedAnimal.internalName || 'পাখি ও পোষা প্রাণী';
+
+  return (
+    <>
+      <ProductJsonLd item={resolvedAnimal} isAnimal={true} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "হোম", url: "/" },
+          { name: "কালেকশন", url: "/collection" },
+          { name: "পাখি ও পোষা প্রাণী", url: "/categories/birds" },
+          { name: animalTitle, url: `/animals/${id}` },
+        ]}
+      />
+      <AnimalClient animal={resolvedAnimal} settings={settings} />
+    </>
+  );
 }

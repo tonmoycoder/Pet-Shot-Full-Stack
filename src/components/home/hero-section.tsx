@@ -66,7 +66,7 @@ export function HeroSection({ heroImage, storeSettings, lcpImage, language = 'bn
       <CausticsBackground />
 
       {/* Subtle Texture */}
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay -z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-[url(/noise.png)] opacity-[0.03] mix-blend-overlay -z-10 pointer-events-none" />
 
       {/* Main Content Container — exact original classes: pt-24 md:pt-0 centers content on desktop via section's items-center */}
       <div className="container mx-auto px-4 lg:px-8 w-full h-full flex flex-col-reverse md:flex-row items-center gap-8 md:gap-16 relative z-10 pb-12 md:pb-0 pt-24 md:pt-0">
@@ -76,19 +76,19 @@ export function HeroSection({ heroImage, storeSettings, lcpImage, language = 'bn
           
           {/* Eyebrow Status — synced with backend hours (Wrapped to prevent CLS) */}
           <div className="min-h-[36px] mb-6 flex items-center">
-             <StoreStatusClient storeSettings={storeSettings} dict={dict} />
+             <StoreStatusClient storeSettings={storeSettings} dicts={heroDict} />
           </div>
 
-          <HeroTextClient dict={dict} />
+          <HeroTextClient dicts={heroDict} />
 
           {/* CTAs */}
-          <HeroCTAsClient whatsappLink={whatsappLink} dict={dict} />
+          <HeroCTAsClient whatsappLink={whatsappLink} dicts={heroDict} />
         </div>
 
         {/* Right Column (Visual Stage) — exact original right-col classes */}
         <div className="flex-1 w-full relative aspect-[4/3] md:aspect-auto md:h-[75vh] md:max-h-[700px] z-10 flex items-center justify-center mt-2 md:mt-0 min-h-[260px]">
           
-          <HeroBadgesClient dict={dict} />
+          <HeroBadgesClient dicts={heroDict} />
 
           {/* The Asymmetric Stage — animate-float replaces framer-motion's gentle scale pulse.
               overflow-x-hidden on section clips the md:max-w-[110%] overflow (same as deployed). */}

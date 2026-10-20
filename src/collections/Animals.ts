@@ -117,6 +117,15 @@ export const Animals: CollectionConfig = {
               ]
             },
             {
+              name: 'numericPrice',
+              type: 'number',
+              label: 'প্রকৃত দাম (Number for Sorting)',
+              admin: {
+                description: 'সঠিক সর্টিং (Sorting) এবং ফিল্টারিংয়ের জন্য এখানে শুধু টাকার অংকটি দিন (যেমন: 1200)। দাম না থাকলে 0 দিন।',
+              },
+              defaultValue: 0,
+            },
+            {
               name: 'tag',
               type: 'group',
               label: 'ট্যাগ / ব্যাজ (Badge)',
@@ -195,13 +204,21 @@ export const Animals: CollectionConfig = {
           description: 'মিডিয়া (Media) সেকশন থেকে লিংক কপি করে এখানে বসান।',
           fields: [
             {
+              name: 'imageUpload',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'ছবি আপলোড (Upload Image)',
+              admin: {
+                description: 'সরাসরি ছবি আপলোড করুন অথবা মিডিয়া লাইব্রেরি থেকে সিলেক্ট করুন। (Upload image directly)',
+              },
+            },
+            {
               name: 'image',
               type: 'text',
-              label: 'প্রধান ছবির লিংক (Main Image URL)',
+              label: 'ছবির লিংক (Legacy Image URL)',
               admin: {
-                description: 'যে ছবিটি সবার আগে দেখানো হবে (e.g., /images/cockatiel.jpg)',
+                description: 'যদি আপলোড না করে সরাসরি লিংক দিতে চান (যেমন: /images/cockatiel.jpg)',
               },
-              required: true,
               defaultValue: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?w=800&q=80',
             },
             {
@@ -224,10 +241,15 @@ export const Animals: CollectionConfig = {
               },
               fields: [
                 {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'ছবি আপলোড (Upload Image)'
+                },
+                {
                   name: 'url',
                   type: 'text',
-                  required: true,
-                  label: 'ছবির লিংক (Image URL)'
+                  label: 'ছবির লিংক (Legacy URL)'
                 }
               ]
             }

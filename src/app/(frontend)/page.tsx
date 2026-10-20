@@ -1,20 +1,33 @@
-import dynamic from "next/dynamic";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
-export const revalidate = 60; // Enable ISR (cache for 60 seconds) to fix slow TTFB
+// ISR: Cache at Vercel Edge with 60s background revalidation for instant TTFB & fast LCP
+export const revalidate = 60;
 
-// Below-the-fold & Heavy components: Lazy-load JS chunks to reduce initial bundle and TBT
+export const metadata: Metadata = {
+  title: {
+    absolute: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম | Premium Pet Shop in Chuadanga",
+  },
+  description:
+    "চুয়াডাঙ্গার শীর্ষস্থানীয় বিশ্বস্ত দেশি-বিদেশি পাখি, অ্যাকোয়ারিয়াম মাছ, অ্যাকোয়াস্কেপিং ও পেট সামগ্রীর দোকান। সুস্থ পাখি, রঙিন মাছ, অ্যাকোয়ারিয়াম ফিল্টার ও পাখির পুষ্টিকর খাবার।",
+  alternates: {
+    canonical: "/",
+  },
+};
+
+// Below-the-fold components: Statically imported for instant SSR layout generation (0 CLS)
 import { HeroSection } from "@/components/home/hero-section";
-const DiscoveryBento = dynamic(() => import("@/components/home/discovery-bento").then(m => ({ default: m.DiscoveryBento })));
-const FeaturedPets = dynamic(() => import("@/components/home/featured-pets").then(m => ({ default: m.FeaturedPets })));
-const TrustStrip = dynamic(() => import("@/components/home/trust-strip").then(m => ({ default: m.TrustStrip })));
-const StoreExperience = dynamic(() => import("@/components/home/store-experience").then(m => ({ default: m.StoreExperience })));
-const TestimonialSection = dynamic(() => import("@/components/home/testimonial-section").then(m => ({ default: m.TestimonialSection })));
-const BlogPeek = dynamic(() => import("@/components/home/blog-peek").then(m => ({ default: m.BlogPeek })));
-const FinalCTA = dynamic(() => import("@/components/home/final-cta").then(m => ({ default: m.FinalCTA })));
-const RareExoticCollection = dynamic(() => import("@/components/home/rare-exotic-collection").then(m => ({ default: m.RareExoticCollection })));
+import { DiscoveryBento } from "@/components/home/discovery-bento";
+import { FeaturedPets } from "@/components/home/featured-pets";
+import { TrustStrip } from "@/components/home/trust-strip";
+import { StoreExperience } from "@/components/home/store-experience";
+import { TestimonialSection } from "@/components/home/testimonial-section";
+import { BlogPeek } from "@/components/home/blog-peek";
+import { FinalCTA } from "@/components/home/final-cta";
+import { RareExoticCollection } from "@/components/home/rare-exotic-collection";
+import { getFallbackAnimals, getFallbackProducts, getFallbackBlogs } from "@/lib/data-fallback";
 
 export default async function Home() {
   let pets: any[] = [];
@@ -24,52 +37,103 @@ export default async function Home() {
   let blogs: any[] = [];
   let rareProducts: any[] = [];
 
+  const truncateDesc = (desc: any) => {
+    if (!desc) return '';
+    if (typeof desc === 'string') return desc.slice(0, 140);
+    if (typeof desc === 'object') {
+      return {
+        en: desc.en ? desc.en.slice(0, 140) : '',
+        bn: desc.bn ? desc.bn.slice(0, 140) : '',
+      };
+    }
+    return '';
+  };
+
   try {
     const payload = await getPayload({ config: configPromise });
 
-    // ✅ Run ALL queries in PARALLEL — reduces wait from ~2.3s to ~600ms
-    const [
-      animalsResult,
-      rareAnimalsResult,
-      rareProductsResult,
-      settingsResult,
-      homepageResult,
-      testimonialsResult,
-      blogsResult,
-    ] = await Promise.allSettled([
-      payload.find({
+    // Fetch animals
+    try {
+      const animalsResult = await payload.find({
         collection: 'animals',
         limit: 12,
+        depth: 1,
         where: {
           and: [
             { status: { equals: 'available' } },
             { isFeatured: { equals: true } }
           ]
         }
-      }),
-      payload.find({
+      });
+      pets = animalsResult.docs.map((doc: any) => ({
+        id: doc.id,
+        image: doc.imageUpload?.url || doc.image || '',
+        objectPosition: doc.objectPosition,
+        name: doc.name,
+        tag: doc.tag,
+        price: doc.price,
+      }));
+    } catch (e) { console.warn("Animals query failed", e); }
+
+    // Fetch rare animals and products
+    try {
+      const rareAnimalsResult = await payload.find({
         collection: 'animals',
         limit: 12,
+        depth: 1,
         where: {
           and: [
             { status: { equals: 'available' } },
             { isRareExotic: { equals: true } }
           ]
         }
-      }),
-      payload.find({
+      });
+      const rareProductDocs = await payload.find({
         collection: 'products',
         limit: 12,
+        depth: 1,
         where: {
           and: [
             { status: { equals: 'in_stock' } },
             { isRareExotic: { equals: true } }
           ]
         }
-      }),
-      payload.findGlobal({ slug: 'store-settings' }),
-      payload.findGlobal({ slug: 'homepage' }),
-      payload.find({
+      });
+      
+      const rareA = rareAnimalsResult.docs.map((doc: any) => ({
+        id: doc.id,
+        isAnimal: true,
+        image: doc.imageUpload?.url || doc.image || '',
+        name: doc.name,
+        tag: doc.tag,
+        price: doc.price,
+        description: truncateDesc(doc.description),
+      }));
+      const rareP = rareProductDocs.docs.map((doc: any) => ({
+        id: doc.id,
+        isAnimal: false,
+        image: doc.imageUpload?.url || doc.image || '',
+        name: doc.name,
+        tag: doc.tag,
+        price: doc.price,
+        description: truncateDesc(doc.description),
+      }));
+      rareProducts = [...rareA, ...rareP];
+    } catch (e) { console.warn("Rare products query failed", e); }
+
+    // Fetch settings
+    try {
+      settingsRes = await payload.findGlobal({ slug: 'store-settings' });
+    } catch (e) { console.warn("Settings query failed", e); }
+
+    // Fetch homepage
+    try {
+      homepageRes = await payload.findGlobal({ slug: 'homepage' });
+    } catch (e) { console.warn("Homepage query failed", e); }
+
+    // Fetch testimonials
+    try {
+      const testimonialsResult = await payload.find({
         collection: 'testimonials',
         limit: 10,
         where: {
@@ -78,66 +142,10 @@ export default async function Home() {
             { status: { exists: false } }
           ]
         },
-        sort: '-createdAt'
-      }),
-      payload.find({
-        collection: 'blogs',
-        limit: 3,
-        sort: '-publishedAt'
-      }),
-    ]);
-
-    // Process results
-    if (animalsResult.status === 'fulfilled') {
-      pets = animalsResult.value.docs.map((doc: any) => ({
-        id: doc.id,
-        image: doc.image,
-        objectPosition: doc.objectPosition,
-        name: doc.name,
-        tag: doc.tag,
-        price: doc.price,
-      }));
-    } else {
-      console.warn("Could not query animals:", animalsResult.reason);
-    }
-
-    // Combine rare animals + rare products into one list
-    const rareAnimalDocs = rareAnimalsResult.status === 'fulfilled'
-      ? rareAnimalsResult.value.docs.map((doc: any) => ({
-          id: doc.id,
-          isAnimal: true,
-          image: doc.image,
-          name: doc.name,
-          tag: doc.tag,
-          price: doc.price,
-          description: doc.description,
-        }))
-      : [];
-
-    const rareProductDocs = rareProductsResult.status === 'fulfilled'
-      ? rareProductsResult.value.docs.map((doc: any) => ({
-          id: doc.id,
-          isAnimal: false,
-          image: doc.image,
-          name: doc.name,
-          tag: doc.tag,
-          price: doc.price,
-          description: doc.description,
-        }))
-      : [];
-
-    rareProducts = [...rareAnimalDocs, ...rareProductDocs];
-
-    if (settingsResult.status === 'fulfilled') {
-      settingsRes = settingsResult.value;
-    }
-
-    if (homepageResult.status === 'fulfilled') {
-      homepageRes = homepageResult.value;
-    }
-
-    if (testimonialsResult.status === 'fulfilled') {
-      testimonials = testimonialsResult.value.docs.map((doc: any) => ({
+        sort: '-createdAt',
+        depth: 1
+      });
+      testimonials = testimonialsResult.docs.map((doc: any) => ({
         id: doc.id,
         authorName: doc.authorName,
         authorRole: doc.authorRole,
@@ -145,20 +153,71 @@ export default async function Home() {
         rating: doc.rating || 5,
         authorImage: doc.authorImage,
       }));
-    }
+    } catch (e) { console.warn("Testimonials query failed", e); }
 
-    if (blogsResult.status === 'fulfilled') {
-      blogs = blogsResult.value.docs.map((doc: any) => ({
+    // Fetch blogs
+    try {
+      const blogsResult = await payload.find({
+        collection: 'blogs',
+        limit: 3,
+        sort: '-publishedAt',
+        depth: 1
+      });
+      blogs = blogsResult.docs.map((doc: any) => ({
         id: doc.id,
         title: doc.title,
         excerpt: doc.excerpt,
         coverImage: doc.coverImage,
         publishedAt: doc.publishedAt,
       }));
-    }
+    } catch (e) { console.warn("Blogs query failed", e); }
 
   } catch (error) {
     console.error("Failed to connect to Payload or Database. Is Postgres running?", error);
+  }
+
+  // Master local fallback resolution for zero blank renders
+  if (pets.length === 0) {
+    pets = getFallbackAnimals().filter(a => a.isFeatured).map(a => ({
+      id: a.id,
+      image: a.image,
+      objectPosition: a.objectPosition,
+      name: a.name,
+      tag: a.tag,
+      price: a.price,
+    }));
+  }
+
+  if (rareProducts.length === 0) {
+    const fbRareA = getFallbackAnimals().filter(a => a.isRareExotic).map(a => ({
+      id: a.id,
+      isAnimal: true,
+      image: a.image,
+      name: a.name,
+      tag: a.tag,
+      price: a.price,
+      description: truncateDesc(a.description),
+    }));
+    const fbRareP = getFallbackProducts().filter(p => p.isRareExotic).map(p => ({
+      id: p.id,
+      isAnimal: false,
+      image: p.image,
+      name: p.name,
+      tag: p.tag,
+      price: p.price,
+      description: truncateDesc(p.description),
+    }));
+    rareProducts = [...fbRareA, ...fbRareP];
+  }
+
+  if (blogs.length === 0) {
+    blogs = getFallbackBlogs().slice(0, 3).map(b => ({
+      id: b.id,
+      title: b.title,
+      excerpt: b.excerpt,
+      coverImage: typeof b.coverImage === 'object' ? b.coverImage?.url : b.coverImage,
+      publishedAt: b.publishedAt,
+    }));
   }
 
   return (
@@ -170,55 +229,39 @@ export default async function Home() {
         lcpImage={
           <Image
             src={typeof homepageRes?.heroImage === 'object' && homepageRes?.heroImage?.url ? homepageRes.heroImage.url : "/images/hero.webp"}
-            alt="Beautiful Aquarium and Birds"
+            alt="বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম - Beautiful Birds & Aquarium Store in Chuadanga"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
-            unoptimized
+            fetchPriority="high"
             className="w-full h-full object-cover origin-center z-10"
           />
         }
       />
 
       {/* 2. Discovery surface — animals, food, accessories */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
-        <DiscoveryBento discoveryCards={homepageRes?.discoveryCards} />
-      </div>
+      <DiscoveryBento discoveryCards={homepageRes?.discoveryCards} />
 
       {/* 3. Featured pets — filtered by isFeatured */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
-        <FeaturedPets pets={pets} />
-      </div>
+      <FeaturedPets pets={pets} />
 
-      {/* RARE & EXOTIC COLLECTION — lazy */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
-        <RareExoticCollection products={rareProducts} storeNumber={settingsRes?.contact?.whatsappNumber || settingsRes?.contact?.phoneNumber || '8801947315330'} />
-      </div>
+      {/* RARE & EXOTIC COLLECTION */}
+      <RareExoticCollection products={rareProducts} storeNumber={settingsRes?.contact?.whatsappNumber || settingsRes?.contact?.phoneNumber || '8801947315330'} />
 
       {/* 4. Trust strip — live signal + proof points */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 200px' }}>
-        <TrustStrip />
-      </div>
+      <TrustStrip />
 
       {/* 5. Store experience — live video + physical store */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 800px' }}>
-        <StoreExperience settings={settingsRes as any} />
-      </div>
+      <StoreExperience settings={settingsRes as any} />
 
-      {/* 6. Testimonials — customer reviews and form */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
-        <TestimonialSection testimonials={testimonials} />
-      </div>
+      {/* 6. Testimonials — customer reviews */}
+      <TestimonialSection testimonials={testimonials} />
 
       {/* 7. Blog Peek — latest articles */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
-        <BlogPeek blogs={blogs} />
-      </div>
+      <BlogPeek blogs={blogs} />
 
       {/* 8. Final invitation CTA — warm closing section */}
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
-        <FinalCTA settings={settingsRes as any} />
-      </div>
+      <FinalCTA settings={settingsRes as any} />
     </div>
   );
 }

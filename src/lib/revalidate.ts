@@ -7,6 +7,9 @@ export const revalidateCollection = (collectionSlug: string): CollectionAfterCha
       try {
         // Revalidate the global layout/index
         revalidatePath('/');
+        revalidatePath('/blog');
+        revalidatePath('/blog/[id]', 'page');
+        
         // Revalidate specific tags if used in fetch
         // @ts-ignore
         revalidateTag(collectionSlug);

@@ -112,6 +112,15 @@ export const Products: CollectionConfig = {
               ]
             },
             {
+              name: 'numericPrice',
+              type: 'number',
+              label: 'প্রকৃত দাম (Number for Sorting)',
+              admin: {
+                description: 'সঠিক সর্টিং (Sorting) এবং ফিল্টারিংয়ের জন্য এখানে শুধু টাকার অংকটি দিন (যেমন: 1200)। দাম না থাকলে 0 দিন।',
+              },
+              defaultValue: 0,
+            },
+            {
               name: 'tag',
               type: 'group',
               label: 'ট্যাগ / ব্যাজ (Badge)',
@@ -130,13 +139,21 @@ export const Products: CollectionConfig = {
           description: 'মিডিয়া (Media) থেকে ছবির লিংক কপি করে এখানে বসান।',
           fields: [
             {
+              name: 'imageUpload',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'ছবি আপলোড (Upload Image)',
+              admin: {
+                description: 'সরাসরি ছবি আপলোড করুন অথবা মিডিয়া লাইব্রেরি থেকে সিলেক্ট করুন।',
+              },
+            },
+            {
               name: 'image',
               type: 'text',
-              label: 'প্রধান ছবির লিংক (Main Image URL)',
+              label: 'ছবির লিংক (Legacy Image URL)',
               admin: {
-                description: 'যে ছবিটি সবার আগে দেখানো হবে (e.g., /images/seed.jpg)',
+                description: 'যদি আপলোড না করে সরাসরি লিংক দিতে চান',
               },
-              required: true,
               defaultValue: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80',
             },
             {
@@ -148,7 +165,8 @@ export const Products: CollectionConfig = {
                 plural: 'ছবিসমূহ (Images)',
               },
               fields: [
-                { name: 'url', type: 'text', required: true, label: 'ছবির লিংক (Image URL)' }
+                { name: 'image', type: 'upload', relationTo: 'media', label: 'ছবি আপলোড (Upload Image)' },
+                { name: 'url', type: 'text', label: 'ছবির লিংক (Legacy URL)' }
               ]
             }
           ]

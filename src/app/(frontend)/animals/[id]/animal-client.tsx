@@ -12,6 +12,8 @@ import { MagneticButton } from "@/components/ui/magnetic-button";
 import { useMotionConfig } from "@/lib/motion";
 import { ShortlistButton } from "@/components/ui/shortlist-button";
 import { ImageZoom } from "@/components/ui/image-zoom";
+import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 
 type AnimalClientProps = {
   animal: any;
@@ -98,36 +100,36 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           
           {/* Left: Image Gallery */}
-          <div className="flex flex-col gap-4 relative lg:sticky lg:top-24">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={getTransition("fluid")}
+          <div className="flex flex-col gap-4 relative md:sticky md:top-24">
+            <div 
+              className="w-full"
               onMouseEnter={() => setCursorType("view")}
               onMouseLeave={() => setCursorType("default")}
             >
-              <ImageZoom src={images[activeImageIndex].url} alt={name || "Animal Image"} className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+              <ImageZoom src={images[activeImageIndex].url} alt={`${name || "Animal"} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা`} className="relative w-full aspect-square rounded-[40px] overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeImageIndex}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.2 }}
                     className="absolute inset-0"
                   >
                     <Image
                       src={images[activeImageIndex].url}
-                      alt={name || 'Animal'}
+                      alt={`${name || 'Animal'} - বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা`}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
+                      priority={activeImageIndex === 0}
+                      fetchPriority={activeImageIndex === 0 ? "high" : "auto"}
                       className="object-cover"
                       style={{ objectPosition: activeImageIndex === 0 ? animal.objectPosition : "center center" }}
                     />
                   </motion.div>
                 </AnimatePresence>
               </ImageZoom>
-            </motion.div>
+            </div>
 
             {/* Thumbnails */}
             {images.length > 1 && (
@@ -136,6 +138,7 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
+                    aria-label={`View photo ${idx + 1} of ${name}`}
                     className={cn(
                       "relative w-20 h-20 shrink-0 rounded-2xl overflow-hidden border-2 transition-all",
                       activeImageIndex === idx 
@@ -143,19 +146,16 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                         : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
-                    <Image src={img.url} alt={`${name || 'Animal'} ${idx}`} fill sizes="80px" className="object-cover" />
+                    <Image src={img.url} alt={`${name || 'Animal'} photo ${idx + 1}`} fill sizes="80px" className="object-cover" loading="lazy" />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Right: Details */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...getTransition("fluid"), delay: 0.1 }}
-            className="flex flex-col pt-4 lg:pt-12"
+          {/* Right: Details — render at full opacity for instant SSR paint */}
+          <div 
+            className="flex flex-col pt-4 lg:pt-12 animate-in fade-in duration-500"
           >
             <div className="mb-8">
               <div className="flex flex-wrap gap-2 items-center mb-6">
@@ -209,9 +209,15 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                 {t.description}
               </h3>
               {description ? (
-                <p className={cn("text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed whitespace-pre-wrap", fontClass)}>
-                  {description}
-                </p>
+                <div className={cn("text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed prose prose-emerald dark:prose-invert max-w-none", fontClass)}>
+                  {typeof description === 'string' ? (
+                    <ReactMarkdown remarkPlugins={[remarkBreaks]}>
+                      {description.replace(/\\n/g, '\n')}
+                    </ReactMarkdown>
+                  ) : (
+                    description
+                  )}
+                </div>
               ) : (
                 <p className={cn("text-zinc-400 italic", fontClass)}>
                   No description available.
@@ -232,9 +238,28 @@ export function AnimalClient({ animal, settings }: AnimalClientProps) {
                   {t.inquire}
                 </MagneticButton>
               </a>
+
+              <a 
+                href={settings?.contact?.storeFacebookPageUrl || "https://www.facebook.com/bismillahpakhiandaquarium"} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex-1 sm:max-w-[270px]"
+              >
+                <button
+                  className={cn(
+                    "w-full h-full bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] dark:text-[#4294ff] border border-[#1877F2]/30 rounded-2xl px-5 py-4 text-sm font-semibold flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95",
+                    fontClass
+                  )}
+                >
+                  <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                  <span>{language === "bn" ? "ফেসবুক পেজে আমাদের আপডেট দেখুন" : "View Updates on Facebook"}</span>
+                </button>
+              </a>
             </div>
 
-          </motion.div>
+          </div>
         </div>
       </div>
 

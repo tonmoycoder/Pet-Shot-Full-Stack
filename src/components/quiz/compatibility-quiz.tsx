@@ -359,7 +359,7 @@ export function CompatibilityQuiz() {
   const selectedAnswer = answers[question.id];
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12 md:py-20 min-h-[60vh] flex flex-col justify-center">
+    <div className="max-w-2xl mx-auto px-4 py-12 md:py-20 min-h-[60vh] flex flex-col justify-center overflow-x-hidden w-full">
 
       {/* Progress */}
       <div className="flex gap-2 mb-12 justify-center">

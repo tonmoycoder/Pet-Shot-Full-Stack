@@ -11,6 +11,7 @@ import { useCursor } from "@/lib/cursor-context";
 import { formatStoreHours } from "@/lib/format-time";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CausticsBackground } from "@/components/ui/caustics-background";
+import { useStoreSettings } from "@/lib/store-settings-context";
 
 const ctaDict = {
   bn: {
@@ -18,6 +19,7 @@ const ctaDict = {
     headline: "চা খেতে খেতে\nগল্প করি।",
     sub: "দোকানে এলে আমরা সরাসরি সাহায্য করতে পারব। প্রতিটি পাখি, মাছ ও পণ্য নিজে দেখে, জেনে, তারপর সিদ্ধান্ত নিন।",
     whatsapp: "WhatsApp-এ কথা বলুন",
+    facebook: "ফেসবুক পেজ",
     call: "কল করুন",
     directions: "পথ দেখুন",
     quiz: "সঠিক সঙ্গী খুঁজুন",
@@ -27,6 +29,7 @@ const ctaDict = {
     headline: "Let's chat\nover tea.",
     sub: "Visiting us in person lets you see every bird, fish, and product up close. Make your decision with full confidence.",
     whatsapp: "Chat on WhatsApp",
+    facebook: "Facebook Page",
     call: "Call Us",
     directions: "Get Directions",
     quiz: "Find Perfect Match",
@@ -35,12 +38,13 @@ const ctaDict = {
 
 type SettingsProp = {
   contact?: {
-    whatsappNumber: string;
-    phoneNumber: string;
+    whatsappNumber?: string;
+    phoneNumber?: string;
+    storeFacebookPageUrl?: string;
   };
   location?: {
-    address: string;
-    googleMapsLink: string;
+    address?: string;
+    googleMapsLink?: string;
   };
   hours?: {
     openingTime?: string;
@@ -59,19 +63,21 @@ type SettingsProp = {
 export function FinalCTA({ settings }: { settings?: SettingsProp }) {
   const { language } = useLanguage();
   const { setCursorType } = useCursor();
+  const storeSettings = useStoreSettings();
   const t = ctaDict[language];
   const fontClass = language === "bn" ? "font-bangla" : "font-sans";
   const sectionRef = useRef<HTMLElement>(null);
 
+  const defaultNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330").replace(/[^0-9]/g, '');
+  const whatsappLink = settings?.contact?.whatsappNumber 
+    ? `https://wa.me/${settings.contact.whatsappNumber.replace(/[^0-9]/g, '')}` 
+    : `https://wa.me/${defaultNumber}`;
+  const facebookUrl = settings?.contact?.storeFacebookPageUrl || storeSettings?.contact?.storeFacebookPageUrl || "https://www.facebook.com/bismillahpakhiandaquarium";
+  const displayPhone = settings?.contact?.phoneNumber || storeSettings?.contact?.phoneNumber || "01947315330";
+  const displayAddress = settings?.location?.address || storeSettings?.location?.address || "সাত ভাই পুকুড় পাড়, চুয়াডাঙ্গা";
+  const mapsLink = settings?.location?.googleMapsLink || storeSettings?.location?.googleMapsLink || "https://maps.app.goo.gl/j1NbDKU1zVpx533x8";
 
-
-  const defaultNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330";
-  const whatsappLink = settings?.contact?.whatsappNumber ? `https://wa.me/${settings.contact.whatsappNumber}` : `https://wa.me/${defaultNumber}`;
-  const displayPhone = settings?.contact?.phoneNumber || "01947315330";
-  const displayAddress = settings?.location?.address || "সাত ভাই পুকুড় পাড়, চুয়াডাঙ্গা";
-  const mapsLink = settings?.location?.googleMapsLink || "https://maps.app.goo.gl/j1NbDKU1zVpx533x8";
-
-  const h = settings?.hours;
+  const h = settings?.hours || storeSettings?.hours;
   const displayHours = formatStoreHours(h, language as any);
 
   return (
@@ -141,7 +147,7 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
 
         {/* CTA buttons */}
         <div
-          className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 w-full sm:w-auto animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
+          className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3.5 md:gap-4 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
           style={{ animationDelay: "260ms" }}
         >
           {/* Primary: WhatsApp */}
@@ -157,7 +163,7 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
               onMouseLeave={() => setCursorType("default")}
               className={cn(
                 "w-full sm:w-auto flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20b558] text-white",
-                "rounded-full px-6 md:px-8 py-4 md:py-5 text-base md:text-lg font-semibold",
+                "rounded-full px-6 md:px-7 py-3.5 md:py-4 text-base md:text-lg font-semibold",
                 "shadow-[0_0_40px_-8px_rgba(37,211,102,0.5)] hover:shadow-[0_0_60px_-8px_rgba(37,211,102,0.6)]",
                 "transition-all duration-300",
                 fontClass
@@ -165,6 +171,33 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
             >
               <MessageCircle className="w-5 h-5 shrink-0" />
               {t.whatsapp}
+            </MagneticButton>
+          </a>
+
+          {/* Facebook Page */}
+          <a
+            href={facebookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto"
+            aria-label={t.facebook}
+          >
+            <MagneticButton
+              magneticStrength={12}
+              onMouseEnter={() => setCursorType("cta")}
+              onMouseLeave={() => setCursorType("default")}
+              className={cn(
+                "w-full sm:w-auto flex items-center justify-center gap-3 bg-[#1877F2] hover:bg-[#166fe5] text-white",
+                "rounded-full px-6 md:px-7 py-3.5 md:py-4 text-base md:text-lg font-semibold",
+                "shadow-[0_0_40px_-8px_rgba(24,119,242,0.5)] hover:shadow-[0_0_60px_-8px_rgba(24,119,242,0.7)]",
+                "transition-all duration-300",
+                fontClass
+              )}
+            >
+              <svg className="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              {t.facebook}
             </MagneticButton>
           </a>
 
@@ -176,7 +209,7 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
               onMouseLeave={() => setCursorType("default")}
               className={cn(
                 "w-full sm:w-auto flex items-center justify-center gap-3 bg-white/10 hover:bg-white/20 text-white",
-                "rounded-full px-5 md:px-7 py-4 md:py-5 text-base md:text-lg font-semibold",
+                "rounded-full px-5 md:px-6 py-3.5 md:py-4 text-base md:text-lg font-semibold",
                 "border border-white/15 hover:border-white/30 backdrop-blur-md",
                 "transition-all duration-300",
                 fontClass
@@ -200,7 +233,7 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
               onMouseLeave={() => setCursorType("default")}
               className={cn(
                 "w-full sm:w-auto flex items-center justify-center gap-3 bg-transparent hover:bg-white/10 text-white/70 hover:text-white",
-                "rounded-full px-6 py-5 text-base font-medium",
+                "rounded-full px-5 md:px-6 py-3.5 md:py-4 text-base md:text-lg font-medium",
                 "border border-white/10 hover:border-white/20 backdrop-blur-md",
                 "transition-all duration-300",
                 fontClass
@@ -212,14 +245,14 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
           </a>
 
           {/* Quaternary: Quiz */}
-          <Link href="/match" className="w-full sm:w-auto mt-4 sm:mt-0">
+          <Link href="/match" className="w-full sm:w-auto">
             <MagneticButton
               magneticStrength={10}
               onMouseEnter={() => setCursorType("cta")}
               onMouseLeave={() => setCursorType("default")}
               className={cn(
                 "w-full sm:w-auto flex items-center justify-center gap-3 bg-transparent hover:bg-emerald-900/40 text-[#67D8CE]/80 hover:text-[#67D8CE]",
-                "rounded-full px-6 py-5 text-base font-medium",
+                "rounded-full px-5 md:px-6 py-3.5 md:py-4 text-base md:text-lg font-medium",
                 "border border-[#67D8CE]/20 hover:border-[#67D8CE]/40 backdrop-blur-md",
                 "transition-all duration-300",
                 fontClass
@@ -235,7 +268,7 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
         <div
           className={cn(
             "mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3",
-            "text-white/30 text-sm animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both",
+            "text-white/40 text-sm animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both",
             fontClass
           )}
           style={{ animationDelay: "340ms" }}
@@ -245,6 +278,18 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
           <span>{displayHours}</span>
           <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
           <span>{displayPhone}</span>
+          <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
+          <a
+            href={facebookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-white/50 hover:text-[#1877F2] transition-colors"
+          >
+            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            <span>{language === "bn" ? "অফিসিয়াল ফেসবুক পেজ" : "Official Facebook Page"}</span>
+          </a>
         </div>
       </div>
     </section>

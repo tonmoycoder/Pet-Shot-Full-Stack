@@ -1,0 +1,152 @@
+Skip to content
+Navigation Menu
+Platform
+Solutions
+Resources
+Open Source
+Enterprise
+Pricing
+Sign in
+Sign up
+payloadcms
+/
+payload
+Public
+Notifications
+Fork 4.3k
+ Star 45.1k
+Code
+Issues
+495
+Pull requests
+764
+Discussions
+Actions
+Projects
+Security and quality
+40
+Insights
+Payload admin renders blank on Vercel (works via next start) — Next 16.2.6, Payload 3.85.2 #17910
+bao-creator started this conversation in Feature Requests & Ideas
+bao-creator
+Summary
+
+On Vercel, the Payload admin panel renders a completely blank white page at /admin and /admin/login. The page title is correct (Login - Payload), all JS/CSS chunks return 200, the admin client app mounts and fires its API calls, React hydrates — but the admin view renders to an empty tree with no error thrown anywhere (client console or server logs).
+
+The public (non-admin) site works perfectly on the same deployment, and the REST API works (/api/* returns data).
+
+The identical git commit, built with next build and served with next start in a Linux/x64 + Node 24 container (matching Vercel's runtime), renders the admin login form perfectly. So the failure is specific to Vercel's build + serverless-serve pipeline for the Payload admin, not the application code.
+
+Environment
+	
+Payload	payload@3.85.2, @payloadcms/next@3.85.2, @payloadcms/ui@3.85.2, @payloadcms/richtext-lexical@3.85.2
+DB adapter	@payloadcms/db-postgres@3.85.2 (Supabase Postgres)
+Storage	@payloadcms/storage-vercel-blob
+Next.js	16.2.6 (default Turbopack build) — also reproduced on 16.2.12 and 15.4.11
+React	react@19.2.6, react-dom@19.2.6
+Hosting	Vercel, serverless/Fluid Compute; Node runtime 24.x; pnpm 10.28
+Config	withPayload(nextConfig, { devBundleServerPackages: false }); custom i18n middleware (locale rewrites) with matcher excluding admin, api, _next
+Symptom / observations (from a real browser)
+/admin/login → blank. document.title = Login - Payload. document.body.innerText.length === 0. No <form> / email / password inputs in the DOM.
+No console errors or warnings (checked incl. preserved messages across navigations). An injected window.onerror / unhandledrejection / console.error trap caught nothing.
+React does hydrate: __reactFiber$… present on <body>, <html>, and the admin <section>; window.next present; webpackChunk_N_E present.
+The admin client app executes: network shows GET /api/users/me → 200 ({user: null}), GET /api/payload-preferences/nav → 200, and the admin page chunk /_next/static/chunks/app/(payload)/admin/[[...segments]]/page-*.js → 200.
+All JS/CSS chunks return 200 (correct ?dpl= for the current deployment). 5 stylesheets load.
+The admin root container (<body> > section) has 0 children (empty). The string "Welcome to your dashboard" exists only inside the RSC flight <script> payload, never in the visible DOM.
+x-vercel-cache: MISS, cache-control: private, no-cache, fresh — not a CDN cache issue.
+Public frontend on the same deployment hydrates and is interactive (React fibers attached, event handlers work).
+REST API works: /api/pages, /api/posts, /api/globals/* all return real data (200) → Payload core + DB connectivity are fine at runtime.
+The decisive comparison
+Build & serve	Admin /admin/login
+Vercel vercel build (Turbopack) + serverless serve	❌ blank
+Vercel vercel build (next build --webpack) + serverless serve	❌ blank
+Vercel, Next 15.4.11	❌ blank
+Vercel, Next 16.2.12	❌ blank
+Same commit: next build + next start in Docker node:24-bookworm, --platform linux/amd64, same env/DB	✅ login form renders correctly
+
+The server output is essentially identical between the working container and the blank Vercel deployment: the initial HTML for /admin/login is ~52 KB in both, with the same self.__next_f.push(...) RSC flight rows and the same client-component references (CreateFirstUser, Email/Password fields, template-minimal). So the RSC render is correct on Vercel too — the client simply does not turn that (correct) payload into DOM when the app was built & served by Vercel.
+
+The only differences between the two are:
+
+Vercel runs vercel build (which logs "Applying modifyConfig from Vercel") instead of plain next build.
+Vercel serves the admin route as a serverless function + static chunks from CDN, instead of a single next start Node server.
+Ruled out (with evidence)
+Not "not logged in" — /admin/login itself is blank; the server issues a NEXT_REDIRECT to /admin/login for /admin but the login page is blank too.
+Not CDN/edge cache — x-vercel-cache: MISS, forced clean redeploy (--force, "Skipping build cache") still blank.
+Not the bundler — Turbopack and webpack builds both blank on Vercel.
+Not the Next version — 16.2.6, 16.2.12, 15.4.11 all blank on Vercel.
+Not Node 18 — Vercel project runs Node 24.x.
+Not DB connectivity — REST reads return data at runtime.
+Not missing JS/CSS chunks — all 200, correct ?dpl=.
+Not a client JS crash — React hydrates; error traps catch nothing.
+Not a stale admin importMap — payload generate:importmap reports "No new imports found".
+Not duplicate React — single react@19.2.6 / react-dom@19.2.6.
+Not a local .env leaking into the build — no localhost in the served admin bundle; Vercel env vars take precedence.
+Not serverless file-tracing — adding outputFileTracingIncludes for /admin/[[...segments]] (@payloadcms/ui, @payloadcms/next, payload) did not change anything; and a missing traced file would throw, but the render is silently empty and the REST API (same node_modules) works.
+Minimal reproduction
+Payload 3.85.2 website-style app (Next 16.2.6, App Router, @payloadcms/db-postgres, @payloadcms/storage-vercel-blob), custom i18n middleware with a [locale] segment (matcher excludes admin|api|_next).
+vercel deploy --prod → open /admin/login → blank (title correct, no form, no console errors).
+Same commit: next build && next start (Node 24, Linux/x64) → open /admin/login → login form renders.
+Questions for maintainers
+Is there a known interaction between the Payload admin RSC client-reference manifest and Vercel's vercel build output (Build Output API) / modifyConfig step that can leave client components unrendered without error?
+Is any additional config required for the Payload admin under Vercel serverless with Next 16 (e.g., serverExternalPackages, outputFileTracing*, runtime pinning) beyond what withPayload sets?
+Any recommended way to capture the client-side reason the RSC flight resolves to an empty tree (it fails silently — no console error, no hydration warning)?
+Workaround currently in use
+
+Serve the app as a standard Node server (next build && next start) — the admin renders correctly there.
+
+2
+Replies:
+1 comment
+Oldest
+Newest
+Top
+jlantunes
+
+I hit this exact symptom (blank /admin and /admin/login, everything 200, zero console errors, works fine locally via next start) and found the actual root cause via Vercel's Runtime Logs (Observability → Logs — not the build logs, not the browser console).
+
+The function log showed:
+
+getFromImportMap: PayloadComponent not found in importMap {
+  key: '@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler',
+  ...
+}
+You may need to run the `payload generate:importmap` command to generate the importMap ahead of runtime.
+
+
+Running payload generate:importmap does not pick up this entry. I had to add it to src/app/(payload)/admin/importMap.js by hand:
+
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_xxx } from '@payloadcms/storage-vercel-blob/client'
+// ...
+export const importMap = {
+  // ...
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_xxx,
+}
+
+After that, the admin panel rendered correctly on Vercel. My setup: payload@3.90.1, next@16.3.5, @payloadcms/storage-vercel-blob@3.90.1, Postgres via Neon.
+
+This explains the failure mode: when getFromImportMap throws for a component referenced deep in a Server Component tree, the error gets swallowed rather than surfacing — hence the blank page with zero visible errors anywhere else (console, network, build logs). Only the raw Vercel function logs showed it.
+
+Might be worth checking whether others on this thread are also using @payloadcms/storage-vercel-blob — that seems to be the common thread, at least for my case.
+
+1
+0 replies
+Sign up for free to join this conversation on GitHub. Already have an account? Sign in to comment
+Category
+💡
+Feature Requests & Ideas
+Labels
+None yet
+2 participants
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information

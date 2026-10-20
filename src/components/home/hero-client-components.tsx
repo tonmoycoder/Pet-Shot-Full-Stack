@@ -10,8 +10,9 @@ import { useCursor } from "@/lib/cursor-context";
 import { useLanguage } from "@/lib/language-context";
 
 // ── Store Status Badge ──────────────────────────────────────────────────────
-export function StoreStatusClient({ storeSettings, dict }: { storeSettings: any, dict: any }) {
+export function StoreStatusClient({ storeSettings, dicts }: { storeSettings: any, dicts: any }) {
   const { language } = useLanguage();
+  const dict = dicts[language as 'en' | 'bn'] || dicts['bn'];
 
   const [isStoreOpen, setIsStoreOpen] = React.useState<boolean | null>(null);
 
@@ -57,7 +58,24 @@ export function StoreStatusClient({ storeSettings, dict }: { storeSettings: any,
     return () => clearInterval(iv);
   }, [storeSettings, language]);
 
-  if (isStoreOpen === null) return null;
+  if (isStoreOpen === null) {
+    return (
+      <div
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-transparent opacity-0 pointer-events-none select-none"
+        aria-hidden="true"
+      >
+        <div className="relative flex h-2 w-2">
+          <span className="relative inline-flex rounded-full h-2 w-2" />
+        </div>
+        <span className={cn(
+          "text-xs font-bold tracking-wider",
+          language === "bn" ? "font-bangla" : "font-sans"
+        )}>
+          {dict.liveStatusOpen}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -92,8 +110,9 @@ export function StoreStatusClient({ storeSettings, dict }: { storeSettings: any,
 }
 
 // ── Hero CTAs ───────────────────────────────────────────────────────────────
-export function HeroCTAsClient({ whatsappLink, dict }: { whatsappLink: string, dict: any }) {
+export function HeroCTAsClient({ whatsappLink, dicts }: { whatsappLink: string, dicts: any }) {
   const { language } = useLanguage();
+  const dict = dicts[language as 'en' | 'bn'] || dicts['bn'];
   const { setCursorType } = useCursor();
   
   return (
@@ -143,8 +162,9 @@ export function HeroCTAsClient({ whatsappLink, dict }: { whatsappLink: string, d
 }
 
 // ── Hero Badges (Parallax) ──────────────────────────────────────────────────
-export function HeroBadgesClient({ dict }: { dict: any }) {
+export function HeroBadgesClient({ dicts }: { dicts: any }) {
   const { language } = useLanguage();
+  const dict = dicts[language as 'en' | 'bn'] || dicts['bn'];
 
   return (
     <>

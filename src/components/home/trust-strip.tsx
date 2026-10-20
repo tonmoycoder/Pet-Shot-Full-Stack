@@ -7,10 +7,10 @@ import { useLanguage } from "@/lib/language-context";
 const trustDict = {
   bn: {
     signals: [
-      { icon: "🕐", stat: "২৭+", label: "বছরের অভিজ্ঞতা" },
-      { icon: "📍", stat: "বাস্তব", label: "ফিজিক্যাল স্টোর · চুয়াডাঙ্গা" },
-      { icon: "📱", stat: "সরাসরি", label: "যোগাযোগ · কোনো মিডলম্যান নেই" },
-      { icon: "✅", stat: "যাচাইযোগ্য", label: "ফেসবুকে রিভিউ দেখুন" },
+      { icon: "◷", stat: "৭+ বছর ধরে", label: "পোষা প্রাণী ও অ্যাকোয়ারিয়াম সেবায়" },
+      { icon: "📍", stat: "চুয়াডাঙ্গায় আমাদের দোকান", label: "সরাসরি এসে দেখে নিন" },
+      { icon: "💬", stat: "সরাসরি যোগাযোগ", label: "কোনো মধ্যস্থতাকারী নয়" },
+      { icon: "✓", stat: "কেনার আগে দেখে নিন", label: "WhatsApp-এ Live Video" },
     ],
     liveUpdate: "আজকের আপডেট",
     liveTime: "সর্বশেষ আপডেট: ২ ঘণ্টা আগে",
@@ -18,10 +18,10 @@ const trustDict = {
   },
   en: {
     signals: [
-      { icon: "🕐", stat: "27+", label: "Years of experience" },
-      { icon: "📍", stat: "Real", label: "Physical Store · Chuadanga" },
-      { icon: "📱", stat: "Direct", label: "Contact · No middleman" },
-      { icon: "✅", stat: "Verified", label: "Reviews on Facebook" },
+      { icon: "◷", stat: "7+ Years", label: "In Pet & Aquarium Service" },
+      { icon: "📍", stat: "Store in Chuadanga", label: "Visit us in person" },
+      { icon: "💬", stat: "Direct Contact", label: "No middleman" },
+      { icon: "✓", stat: "See before you buy", label: "WhatsApp Live Video" },
     ],
     liveUpdate: "Today's Update",
     liveTime: "Last updated: 2 hours ago",

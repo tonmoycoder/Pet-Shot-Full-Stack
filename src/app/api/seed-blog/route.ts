@@ -2,8 +2,17 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: Request) {
   const payload = await getPayload({ config: configPromise });
+
+  // Security check: in production, require admin session or secret header
+  if (process.env.NODE_ENV === 'production') {
+    const authHeader = request.headers.get('x-secret-key') || request.headers.get('authorization');
+    const { user } = await payload.auth({ headers: request.headers });
+    if (!user && authHeader !== process.env.PAYLOAD_SECRET && authHeader !== `Bearer ${process.env.PAYLOAD_SECRET}`) {
+      return NextResponse.json({ error: "Unauthorized access to seed endpoint" }, { status: 401 });
+    }
+  }
 
   const existing = await payload.find({ collection: 'blogs' });
   if (existing.totalDocs > 0) {
