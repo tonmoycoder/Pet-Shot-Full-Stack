@@ -105,11 +105,16 @@ function serializeRichText(nodes: any[], language: "en" | "bn") {
         }
         return null;
       case "paragraph":
-      default:
+      default: {
         if (node.children?.length === 1 && node.children[0].text === "") {
           return <br key={i} />;
         }
+        const hasUpload = node.children?.some((c: any) => c.type === "upload");
+        if (hasUpload) {
+          return <div key={i} className="mb-5">{children}</div>;
+        }
         return <p key={i}>{children}</p>;
+      }
     }
   });
 }
@@ -126,7 +131,15 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
       h1: ({ node, ...props }: any) => <h2 className="text-2xl md:text-3xl font-bold text-[#09334F] dark:text-white mt-8 mb-4 tracking-tight leading-snug" {...props} />,
       h2: ({ node, ...props }: any) => <h2 className="text-2xl md:text-3xl font-bold text-[#09334F] dark:text-white mt-8 mb-4 tracking-tight leading-snug" {...props} />,
       h3: ({ node, ...props }: any) => <h3 className="text-xl md:text-2xl font-bold text-[#09334F] dark:text-white mt-6 mb-3 leading-snug" {...props} />,
-      p: ({ node, ...props }: any) => <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed mb-5 text-lg" {...props} />,
+      p: ({ node, children, ...props }: any) => {
+        const hasBlockChild = node?.children?.some(
+          (child: any) => child?.tagName === 'img' || child?.tagName === 'div' || child?.tagName === 'figure' || child?.tagName === 'picture'
+        );
+        if (hasBlockChild) {
+          return <div className="text-zinc-700 dark:text-zinc-300 leading-relaxed mb-5 text-lg" {...props}>{children}</div>;
+        }
+        return <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed mb-5 text-lg" {...props}>{children}</p>;
+      },
       strong: ({ node, ...props }: any) => <strong className="font-bold text-zinc-900 dark:text-white" {...props} />,
       ul: ({ node, ...props }: any) => <ul className="list-disc list-inside space-y-2 mb-6 text-zinc-700 dark:text-zinc-300" {...props} />,
       ol: ({ node, ...props }: any) => <ol className="list-decimal list-inside space-y-2 mb-6 text-zinc-700 dark:text-zinc-300" {...props} />,
@@ -328,9 +341,9 @@ export function BlogDetailClient({ blog }: { blog: BlogPost }) {
               </p>
               <div className="flex flex-col gap-3">
                 <a 
-                  href={`https://wa.me/${STORE_FALLBACK.contact?.whatsappNumber || "8801947315330"}`} 
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8801947315330"}`} 
                   target="_blank" 
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="block w-full bg-white text-emerald-600 text-center py-3 rounded-xl font-bold hover:bg-emerald-50 transition-colors shadow-sm"
                 >
                   {language === "bn" ? "হোয়াটসঅ্যাপে মেসেজ দিন" : "Message on WhatsApp"}

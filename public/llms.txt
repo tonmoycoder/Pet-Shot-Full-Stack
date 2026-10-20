@@ -1,29 +1,28 @@
 # Bismillah Pakhi & Aquarium (বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম)
 
-> চুয়াডাঙ্গার শীর্ষস্থানীয় ও বিশ্বস্ত পেট শপ — সুস্থ দেশি-বিদেশি পোষা পাখি (বাজরিগার, ককাটেল, লাভবার্ড, সান কনুর, ম্যাকাও), রঙিন অ্যাকোয়ারিয়াম মাছ (ফাইটার, গোল্ডফিশ, গাপ্পি, কই কার্প, অ্যারোওয়ানা), অ্যাকোয়াস্কেপিং সরঞ্জাম, খাঁচা এবং পুষ্টিকর খাবার।
+> Chuadanga's premier destination for exotic pet birds, ornamental aquarium fishes, planted tank supplies, and authentic pet nutrition in Bangladesh.
 
-## Primary Information
-- Official Website: https://bismillahpakhiandaquarium.vercel.app
-- Physical Store Address: সাত ভাই পুকুর পাড়, আব্দুল্লাহ সিটির পিছনে, বড় বাজার, চুয়াডাঙ্গা, বাংলাদেশ (Sat Bhai Pukur Par, Behind Abdullah City, Boro Bazar, Chuadanga, Bangladesh)
-- Direct Phone: +880 1947-315330
-- WhatsApp Contact: https://wa.me/8801947315330
-- Operating Hours: প্রতিদিন সকাল ৯:০০ টা থেকে রাত ৯:০০ টা (Daily 9:00 AM – 9:00 PM Asia/Dhaka)
-- Store Management: Arfin (আরফিন)
+## Store Information
+- **Brand Name:** Bismillah Pakhi & Aquarium (বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম)
+- **Founder & Specialist:** Arfin (আরফিন)
+- **Location:** Boro Bazar, Chuadanga, Khulna Division, Bangladesh (বড় বাজার, চুয়াডাঙ্গা, বাংলাদেশ)
+- **Phone / WhatsApp:** +8801947315330
+- **Website:** https://bismillahpakhiandaquarium.vercel.app
 
-## Core Categories & Pages
-- [Collection](/collection): Browse all currently available birds, fish, feeds, and aquarium accessories.
-- [Exotic Birds](/categories/birds): Budgerigar, Cockatiel, Lovebird, Finch, Sun Conure, and rare Macaw pre-booking.
-- [Aquarium & Fish](/categories/aquarium): Planted aquariums, hang-on/canister filters, air pumps, CO2 systems, substrate, and LED lighting.
-- [Fish Collection](/categories/fish): Freshwater ornamental fishes, Betta Fighter, Goldfish, Guppy, Tetra, and Koi Carp.
-- [Pet Food](/categories/food): Nutritious bird seed mixes, pelleted bird feeds (ZuPreem), fish flakes, floating pellets (Hikari), and health supplements.
-- [Accessories](/categories/accessories): Stainless steel bird cages, natural perches, toys, waterers, and breeding boxes.
-- [Pet Matching Quiz](/match): Interactive quiz helping beginners and families find their ideal companion pet based on space, time, and budget.
-- [Blog & Journal](/blog): Comprehensive care guides for birds, fish disease prevention, water chemistry, and planted tank maintenance.
-- [Contact & Store Visit](/contact): Directions, Google Maps location, phone contacts, and live video consultation scheduling.
+## Core Categories & Offerings
+- **Exotic & Pet Birds:** Budgerigar (বাজরিগার), Cockatiel (ককাটেল), Lovebird (লাভবার্ড), Sun Conure (সান কনুর), Macaw (ম্যাকাও), Finch, Dove, and Pigeon.
+- **Aquarium Fishes:** Goldfish (গোল্ডফিশ), Betta / Fighter Fish (ফাইটার মাছ), Imported Guppy (গাপ্পি), Koi Carp (কই কার্প), Monster & Exotic Fish (Arowana, Flowerhorn).
+- **Pet Food & Medicine:** Premium dust-free Seed Mix, ZuPreem pellets, hand-feeding formulas, calcium, and avian/aquatic vitamins.
+- **Aquarium & Cage Accessories:** Planted tank ADA aqua soil, canister & sponge filters, LED lights, heaters, oxygen pumps, and breeding cages.
 
-## Policies & Customer Assurance
-- [DOA (Dead on Arrival) Policy](/doa-policy): Live arrival guarantee with unboxing video proof policy.
-- [Delivery Policy](/delivery-policy): Safe localized delivery protocol within Chuadanga and nearby districts.
-- [Frequently Asked Questions](/faq): Common questions regarding live video checking, care, and payments.
-- [Terms of Service](/terms): General terms and store policies.
-- [Privacy Policy](/privacy): Customer privacy and data protection terms.
+## Key Website URLs
+- Homepage: https://bismillahpakhiandaquarium.vercel.app/
+- Full Collection: https://bismillahpakhiandaquarium.vercel.app/collection
+- Birds Category: https://bismillahpakhiandaquarium.vercel.app/categories/birds
+- Aquarium Category: https://bismillahpakhiandaquarium.vercel.app/categories/aquarium
+- Pet Food Category: https://bismillahpakhiandaquarium.vercel.app/categories/food
+- Accessories Category: https://bismillahpakhiandaquarium.vercel.app/categories/accessories
+- Pet Care Blog & Guides: https://bismillahpakhiandaquarium.vercel.app/blog
+- Pet Compatibility Quiz: https://bismillahpakhiandaquarium.vercel.app/match
+- Contact & Pre-Booking: https://bismillahpakhiandaquarium.vercel.app/contact
+- Sitemap: https://bismillahpakhiandaquarium.vercel.app/sitemap.xml

@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteBaseUrl),
   title: {
     default: "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম | Bismillah Pakhi & Aquarium - Chuadanga",
-    template: "%s | Bismillah Pakhi & Aquarium",
+    template: "%s | বিসমিল্লাহ পাখি",
   },
   description:
     "চুয়াডাঙ্গার শীর্ষস্থানীয় বিশ্বস্ত পেট শপ। সুস্থ ও সুন্দর দেশি-বিদেশি পাখি (বাজরিগার, ককাটেল, লাভবার্ড, সান কনুর), রঙিন অ্যাকোয়ারিয়াম মাছ (গোল্ডফিশ, ফাইটার, গাপ্পি, কই কার্প, অ্যারোওয়ানা), খাঁচা, অ্যাকোয়ারিয়াম ফিল্টার, ও পুষ্টিকর পাখির খাবার। Premium Pet Shop in Chuadanga offering exotic birds, aquarium fish, feeds, and supplies across Bangladesh.",
