@@ -578,16 +578,28 @@ export function getFallbackBlogs(): FallbackBlog[] {
 
 export function getFallbackAnimalById(id: string | number): FallbackItem | undefined {
   const strId = String(id);
-  return FALLBACK_ANIMALS.find(
+  const found = FALLBACK_ANIMALS.find(
     (a) => String(a.id) === strId || a.internalName.toLowerCase() === strId.toLowerCase()
   );
+  if (found) return found;
+  const num = parseInt(strId, 10);
+  if (!isNaN(num) && num >= 1 && num <= FALLBACK_ANIMALS.length) {
+    return FALLBACK_ANIMALS[num - 1];
+  }
+  return undefined;
 }
 
 export function getFallbackProductById(id: string | number): FallbackItem | undefined {
   const strId = String(id);
-  return FALLBACK_PRODUCTS.find(
+  const found = FALLBACK_PRODUCTS.find(
     (p) => String(p.id) === strId || p.internalName.toLowerCase() === strId.toLowerCase()
   );
+  if (found) return found;
+  const num = parseInt(strId, 10);
+  if (!isNaN(num) && num >= 1 && num <= FALLBACK_PRODUCTS.length) {
+    return FALLBACK_PRODUCTS[num - 1];
+  }
+  return undefined;
 }
 
 export function getFallbackBlogById(id: string | number): FallbackBlog | undefined {

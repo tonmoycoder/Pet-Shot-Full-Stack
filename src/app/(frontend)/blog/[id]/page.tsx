@@ -16,7 +16,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       id: resolvedParams.id,
     });
     
-    const title = blog.title?.bn || blog.title?.en || 'ব্লগ বিস্তারিত';
+    const rawTitle = blog.title?.bn || blog.title?.en || 'ব্লগ';
+    const cleanTitle = rawTitle.replace(/\s*[\|\-]\s*(?:Bismillah.*|Journal.*)$/i, "").trim();
+    const shortMetaTitle = cleanTitle.length > 40 ? `${cleanTitle.slice(0, 39).trim()}…` : cleanTitle;
     const description = blog.excerpt?.bn || blog.excerpt?.en || "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম - পোষা পাখি ও অ্যাকোয়ারিয়াম যত্ন টিপস ও গাইড।";
     
     let imageUrl = '';
@@ -25,13 +27,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     }
 
     return {
-      title,
+      title: shortMetaTitle,
       description,
       alternates: {
         canonical: `/blog/${resolvedParams.id}`,
       },
       openGraph: {
-        title: `${title} | Bismillah Pakhi & Aquarium`,
+        title: `${cleanTitle} | Bismillah Pakhi & Aquarium`,
         description,
         type: 'article',
         url: `/blog/${resolvedParams.id}`,
@@ -39,24 +41,26 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${title} | Bismillah Pakhi & Aquarium`,
+        title: `${cleanTitle} | Bismillah Pakhi & Aquarium`,
         description,
         ...(imageUrl && { images: [imageUrl] }),
       },
     };
   } catch {
     const fallback = getFallbackBlogById(resolvedParams.id);
-    const title = fallback ? `${fallback.title.bn} (${fallback.title.en})` : 'ব্লগ বিস্তারিত';
+    const rawTitle = fallback ? (fallback.title?.bn || fallback.title?.en || 'ব্লগ বিস্তারিত') : 'ব্লগ বিস্তারিত';
+    const cleanTitle = rawTitle.replace(/\s*[\|\-]\s*(?:Bismillah.*|Journal.*)$/i, "").trim();
+    const shortMetaTitle = cleanTitle.length > 40 ? `${cleanTitle.slice(0, 39).trim()}…` : cleanTitle;
     const description = fallback ? fallback.excerpt.bn : 'বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম চুয়াডাঙ্গা।';
     const imageUrl = fallback?.coverImage && typeof fallback.coverImage === 'object' ? fallback.coverImage.url : '';
     return {
-      title,
+      title: shortMetaTitle,
       description,
       alternates: {
         canonical: `/blog/${resolvedParams.id}`,
       },
       openGraph: {
-        title: `${title} | Bismillah Pakhi & Aquarium`,
+        title: `${cleanTitle} | Bismillah Pakhi & Aquarium`,
         description,
         type: 'article',
         url: `/blog/${resolvedParams.id}`,
@@ -64,7 +68,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${title} | Bismillah Pakhi & Aquarium`,
+        title: `${cleanTitle} | Bismillah Pakhi & Aquarium`,
         description,
         ...(imageUrl && { images: [imageUrl] }),
       },
@@ -92,19 +96,28 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ id:
 
   if (!blog) notFound();
 
-  const blogTitle = blog.title?.bn || blog.title?.en || 'ব্লগ পোস্ট';
+  const rawTitle = blog.title?.bn || blog.title?.en || 'ব্লগ পোস্ট';
+  const cleanTitle = rawTitle.replace(/\s*[\|\-]\s*(?:Bismillah.*|Journal.*)$/i, "").trim();
+
+  const blogForSchema = {
+    ...blog,
+    title: {
+      bn: (blog.title?.bn || cleanTitle).replace(/\s*[\|\-]\s*(?:Bismillah.*|Journal.*)$/i, "").trim(),
+      en: (blog.title?.en || cleanTitle).replace(/\s*[\|\-]\s*(?:Bismillah.*|Journal.*)$/i, "").trim(),
+    }
+  };
 
   return (
     <>
-      <BlogPostingJsonLd blog={blog} />
+      <BlogPostingJsonLd blog={blogForSchema} />
       <BreadcrumbJsonLd
         items={[
           { name: "হোম", url: "/" },
           { name: "ব্লগ ও পরামর্শ", url: "/blog" },
-          { name: blogTitle, url: `/blog/${resolvedParams.id}` },
+          { name: cleanTitle, url: `/blog/${resolvedParams.id}` },
         ]}
       />
-      <BlogDetailClient blog={blog} />
+      <BlogDetailClient blog={blogForSchema} />
     </>
   );
 }

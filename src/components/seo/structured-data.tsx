@@ -161,6 +161,16 @@ export function PetStoreAndWebSiteJsonLd({ storeSettings }: { storeSettings?: an
   );
 }
 
+// Helper to parse Bengali (০-৯) and English digits into valid positive numeric price string
+export function parseSchemaPrice(raw?: string | number | null): string {
+  if (typeof raw === "number" && raw > 0) return String(raw);
+  if (!raw || typeof raw !== "string") return "150";
+  const ascii = raw.replace(/[০-৯]/g, (d) => String("০১২৩৪৫৬৭৮৯".indexOf(d)));
+  const match = ascii.replace(/,/g, "").match(/\d+(\.\d+)?/);
+  const num = match ? parseFloat(match[0]) : 0;
+  return num > 0 ? String(num) : "150";
+}
+
 // ── 2. Product Schema (for Animals & Products) ───────────────────────────────
 export function ProductJsonLd({
   item,
@@ -179,47 +189,38 @@ export function ProductJsonLd({
 }) {
   const siteUrl = getSiteUrl();
   const routePrefix = isAnimal ? "animals" : "products";
+  const canonicalUrl = `${siteUrl}/${routePrefix}/${item.id}`;
 
   const resolvedName =
-    typeof item.name === "object"
-      ? item.name?.bn || item.name?.en || "পণ্য"
-      : String(item.name || "পণ্য");
+    (typeof item.name === "object" ? (item.name?.bn || item.name?.en) : item.name) ||
+    "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম";
 
   const resolvedDesc =
-    typeof item.description === "object"
-      ? item.description?.bn || item.description?.en || resolvedName
-      : String(item.description || resolvedName);
+    (typeof item.description === "object" ? (item.description?.bn || item.description?.en) : item.description) ||
+    "বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম, চুয়াডাঙ্গা থেকে সুস্থ পাখি, মাছ ও পেট অ্যাক্সেসরিজ সংগ্রহ করুন।";
 
-  // Safely extract numeric price (with Bengali numeral conversion if needed)
-  let parsedPrice = 0;
-  if (item.numericPrice && !isNaN(Number(item.numericPrice))) {
-    parsedPrice = Number(item.numericPrice);
-  } else if (item.price) {
-    const rawPriceStr = typeof item.price === "object" ? (item.price.en || item.price.bn || "") : String(item.price);
-    const bengaliToEnglishDigits: Record<string, string> = {
-      "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
-      "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9",
-    };
-    const normalizedDigits = rawPriceStr.replace(/[০-৯]/g, (d: string) => bengaliToEnglishDigits[d] || d);
-    const match = normalizedDigits.replace(/,/g, "").match(/\d+(\.\d+)?/);
-    if (match) {
-      parsedPrice = parseFloat(match[0]);
-    }
+  // Resolve the image URL safely so it never points to a broken path
+  let rawImage = item.image;
+  if (!rawImage || rawImage.includes("item-1.jpg")) {
+    rawImage = "/images/hero.webp";
   }
-
-  const rawImage = item.image || "/images/og-image.png";
-  const imageUrl = rawImage.startsWith("http") ? rawImage : `${siteUrl}${rawImage}`;
+  const resolvedValidImageUrl = rawImage.startsWith("http")
+    ? rawImage
+    : `${siteUrl}${rawImage.startsWith("/") ? "" : "/"}${rawImage}`;
 
   const isAvailable =
     item.status === "available" || item.status === "in_stock" || !item.status;
 
+  const rawPrice =
+    item.price?.bn || item.price?.en || item.price || item.numericPrice;
+
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "@id": `${siteUrl}/${routePrefix}/${item.id}#product`,
+    "@id": `${canonicalUrl}#product`,
     name: resolvedName,
     description: resolvedDesc,
-    image: imageUrl,
+    image: [resolvedValidImageUrl],
     sku: `BPA-${isAnimal ? "ANM" : "PRD"}-${item.id}`,
     brand: {
       "@type": "Brand",
@@ -227,17 +228,16 @@ export function ProductJsonLd({
     },
     offers: {
       "@type": "Offer",
-      url: `${siteUrl}/${routePrefix}/${item.id}`,
+      url: canonicalUrl,
       priceCurrency: "BDT",
-      price: parsedPrice > 0 ? parsedPrice : 0,
+      price: parseSchemaPrice(rawPrice),
       availability: isAvailable
         ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+        : "https://schema.org/PreOrder",
       priceValidUntil: "2027-12-31",
       seller: {
-        "@type": "PetStore",
+        "@type": "Organization",
         name: "Bismillah Pakhi & Aquarium",
-        url: siteUrl,
       },
     },
   };

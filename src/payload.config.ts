@@ -79,7 +79,7 @@ export default buildConfig({
       idleTimeoutMillis: 10000,
       connectionTimeoutMillis: 8000,
     },
-    push: process.env.NODE_ENV !== 'production',
+    push: false, // ডাটাবেসের কোনো কলাম যেন অটোমেটিক ডিলিট না হয়
   }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
