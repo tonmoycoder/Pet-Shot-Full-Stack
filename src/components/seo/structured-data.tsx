@@ -42,9 +42,8 @@ export function PetStoreAndWebSiteJsonLd({ storeSettings }: { storeSettings?: an
     url: siteUrl,
     logo: `${siteUrl}/images/logo_shop.webp`,
     image: [
-      `${siteUrl}/images/og-image.png`,
-      `${siteUrl}/images/logo_shop.webp`,
       `${siteUrl}/images/hero.webp`,
+      `${siteUrl}/images/logo_shop.webp`,
       `${siteUrl}/images/bento/birds.webp`,
       `${siteUrl}/images/bento/aquarium.webp`,
       `${siteUrl}/images/bento/food.webp`,
@@ -275,7 +274,7 @@ export function BlogPostingJsonLd({
       ? blog.excerpt?.bn || blog.excerpt?.en || title
       : String(blog.excerpt || title);
 
-  let imageUrl = `${siteUrl}/images/og-image.png`;
+  let imageUrl = `${siteUrl}/images/hero.webp`;
   if (blog.coverImage) {
     if (typeof blog.coverImage === "string") {
       imageUrl = blog.coverImage.startsWith("http")

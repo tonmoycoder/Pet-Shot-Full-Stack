@@ -94,6 +94,7 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
         </div>
         <Link
           href="/collection"
+          prefetch={false}
           onMouseEnter={() => setCursorType("cta")}
           onMouseLeave={() => setCursorType("default")}
           className={cn("group shrink-0 inline-flex items-center gap-1 font-medium text-amber-500 hover:text-amber-400 transition-all", fontClass)}
@@ -126,7 +127,7 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
               onMouseLeave={() => setCursorType("default")}
             >
               {/* Visual Container */}
-              <Link href={href} className="relative w-full h-[360px] overflow-hidden bg-zinc-950 block">
+              <Link href={href} prefetch={false} className="relative w-full h-[360px] overflow-hidden bg-zinc-950 block">
                 {product.image ? (
                   <>
                     <Image
@@ -201,6 +202,7 @@ export function RareExoticCollection({ products, storeNumber = "8801947315330" }
                 </a>
                 <Link 
                   href={href}
+                  prefetch={false}
                   className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors shrink-0"
                   title={language === 'bn' ? 'বিস্তারিত জানুন' : 'Learn More'}
                   aria-label={language === 'bn' ? `বিস্তারিত জানুন - ${productName}` : `Learn More - ${productName}`}

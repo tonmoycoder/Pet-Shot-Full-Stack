@@ -181,7 +181,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
             aria-hidden="true"
             className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
             style={{
-              backgroundImage: "url('https://i.postimg.cc/k4s8FFgR/caust-016.png')",
+              backgroundImage: "url('/images/caustics.webp')",
               backgroundSize: "cover",
               backgroundPosition: "center",
               opacity: 0.18,
@@ -217,7 +217,7 @@ export function StoreExperience({ settings }: { settings?: SettingsProp }) {
               href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
-              className={cn("bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full px-8 py-6 text-lg shadow-[0_10px_30px_-10px_rgba(37,211,102,0.5)] transition-all gap-3 w-full sm:w-auto", fontClass)}
+              className={cn("bg-[#047857] hover:bg-[#065f46] text-white rounded-full px-8 py-6 text-lg shadow-[0_10px_30px_-10px_rgba(4,120,87,0.5)] transition-all gap-3 w-full sm:w-auto", fontClass)}
               magneticStrength={15}
               onMouseEnter={() => setCursorType("cta")}
               onMouseLeave={() => setCursorType("default")}
@@ -409,7 +409,7 @@ function LazyMapIframe({ className, width, height }: { className?: string; width
           referrerPolicy="no-referrer-when-downgrade"
         />
       ) : (
-        <div className="flex items-center justify-center gap-1.5 text-xs text-zinc-400">
+        <div className="flex items-center justify-center gap-1.5 text-xs text-zinc-800 dark:text-zinc-200 font-medium">
           <MapPin className="w-3.5 h-3.5" />
           <span>Google Maps</span>
         </div>

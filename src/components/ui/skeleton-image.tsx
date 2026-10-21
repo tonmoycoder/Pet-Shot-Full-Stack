@@ -37,12 +37,9 @@ export function SkeletonImage({
       wrapperClassName
     )}>
       {/* Skeleton Background */}
-      {!isPriority && (
+      {!isPriority && isLoading && (
         <div 
-          className={cn(
-            "absolute inset-0 transition-opacity duration-500 z-0",
-            isLoading ? "skeleton-shimmer opacity-100" : "opacity-0 pointer-events-none"
-          )} 
+          className="absolute inset-0 z-0 skeleton-shimmer" 
         />
       )}
       

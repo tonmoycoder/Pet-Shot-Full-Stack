@@ -56,6 +56,7 @@ function BentoCard({ title, desc, imageSrc, className, href, delay = 0, fontClas
     >
       <Link 
         href={href} 
+        prefetch={false}
         className={cn(
           "block relative w-full h-full overflow-hidden rounded-[32px] md:rounded-[40px]",
           "bg-zinc-100 dark:bg-zinc-900 border border-white/20 dark:border-white/5",
@@ -77,7 +78,7 @@ function BentoCard({ title, desc, imageSrc, className, href, delay = 0, fontClas
               fill
               className="object-cover"
               style={{ objectPosition }}
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 384px"
             />
           </VanillaParallax>
         </div>
