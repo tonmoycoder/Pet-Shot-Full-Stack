@@ -103,15 +103,19 @@ const nextConfig: NextConfig = {
             value: "camera=(), microphone=(), geolocation=()",
           },
           {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+          {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://va.vercel-scripts.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://va.vercel-scripts.com https://vercel.live https://*.vercel.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
-              "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://api.resend.com https://bismillahpakhiandaquarium.vercel.app",
-              "frame-src 'self' https://www.google.com https://www.youtube.com https://maps.google.com",
+              "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://api.resend.com https://bismillahpakhiandaquarium.vercel.app https://vercel.live https://*.vercel.com",
+              "frame-src 'self' https://www.google.com https://www.youtube.com https://maps.google.com https://vercel.live https://*.vercel.com",
               "media-src 'self' blob:",
             ].join("; "),
           },

@@ -122,7 +122,7 @@ export function Footer() {
               rel="noopener noreferrer"
               variant="default"
               size="lg"
-              className={cn("w-full sm:w-auto rounded-full gap-2 shadow-[0_8px_20px_-4px_rgba(4,120,87,0.3)] bg-emerald-500 hover:bg-emerald-600 text-white border border-emerald-400/50 transition-all hover:shadow-[0_12px_24px_-4px_rgba(4,120,87,0.4)]", fontClass)}
+              className={cn("w-full sm:w-auto rounded-full gap-2 shadow-[0_8px_20px_-4px_rgba(4,120,87,0.3)] bg-[#047857] hover:bg-[#065f46] text-white border border-emerald-400/50 transition-all hover:shadow-[0_12px_24px_-4px_rgba(4,120,87,0.4)]", fontClass)}
               magneticStrength={15}
               onMouseEnter={() => setCursorType("cta")}
               onMouseLeave={() => setCursorType("default")}
@@ -224,6 +224,7 @@ export function Footer() {
                 <li key={idx}>
                   <Link
                     href={link.href}
+                    prefetch={false}
                     className="flex items-center gap-3 text-zinc-400 hover:text-white transition-colors text-sm group"
                   >
                     <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all">{link.icon}</span>
@@ -244,6 +245,7 @@ export function Footer() {
                 <li key={idx}>
                   <Link
                     href={link.href}
+                    prefetch={false}
                     className="flex items-center gap-3 text-zinc-400 hover:text-white transition-colors text-sm group"
                   >
                     <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all">{link.icon}</span>
@@ -297,9 +299,9 @@ export function Footer() {
                 {t.location}
               </span>
               <div className="hidden md:flex items-center gap-4 text-xs font-sans">
-                <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+                <Link href="/terms" prefetch={false} className="hover:text-white transition-colors">Terms</Link>
                 <span className="text-zinc-600">&bull;</span>
-                <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+                <Link href="/privacy" prefetch={false} className="hover:text-white transition-colors">Privacy</Link>
               </div>
             </div>
           </div>

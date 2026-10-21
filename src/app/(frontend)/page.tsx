@@ -231,9 +231,10 @@ export default async function Home() {
             src={typeof homepageRes?.heroImage === 'object' && homepageRes?.heroImage?.url ? homepageRes.heroImage.url : "/images/hero.webp"}
             alt="বিসমিল্লাহ পাখি এন্ড অ্যাকোয়ারিয়াম - Beautiful Birds & Aquarium Store in Chuadanga"
             fill
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 768px) 92vw, 50vw"
             priority
             fetchPriority="high"
+            loading="eager"
             className="w-full h-full object-cover origin-center z-10"
           />
         }

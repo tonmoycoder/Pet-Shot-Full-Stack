@@ -103,6 +103,7 @@ export function FeaturedPets({ pets }: { pets: PetProp[] }) {
         </div>
         <Link
           href="/collection"
+          prefetch={false}
           onMouseEnter={() => setCursorType("cta")}
           onMouseLeave={() => setCursorType("default")}
           className={cn("group shrink-0 inline-flex items-center gap-1 font-medium text-[#265D85] dark:text-[#67B1E0] hover:text-[#1c4461] dark:hover:text-[#90c6eb] transition-all", fontClass)}
@@ -133,7 +134,7 @@ export function FeaturedPets({ pets }: { pets: PetProp[] }) {
                 onMouseLeave={() => setCursorType("default")}
               >
                 {/* Visual Container */}
-                <Link href={`/animals/${pet.id}`} className="relative w-full h-[360px] overflow-hidden bg-zinc-100 dark:bg-zinc-800 block">
+                <Link href={`/animals/${pet.id}`} prefetch={false} className="relative w-full h-[360px] overflow-hidden bg-zinc-100 dark:bg-zinc-800 block">
                   <Image
                     src={pet.image}
                     alt={petName || 'Pet'}
@@ -193,6 +194,7 @@ export function FeaturedPets({ pets }: { pets: PetProp[] }) {
                   </a>
                   <Link 
                     href={`/animals/${pet.id}`}
+                    prefetch={false}
                     className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors shrink-0"
                     title={t.inquire}
                     aria-label={`${t.inquire} - ${petName}`}

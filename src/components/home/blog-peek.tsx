@@ -50,6 +50,7 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
 
           <Link
             href="/blog"
+            prefetch={false}
             className={cn(
               "shrink-0 inline-flex items-center gap-2 group text-[#09334F] dark:text-emerald-400 font-semibold hover:text-emerald-600 transition-colors text-lg",
               language === "bn" ? "font-bangla" : "font-sans"
@@ -68,7 +69,7 @@ export function BlogPeek({ blogs }: BlogPeekProps) {
               className="animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
-              <Link href={`/blog/${blog.id}`} className="group block h-full">
+              <Link href={`/blog/${blog.id}`} prefetch={false} className="group block h-full">
                 <article className="flex flex-col h-full bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-lg shadow-zinc-200/20 dark:shadow-black/20 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
 
                   {/* Image Container */}

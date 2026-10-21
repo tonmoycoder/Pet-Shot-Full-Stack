@@ -7,6 +7,8 @@ import "./theme-toggle.scss";
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
+  const rawId = React.useId();
+  const toggleId = `toggle--daynight-btn-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
   React.useEffect(() => {
     const t = setTimeout(() => setMounted(true), 0);
@@ -23,13 +25,13 @@ export function ThemeToggle() {
     <div className="toggle toggle--daynight" style={{ margin: 0 }}>
       <input 
         type="checkbox" 
-        id="toggle--daynight-btn"
+        id={toggleId}
         className="toggle--checkbox"
         checked={isDark}
         onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
         aria-label="Toggle Theme"
       />
-      <label className="toggle--btn" htmlFor="toggle--daynight-btn">
+      <label className="toggle--btn" htmlFor={toggleId}>
         <span className="toggle--feature"></span>
       </label>
     </div>

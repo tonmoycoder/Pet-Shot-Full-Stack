@@ -210,7 +210,7 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
                   <span className="text-emerald-400 font-serif text-5xl leading-none select-none font-bold inline-block">“</span>
                   <div className="flex items-center gap-1 text-amber-400 text-xs">
                     {"★".repeat(testimonial.rating)}{"☆".repeat(5 - testimonial.rating)}
-                    <span className="text-slate-400 font-sans text-xs ml-1 font-semibold">{testimonial.rating}.0</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-sans text-xs ml-1 font-semibold">{testimonial.rating}.0</span>
                   </div>
                 </div>
 
@@ -307,25 +307,29 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
             {/* Smooth Linear Countdown Progress Bar */}
             <div className="w-36 h-1.5 bg-slate-200/80 dark:bg-zinc-800 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-emerald-500 rounded-full" 
-                style={{ width: `${progress}%`, transition: "width 0.1s linear" }}
+                className="h-full w-full bg-emerald-500 rounded-full origin-left will-change-transform" 
+                style={{ transform: `scaleX(${progress / 100})`, transition: "transform 0.1s linear" }}
               />
             </div>
             
             {/* Clickable Pagination Dots */}
-            <div className="flex items-center gap-1.5 mt-1">
+            <div className="flex items-center gap-0.5 mt-1">
               {testimonials.map((_, idx) => (
                 <button 
                   key={idx}
                   onClick={() => goToSlide(idx)}
                   aria-label={`Slide ${idx + 1}`} 
-                  className={cn(
-                    "rounded-full transition-all duration-300",
-                    idx === currentIndex 
-                      ? "w-2.5 h-2.5 bg-emerald-600 ring-2 ring-emerald-300 dark:ring-emerald-900" 
-                      : "w-2 h-2 bg-slate-300 dark:bg-zinc-700 hover:bg-slate-400 dark:hover:bg-zinc-600"
-                  )}
-                />
+                  className="w-6 h-6 flex items-center justify-center rounded-full focus:outline-none"
+                >
+                  <span 
+                    className={cn(
+                      "rounded-full transition-all duration-300",
+                      idx === currentIndex 
+                        ? "w-2.5 h-2.5 bg-emerald-600 ring-2 ring-emerald-300 dark:ring-emerald-900" 
+                        : "w-2 h-2 bg-slate-300 dark:bg-zinc-700 hover:bg-slate-400 dark:hover:bg-zinc-600"
+                    )} 
+                  />
+                </button>
               ))}
             </div>
           </div>
@@ -357,7 +361,7 @@ export function TestimonialSection({ testimonials }: TestimonialSectionProps) {
 
         {/* Trust Badge Footer Note */}
         <div className="text-center mt-6">
-          <p className={cn("text-xs text-slate-400 dark:text-zinc-500 flex items-start sm:items-center justify-center gap-1.5 font-medium max-w-[280px] sm:max-w-none mx-auto", language === "bn" ? "font-bangla" : "font-sans")}>
+          <p className={cn("text-xs text-slate-600 dark:text-zinc-400 flex items-start sm:items-center justify-center gap-1.5 font-medium max-w-[280px] sm:max-w-none mx-auto", language === "bn" ? "font-bangla" : "font-sans")}>
             <svg className="w-4 h-4 text-emerald-500 shrink-0 mt-[2px] sm:mt-0" fill="currentColor" viewBox="0 0 20 20">
               <path clipRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fillRule="evenodd"></path>
             </svg>

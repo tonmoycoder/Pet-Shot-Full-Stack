@@ -162,9 +162,9 @@ export function FinalCTA({ settings }: { settings?: SettingsProp }) {
               onMouseEnter={() => setCursorType("cta")}
               onMouseLeave={() => setCursorType("default")}
               className={cn(
-                "w-full sm:w-auto flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20b558] text-white",
+                "w-full sm:w-auto flex items-center justify-center gap-3 bg-[#047857] hover:bg-[#065f46] text-white",
                 "rounded-full px-6 md:px-7 py-3.5 md:py-4 text-base md:text-lg font-semibold",
-                "shadow-[0_0_40px_-8px_rgba(37,211,102,0.5)] hover:shadow-[0_0_60px_-8px_rgba(37,211,102,0.6)]",
+                "shadow-[0_0_40px_-8px_rgba(4,120,87,0.5)] hover:shadow-[0_0_60px_-8px_rgba(4,120,87,0.6)]",
                 "transition-all duration-300",
                 fontClass
               )}

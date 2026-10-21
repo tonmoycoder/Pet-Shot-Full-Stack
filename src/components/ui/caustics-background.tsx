@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { cn } from "cn";
 
 interface CausticsBackgroundProps {
@@ -22,15 +21,6 @@ export function CausticsBackground({ className }: CausticsBackgroundProps) {
           loading="lazy"
           decoding="async"
           className="object-cover w-full h-full opacity-[0.06] dark:opacity-[0.12]" 
-        />
-      </div>
-      <div className="absolute inset-0 opacity-0 animate-[delayed-fade-in_1s_ease-out_0.5s_forwards] pointer-events-none">
-        <img 
-          src="/noise.png" 
-          alt="" 
-          loading="lazy"
-          decoding="async"
-          className="object-cover w-full h-full opacity-[0.03]" 
         />
       </div>
 
