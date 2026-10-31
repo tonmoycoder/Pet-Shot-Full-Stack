@@ -15,11 +15,32 @@ export function BackgroundAudio() {
   const [showPopup, setShowPopup] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const constraintsRef = useRef<HTMLDivElement>(null);
+  const hasPromptedRef = useRef(false);
+  const scrollHandlerRef = useRef<(() => void) | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const cleanupTriggers = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    if (scrollHandlerRef.current) {
+      window.removeEventListener("scroll", scrollHandlerRef.current);
+      scrollHandlerRef.current = null;
+    }
+  };
 
   useEffect(() => {
     setIsMounted(true);
-    const stored = sessionStorage.getItem("audio_permission_v2");
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem("audio_permission_v2") || sessionStorage.getItem("audio_permission_v2");
+    } catch {
+      // In case storage is restricted
+    }
+
     if (stored) {
+      hasPromptedRef.current = true;
       setPermission(stored);
       // Even if permission is granted, we need a user interaction to autoplay on reload
       const unlockAudio = () => {
@@ -34,38 +55,52 @@ export function BackgroundAudio() {
         window.removeEventListener("keydown", unlockAudio);
       };
     } else {
-      // Show popup on scroll or after 10s to prevent blocking LCP
+      // Show popup ONLY ONCE on scroll (>200px) or after 8s
       const handleScroll = () => {
+        if (hasPromptedRef.current) return;
         if (window.scrollY > 200) {
+          hasPromptedRef.current = true;
+          cleanupTriggers();
           setShowPopup(true);
-          window.removeEventListener("scroll", handleScroll);
         }
       };
       
+      scrollHandlerRef.current = handleScroll;
       window.addEventListener("scroll", handleScroll, { passive: true });
-      const timer = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
+        if (hasPromptedRef.current) return;
+        hasPromptedRef.current = true;
+        cleanupTriggers();
         setShowPopup(true);
-        window.removeEventListener("scroll", handleScroll);
-      }, 10000);
+      }, 8000);
       
       return () => {
-        clearTimeout(timer);
-        window.removeEventListener("scroll", handleScroll);
+        cleanupTriggers();
       };
     }
   }, []);
 
   const handlePermission = (granted: boolean) => {
+    hasPromptedRef.current = true;
+    cleanupTriggers();
     const val = granted ? "granted" : "denied";
-    sessionStorage.setItem("audio_permission_v2", val);
+    try {
+      localStorage.setItem("audio_permission_v2", val);
+      sessionStorage.setItem("audio_permission_v2", val);
+    } catch {}
     setPermission(val);
     setHasInteracted(true); // User just clicked, so we have interaction
     setShowPopup(false);
   };
 
   const toggleAudio = () => {
+    hasPromptedRef.current = true;
+    cleanupTriggers();
     const newVal = permission === "granted" ? "denied" : "granted";
-    sessionStorage.setItem("audio_permission_v2", newVal);
+    try {
+      localStorage.setItem("audio_permission_v2", newVal);
+      sessionStorage.setItem("audio_permission_v2", newVal);
+    } catch {}
     setPermission(newVal);
     setHasInteracted(true);
   };
